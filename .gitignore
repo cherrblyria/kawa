@@ -43,7 +43,8 @@ venv.bak/
 .dmypy.json
 dmypy.json
 .pytest_cache/
-.vscode/
+.vscode/*
+!.vscode/extensions.json
 .idea/
 
 # Local environment variables / secrets
