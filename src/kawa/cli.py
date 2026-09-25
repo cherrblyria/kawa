@@ -1,13 +1,13 @@
 import argparse
+from .utils.format import *
 
 
 def nether_to_overworld(args):
     ow_x = args.x * 8
     ow_z = args.z * 8
 
-    fmt = lambda v: int(v) if v.is_integer() else v
     print(
-        f"Nether: ({fmt(args.x)}, {fmt(args.z)})  (σ･ω･)σ  Overworld: ({fmt(ow_x)}, {fmt(ow_z)})"
+        f"Nether: ({fmt_float(args.x)}, {fmt_float(args.z)})  (σ･ω･)σ  Overworld: ({fmt_float(ow_x)}, {fmt_float(ow_z)})"
     )
 
 
@@ -15,9 +15,8 @@ def overworld_to_nether(args):
     ow_x = args.x / 8
     ow_z = args.z / 8
 
-    fmt = lambda v: int(v) if v.is_integer() else v
     print(
-        f"Overworld: ({fmt(args.x)}, {fmt(args.z)})  (σ･ω･)σ  Nether: ({fmt(ow_x)}, {fmt(ow_z)})"
+        f"Overworld: ({fmt_float(args.x)}, {fmt_float(args.z)})  (σ･ω･)σ  Nether: ({fmt_float(ow_x)}, {fmt_float(ow_z)})"
     )
 
 

@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+    tags-ignore: ["v*.*.*"]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Set up Python
+        run: uv python install 3.11
+
+      - name: Install project (with dev deps)
+        run: uv sync --dev
+
+      - name: Lint
+        run: uv run ruff check .
+
+      - name: Format check
+        run: uv run ruff format --check .
+
+      - name: Smoke test
+        run: |
+          uv run kawa mc ntow 10 20
+          uv run kawa mc ownt 80 160
+
+  build-check:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Set up Python
+        run: uv python install 3.11
+
+      - name: Install project (with dev deps)
+        run: uv sync --dev
+
+      - name: Build binary
+        run: uv run pyinstaller --onefile --name kawa src/kawa/__main__.py
+
+      - name: Sanity-run built binary
+        run: ./dist/kawa mc ntow 10 20

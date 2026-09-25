@@ -24,8 +24,23 @@
             wheel
           ]
         );
+
+        kawa = pkgs.python311Packages.buildPythonApplication {
+          pname = "kawa";
+          version = "0.1.0";
+          src = ./.;
+          pyproject = true;
+          build-system = [ pkgs.python311Packages.hatchling ];
+        };
       in
+
       {
+        packages.default = kawa;
+        apps.default = {
+          type = "app";
+          program = "${kawa}/bin/kawa";
+        };
+
         devShells.default = pkgs.mkShell {
           buildInputs = [
             pythonEnv
