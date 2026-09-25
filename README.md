@@ -2,9 +2,19 @@
 
 > "A set of useless cute little CLI tools for Minecraft and.. ahh... that's it (for now)"
 
+##### on this page
+
+- [Installation](#installation)
+  - [Nix / NixOS (Flake)](#nix--nixos-flake)
+  - [pip / pipx](#pip--pipx)
+  - [Prebuilt binaries](#prebuilt-binaries)
+  - [From source](#from-source)
+- [Usage](#usage)
+- [License](#license)
+
 ### Installation
 
-#### Nix/NixOS (Flake)
+#### Nix / NixOS (Flake)
 
 since this project is flake you can just run it like this.
 
@@ -58,9 +68,9 @@ uv sync --dev
 uv run kawa mc ntow 10 20
 ```
 
-### Example
+### Usage
 
-here're some example usages
+here're some example usage
 
 ```bash
 $ kawa mc ntow 10 20
