@@ -49,3 +49,6 @@ dmypy.json
 # Local environment variables / secrets
 .env.local
 .env.*.local
+
+# Direnv
+.direnv/
