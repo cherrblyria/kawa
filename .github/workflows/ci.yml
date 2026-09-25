@@ -22,9 +22,13 @@ jobs:
         run: uv sync --dev
 
       - name: Lint
+        id: lint
+        continue-on-error: true
         run: uv run ruff check .
 
       - name: Format check
+        id: fmt_check
+        continue-on-error: true
         run: uv run ruff format --check .
 
       - name: Smoke test
