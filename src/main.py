@@ -7,7 +7,7 @@ def nether_to_overworld(args):
 
     fmt = lambda v: int(v) if v.is_integer() else v
     print(
-        f"Nether: ({fmt(args.x)}, {fmt(args.z)})  ➜  Overworld: ({fmt(ow_x)}, {fmt(ow_z)})"
+        f"Nether: ({fmt(args.x)}, {fmt(args.z)})  (σ･ω･)σ  Overworld: ({fmt(ow_x)}, {fmt(ow_z)})"
     )
 
 
@@ -17,7 +17,7 @@ def overworld_to_nether(args):
 
     fmt = lambda v: int(v) if v.is_integer() else v
     print(
-        f"Overworld: ({fmt(args.x)}, {fmt(args.z)})  ➜  Nether: ({fmt(ow_x)}, {fmt(ow_z)})"
+        f"Overworld: ({fmt(args.x)}, {fmt(args.z)})  (σ･ω･)σ  Nether: ({fmt(ow_x)}, {fmt(ow_z)})"
     )
 
 
