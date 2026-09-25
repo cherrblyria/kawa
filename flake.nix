@@ -1,5 +1,5 @@
 {
-  description = "cute useless things";
+  description = "Use less cute little CLI tool.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
