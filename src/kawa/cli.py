@@ -42,12 +42,18 @@ def main():
     kawa_subparsers = kawa_parser.add_subparsers(dest="tool", required=True)
 
     # kawa mc ...
-    mc_parser = kawa_subparsers.add_parser("mc", help="Minecraft tools")
+    mc_parser = kawa_subparsers.add_parser(
+        "mc",
+        help="Minecraft tools",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     mc_subparsers = mc_parser.add_subparsers(dest="command", required=True)
 
     # kawa mc ntow <x> <z>
     mc_ntow_parser = mc_subparsers.add_parser(
-        "ntow", help="Convert Nether coordinates to Overworld coordinates"
+        "ntow",
+        help="Convert Nether coordinates to Overworld coordinates",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     mc_ntow_parser.add_argument("x", type=float, help="Nether X coordinate")
     mc_ntow_parser.add_argument("z", type=float, help="Nether Z coordinate")
@@ -55,17 +61,21 @@ def main():
 
     # kawa mc ownt <x> <z>
     mc_ownt_parser = mc_subparsers.add_parser(
-        "ownt", help="Convert Overworld coordinates to Nether coordinates"
+        "ownt",
+        help="Convert Overworld coordinates to Nether coordinates",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     mc_ownt_parser.add_argument("x", type=float, help="Overworld X coordinate")
     mc_ownt_parser.add_argument("z", type=float, help="Overworld Z coordinate")
     mc_ownt_parser.set_defaults(func=overworld_to_nether)
 
-    # kawa uwuify
+    # kawa uwuify <text>
     uwu_parser = kawa_subparsers.add_parser(
-        "uwuify", help="Uwuify given text with uwuipy"
+        "uwuify",
+        help="Uwuify given text with uwuipy",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    uwu_parser.add_argument("text", type=str, help="Text to convert")
+    uwu_parser.add_argument("text", type=str, nargs="+", help="Text to convert")
     uwu_parser.set_defaults(func=uwuify)
 
     argcomplete.autocomplete(kawa_parser)
