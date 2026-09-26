@@ -1,29 +1,42 @@
 import argparse
+from importlib.resources import files
 
-from .utils.format import *
+from .utils import *
+from .modules import *
 
-
-def nether_to_overworld(args):
-    ow_x = args.x * 8
-    ow_z = args.z * 8
-
-    print(
-        f"Nether: ({fmt_float(args.x)}, {fmt_float(args.z)})  (σ･ω･)σ  Overworld: ({fmt_float(ow_x)}, {fmt_float(ow_z)})"
-    )
+try:
+    BANNER = files("kawa").joinpath("assets/banner.txt").read_text(encoding="utf-8")
+except Exception:
+    BANNER = "Oops!, seem like banner is missing..."
 
 
-def overworld_to_nether(args):
-    ow_x = args.x / 8
-    ow_z = args.z / 8
+class BannerArgumentParser(argparse.ArgumentParser):
+    def format_help(self):
+        formatter = self._get_formatter()
 
-    print(
-        f"Overworld: ({fmt_float(args.x)}, {fmt_float(args.z)})  (σ･ω･)σ  Nether: ({fmt_float(ow_x)}, {fmt_float(ow_z)})"
-    )
+        if BANNER:
+            formatter.add_text(BANNER)
+
+        formatter.add_usage(self.usage, self._actions, self._mutually_exclusive_groups)
+
+        formatter.add_text(self.description)
+
+        for action_group in self._action_groups:
+            formatter.start_section(action_group.title)
+            formatter.add_text(action_group.description)
+            formatter.add_arguments(action_group._group_actions)
+            formatter.end_section()
+
+        formatter.add_text(self.epilog)
+
+        return formatter.format_help()
 
 
 def main():
-    kawa_parser = argparse.ArgumentParser(
-        prog="kawa", description="Use less cute little CLI tool"
+    kawa_parser = BannerArgumentParser(
+        prog="kawa",
+        description=f"  - Useless cute little CLI tool",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     kawa_subparsers = kawa_parser.add_subparsers(dest="tool", required=True)
 

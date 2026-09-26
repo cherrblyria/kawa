@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "kawa"
 version = "0.1.0"
-description = "Use less cute little CLI tool"
+description = "Useless cute little CLI tool"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
