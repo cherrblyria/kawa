@@ -35,7 +35,7 @@ jobs:
         run: |
           uv run kawa mc ntow 10 20
           uv run kawa mc ownt 80 160
-          uv run uwuify The quick brown fox jumps over the lazy dog
+          uv run kawa uwuify The quick brown fox jumps over the lazy dog
 
   build-check:
     needs: check
