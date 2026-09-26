@@ -3,64 +3,72 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+
+    pyproject-nix = {
+      url = "github:pyproject-nix/pyproject.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    uv2nix = {
+      url = "github:pyproject-nix/uv2nix";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    pyproject-build-systems = {
+      url = "github:pyproject-nix/build-system-pkgs";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.uv2nix.follows = "uv2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     {
       self,
       nixpkgs,
-      flake-utils,
+      uv2nix,
+      pyproject-nix,
+      pyproject-build-systems,
+      ...
     }:
-    flake-utils.lib.eachDefaultSystem (
-      system:
-      let
-        pkgs = import nixpkgs { inherit system; };
+    let
+      inherit (nixpkgs) lib;
 
-        pythonEnv = pkgs.python311.withPackages (
-          ps: with ps; [
-            pip
-            setuptools
-            wheel
-          ]
-        );
+      workspace = uv2nix.lib.workspace.loadWorkspace { workspaceRoot = ./.; };
+      overlay = workspace.mkPyprojectOverlay { sourcePreference = "wheel"; };
 
-        kawa = pkgs.python311Packages.buildPythonApplication {
-          pname = "kawa";
-          version = "0.1.0";
-          src = ./.;
-          pyproject = true;
-          build-system = [ pkgs.python311Packages.hatchling ];
-        };
-      in
+      forAllSystems = lib.genAttrs [
+        "x86_64-linux"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ];
+    in
+    {
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          python = pkgs.python312;
 
-      {
-        packages.default = kawa;
-        apps.default = {
+          pythonSet = (pkgs.callPackage pyproject-nix.build.packages { inherit python; }).overrideScope (
+            lib.composeManyExtensions [
+              pyproject-build-systems.overlays.default
+              overlay
+            ]
+          );
+        in
+        {
+          default = pythonSet.mkVirtualEnv "kawa-env" workspace.deps.default;
+        }
+      );
+
+      apps = forAllSystems (system: {
+        default = {
           type = "app";
-          program = "${kawa}/bin/kawa";
+          program = "${self.packages.${system}.default}/bin/kawa";
         };
-
-        devShells.default = pkgs.mkShell {
-          buildInputs = [
-            pythonEnv
-            pkgs.uv
-            pkgs.git
-          ];
-
-          shellHook = ''
-            if [ ! -d .venv ]; then
-              echo "creating virtualenv with uv..."
-              uv venv .venv
-            fi
-
-            export VIRTUAL_ENV="$PWD/.venv"
-            export PATH="$VIRTUAL_ENV/bin:$PATH"
-            export PIP_DISABLE_PIP_VERSION_CHECK=1
-
-            echo "# Python $(python --version 2>&1 | cut -d' ' -f2) | uv $(uv --version | cut -d' ' -f2)"
-          '';
-        };
-      }
-    );
+      });
+    };
 }
