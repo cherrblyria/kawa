@@ -7,7 +7,7 @@
 - [Installation](#installation)
   - [Nix / NixOS (Flake)](#nix--nixos-flake)
   - [pip / pipx](#pip--pipx)
-  - [Prebuilt binaries (Soon)](#prebuilt-binaries)
+  - [Prebuilt binaries](#prebuilt-binaries)
   - [From source](#from-source)
 - [Shell Completion](#shell-completion)
 - [Usage](#usage)
@@ -58,7 +58,7 @@ uv tool install git+https://github.com/cherrblyria/kawa
 
 #### Prebuilt binaries
 
-Grab a standalone binary from the [~~Releases page~~](https://github.com/cherrblyria/kawa/releases/latest) — nope, there's no release right now.
+Grab a standalone binary from the [Releases page](https://github.com/cherrblyria/kawa/releases/latest)
 
 #### From source
 
