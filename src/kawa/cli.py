@@ -60,6 +60,13 @@ def main():
     mc_ownt_parser.add_argument("z", type=float, help="Overworld Z coordinate")
     mc_ownt_parser.set_defaults(func=overworld_to_nether)
 
+    # kawa uwuify
+    uwu_parser = kawa_subparsers.add_parser(
+        "uwuify", help="Uwuify given text with uwuipy"
+    )
+    uwu_parser.add_argument("text", type=str, help="Text to convert")
+    uwu_parser.set_defaults(func=uwuify)
+
     args = kawa_parser.parse_args()
     args.func(args)
 
