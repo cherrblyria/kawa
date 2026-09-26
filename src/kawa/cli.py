@@ -1,4 +1,5 @@
 import argparse
+import argcomplete
 from importlib.resources import files
 
 from .utils import *
@@ -67,6 +68,7 @@ def main():
     uwu_parser.add_argument("text", type=str, help="Text to convert")
     uwu_parser.set_defaults(func=uwuify)
 
+    argcomplete.autocomplete(kawa_parser)
     args = kawa_parser.parse_args()
     args.func(args)
 

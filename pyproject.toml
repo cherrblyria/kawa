@@ -11,6 +11,7 @@ requires-python = ">=3.9"
 license = "MIT"
 authors = [{ name = "cherrblyria" }]
 dependencies = [
+    "argcomplete>=3.7.0",
     "uwuipy>=0.1.5",
 ]
 

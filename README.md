@@ -9,6 +9,7 @@
   - [pip / pipx](#pip--pipx)
   - [Prebuilt binaries (Soon)](#prebuilt-binaries)
   - [From source](#from-source)
+- [Shell Completion](#shell-completion)
 - [Usage](#usage)
 - [License](#license)
 
@@ -16,13 +17,13 @@
 
 #### Nix / NixOS (Flake)
 
-since this project is flake you can just run it like this.
+Since this project is a flake, you can just run it like this:
 
 ```bash
 nix run github:cherrblyria/kawa
 ```
 
-or install it on your system just like other flake
+Or install it on your system just like any other flake:
 
 ```nix
 # flake.nix
@@ -57,7 +58,7 @@ uv tool install git+https://github.com/cherrblyria/kawa
 
 #### Prebuilt binaries
 
-Grab a standalone binary from the [~~Releases page~~](https://github.com/cherrblyria/kawa/releases/latest), Nope there's no release right now..
+Grab a standalone binary from the [~~Releases page~~](https://github.com/cherrblyria/kawa/releases/latest) — nope, there's no release right now.
 
 #### From source
 
@@ -68,9 +69,21 @@ uv sync --dev
 uv run kawa mc ntow 10 20
 ```
 
+### Shell Completion
+
+Kawa supports tab-completion for `bash`, `zsh`, and `fish` via [`argcomplete`](https://github.com/kislyuk/argcomplete). Pick your shell below and add the snippet to your config.
+
+| Shell | Setup                                                                                                         |
+| ----- | ------------------------------------------------------------------------------------------------------------- |
+| bash  | Add to `~/.bashrc`: `eval "$(register-python-argcomplete kawa)"`                                              |
+| zsh   | Add to `~/.zshrc`: `autoload -U bashcompinit; bashcompinit` then `eval "$(register-python-argcomplete kawa)"` |
+| fish  | Run once: `register-python-argcomplete --shell fish kawa > ~/.config/fish/completions/kawa.fish`              |
+
+After that, restart your shell (or `source` the config)
+
 ### Usage
 
-here're some example usage
+Here're some example usages:
 
 ```bash
 $ kawa mc ntow 10 20
@@ -78,6 +91,9 @@ Nether: (10, 20)  (σ･ω･)σ  Overworld: (80, 160)
 
 $ kawa mc ownt 80 160
 Overworld: (80, 160)  (σ･ω･)σ  Nether: (10, 20)
+
+$ kawa uwuify "hello world"
+hewwo wowwd
 ```
 
 ### License
