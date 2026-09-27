@@ -1,2 +1,2 @@
-from .mc_portal_calc import *
+from .minecraft import *
 from .uwuify import *

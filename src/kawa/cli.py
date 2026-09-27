@@ -58,6 +58,20 @@ def ownt(x, z):
     overworld_to_nether(x, z)
 
 
+@mc.command()
+@click.argument("level", type=int)
+def lvxp(level):
+    """Convert Level to Expreience"""
+    level_to_experience(level)
+
+
+@mc.command()
+@click.argument("xp", type=int)
+def xplv(xp):
+    """Convert Expreience to Level"""
+    experience_to_level(xp)
+
+
 @cli.command(name="uwuify")
 @click.argument("text", nargs=-1, required=True)
 def uwuify_cmd(text):
