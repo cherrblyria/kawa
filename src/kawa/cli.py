@@ -13,7 +13,16 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
-@click.version_option(None, "-v", "--version", package_name="kawa")
+@click.version_option(
+    None,
+    "-v",
+    "--version",
+    package_name="kawa",
+    message=f"""
+{BANNER}\n
+%(prog)s version %(version)s
+""",
+)
 def cli():
     """Useless cute little CLI tool"""
     pass
