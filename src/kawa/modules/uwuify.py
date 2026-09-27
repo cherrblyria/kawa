@@ -1,9 +1,10 @@
+import click
 from uwuipy import Uwuipy
 
 
-def uwuify(args):
+def uwuify(text: list):
     uwu = Uwuipy()
     uwuified = []
-    for i, v in enumerate(args.text):
-        uwuified.append(uwu.uwuify(args.text[i]))
-    print(" ".join(uwuified))
+    for i, v in enumerate(text):
+        uwuified.append(uwu.uwuify(text[i]))
+    click.echo(" ".join(uwuified))
