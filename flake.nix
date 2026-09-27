@@ -50,7 +50,7 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          python = pkgs.python312;
+          python = pkgs.python314;
 
           pythonSet = (pkgs.callPackage pyproject-nix.build.packages { inherit python; }).overrideScope (
             lib.composeManyExtensions [

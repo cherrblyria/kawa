@@ -40,6 +40,19 @@ wheels = [
 ]
 
 [[package]]
+name = "auto-click-auto"
+version = "0.1.6"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click", version = "8.1.8", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "click", version = "8.5.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b9/67/1a700246336b39ea7368681b02ca1fa5af178f23a4e53503a1a677076e69/auto_click_auto-0.1.6.tar.gz", hash = "sha256:77735c275c7a9be707a4c46878b19c81f0a009c9c3b21e4938dfe26d94b95089", size = 7660, upload-time = "2026-07-20T19:05:44.546Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/46/6d/18a9790222bcc8fe83de91c6a0a8cf90d38fab9508ca2810c51b54e927ed/auto_click_auto-0.1.6-py3-none-any.whl", hash = "sha256:1e152f11ad2f8180d63c3dafca1f476547fd692624bfcea846046ca896a4e8c5", size = 9672, upload-time = "2026-07-20T19:05:43.442Z" },
+]
+
+[[package]]
 name = "click"
 version = "8.1.8"
 source = { registry = "https://pypi.org/simple" }
@@ -94,6 +107,7 @@ source = { editable = "." }
 dependencies = [
     { name = "argcomplete", version = "3.7.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "argcomplete", version = "3.7.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "auto-click-auto" },
     { name = "click", version = "8.1.8", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "click", version = "8.5.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "uwuipy", version = "0.1.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
@@ -109,6 +123,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "argcomplete", specifier = ">=3.7.0" },
+    { name = "auto-click-auto", specifier = ">=0.1.6" },
     { name = "click", specifier = ">=8.1.8" },
     { name = "uwuipy", specifier = ">=0.1.5" },
 ]

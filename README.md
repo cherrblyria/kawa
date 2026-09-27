@@ -9,7 +9,6 @@
   - [pip / pipx](#pip--pipx)
   - [Prebuilt binaries](#prebuilt-binaries)
   - [From source](#from-source)
-- [Shell Completion](#shell-completion)
 - [Usage](#usage)
 - [License](#license)
 
@@ -68,18 +67,6 @@ cd kawa
 uv sync --dev
 uv run kawa mc ntow 10 20
 ```
-
-### Shell Completion
-
-Kawa supports tab-completion for `bash`, `zsh`, and `fish` via [`argcomplete`](https://github.com/kislyuk/argcomplete). Pick your shell below and add the snippet to your config.
-
-| Shell | Setup                                                                                                         |
-| ----- | ------------------------------------------------------------------------------------------------------------- |
-| bash  | Add to `~/.bashrc`: `eval "$(register-python-argcomplete kawa)"`                                              |
-| zsh   | Add to `~/.zshrc`: `autoload -U bashcompinit; bashcompinit` then `eval "$(register-python-argcomplete kawa)"` |
-| fish  | Run once: `register-python-argcomplete --shell fish kawa > ~/.config/fish/completions/kawa.fish`              |
-
-After that, restart your shell (or `source` the config)
 
 ### Usage
 

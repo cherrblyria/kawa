@@ -1,5 +1,7 @@
 import click
+from auto_click_auto import enable_click_shell_completion_option
 from importlib.resources import files
+from importlib.metadata import version as _version
 
 from .utils import *
 from .modules import *
@@ -11,10 +13,16 @@ except Exception:
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
+try:
+    __version__ = _version("kawa")
+except Exception:
+    __version__ = "unknown"
+
 
 @click.group(context_settings=CONTEXT_SETTINGS)
+@enable_click_shell_completion_option(program_name="kawa")
 @click.version_option(
-    None,
+    __version__,
     "-v",
     "--version",
     package_name="kawa",

@@ -30,13 +30,13 @@ jobs:
         uses: astral-sh/setup-uv@v3
 
       - name: Set up Python
-        run: uv python install 3.11
+        run: uv python install 3.14
 
       - name: Install project (with dev deps)
         run: uv sync --dev
 
       - name: Build binary
-        run: uv run pyinstaller --onefile --name kawa src/kawa/__main__.py
+        run: uv run pyinstaller kawa.spec
 
       - name: Rename artifact (Unix)
         if: runner.os != 'Windows'

@@ -1,4 +1,4 @@
-from kawa.cli import main
+from kawa.cli import cli
 
 if __name__ == "__main__":
-    main()
+    cli()
