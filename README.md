@@ -104,7 +104,8 @@ Grab a standalone binary from the [Releases page](https://github.com/cherrblyria
 git clone https://github.com/cherrblyria/kawa
 cd kawa
 uv sync --dev
-uv run kawa mc ntow 10 20
+uv run pyinstaller kawa.spec
+./dist/kawa --version
 ```
 
 ### License
