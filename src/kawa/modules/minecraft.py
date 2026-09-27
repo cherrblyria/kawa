@@ -45,11 +45,11 @@ def level_to_experience(level):
 def experience_to_level(xp):
     if xp <= 352:
         click.echo(
-            f"Expreience: {comma(xp)}  (σ≧∀≦)σ  Level: {comma(math.sqrt(xp+9)-3)}"
+            f"Expreience: {comma(xp)}  (σ≧∀≦)σ  Level: {comma(math.sqrt(xp + 9) - 3)}"
         )
     elif xp <= 1507:
         click.echo(
-            f"Expreience: {comma(xp)}  (σ≧∀≦)σ  Level: {comma((81/10)+math.sqrt((2/5)*(xp-(7839/40))))}"
+            f"Expreience: {comma(xp)}  (σ≧∀≦)σ  Level: {comma((81 / 10) + math.sqrt((2 / 5) * (xp - (7839 / 40))))}"
         )
     else:
         message = ""
@@ -59,5 +59,5 @@ def experience_to_level(xp):
             message = "\n\n - It's impossible to reach this level in survival btw :3"
 
         click.echo(
-            f"Expreience: {comma(xp)}  (σ≧∀≦)σ  Level: {comma((325/18)+math.sqrt((2/9)*(xp-(54215/72))))}{message}"
+            f"Expreience: {comma(xp)}  (σ≧∀≦)σ  Level: {comma((325 / 18) + math.sqrt((2 / 9) * (xp - (54215 / 72))))}{message}"
         )
