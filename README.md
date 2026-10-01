@@ -1,4 +1,4 @@
-## Kawa
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Cascadia+Code&size=22&pause=1000&color=FED0FF&random=true&width=435&lines=Kawa;Kawa+~;Kawa;Kawa+%3C3;Kawaii+~;Kawaii+%2F%2F%2F;Kawa;Kawa;Kawa;Kawa+~;MudaKawa;Kawa;awaK;Kawa;Kawa;Kaw;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa" alt="Typing SVG" /></a>
 
 > "A set of useless cute little CLI tools for Minecraft and.. ahh... that's it (for now)"
 
