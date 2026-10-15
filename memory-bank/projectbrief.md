@@ -10,6 +10,8 @@ A small, playful Python CLI tool collection. Current scope:
    - Nether ↔ Overworld coordinate calculator (`ntow`, `ownt`)
    - Level ↔ Experience calculator (`lvxp`, `xplv`)
 2. **Uwuify** (`kawa uwuify ...`) — text transformation powered by [uwuipy](https://github.com/Cuprum77/uwuipy)
+3. **JSON pretty printer** (`kawa json pretty ...`) — file path or raw string input, stdlib `json`
+4. **Coinflip** (`kawa coinflip`) — biased coinflip with swappable message pools (AM/PM bias)
 
 ## Core Requirements & Goals
 

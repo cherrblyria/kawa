@@ -19,13 +19,14 @@ Kawa is a hobby/joy project: a bundle of tiny CLI utilities that are useful in p
   ```
 
 - Numbers are formatted prettily: integers with thousands separators and no `.0`; floats shown with 2 decimals (`comma`, `no_dot_zero` helpers).
+- Every command also accepts **`--plain`** (undecorated result only, e.g. `heads`, `5816, 727`) and **`--json`** (single-line JSON) output modes, usable anywhere on the command line; mode resolves as leaf flag > group flag > cute default.
 - `kawa --version` prints the ASCII banner (loaded from `src/kawa/assets/banner.txt`) plus the version.
 - Boundary values get playful easter-egg messages (max XP level 21863, `2147483647` XP, etc.).
 - Shell completion is available via the option injected by `auto-click-auto`.
 
 ## UX Goals
 
-- **Cute over corporate**: kaomoji, banner, casual wording (even typos like "Expreience" are part of the current voice — see `progress.md` quirks).
+- **Cute over corporate**: kaomoji, banner, casual wording — friendly and sometimes playful.
 - **Zero-config**: no config files, no flags needed for core commands — plain positional arguments.
 - **Fast feedback**: commands are pure math/string work; instant output.
 - **Forgiving**: banner/version loading wrapped in try/except so a missing asset degrades gracefully instead of crashing.

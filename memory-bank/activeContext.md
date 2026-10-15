@@ -2,13 +2,15 @@
 
 ## Current Work Focus
 
-Project is in a **stable, released state** at v0.2.0 on `main`. Latest commits: `a6e7140 feat(coinflip): biased coinflip command` and `c7d84de docs(memory-bank): coinflip feature + push state` (committed locally, **not pushed** — `main` is ahead of `origin/main` by 2).
+Project is in a **stable, released state** at v0.2.0 on `main`. Latest commits: `78aade8 feat(cli): global --json/--plain output modes` and `d71ed5f docs(memory-bank): output modes + ruff cleanup`. **Working tree clean**; `main` is ahead of `origin/main` by **4** (`a6e7140`, `c7d84de`, `78aade8`, `d71ed5f`) — committed locally but **not pushed**.
 
-**In progress (uncommitted, 2026-10-16):** global `--json` / `--plain` output modes for every command. New `output_mode` decorator in `cli.py` attaches both flags to every group and leaf command (mode resolution: leaf flag > group flag > cute default, `--json` wins ties); modules gained a `mode="cute"` parameter with three-way output branches. `json pretty` is exempt from mode branching by design — its output is already JSON, so the flags change nothing (user's explicit request). Validated: full placement matrix, all `--json` outputs parse, and cute-mode outputs byte-identical to HEAD (diffed via stash). Also: **all pre-existing ruff errors fixed** (user request) — `ruff check src` and `ruff format --check src` are now fully clean.
+Shipped since `origin/main`: biased `kawa coinflip`, global `--json`/`--plain` output modes on every command, full ruff lint+format cleanup, plus `kawa json pretty` (already pushed).
 
 ## Recent Changes (from git history)
 
-- `c7d84de` docs(memory-bank): coinflip feature + push state (latest, local only)
+- `d71ed5f` docs(memory-bank): output modes + ruff cleanup (latest, local only)
+- `78aade8` feat(cli): global --json/--plain output modes (local only; includes ruff cleanup + format pass)
+- `c7d84de` docs(memory-bank): coinflip feature + push state (local only)
 - `a6e7140` feat(coinflip): biased coinflip command (local only)
 - `99d37df` docs(memory-bank): sync state + json pretty feature
 - `5e7a004` feat(json): pretty print command
@@ -23,8 +25,7 @@ Project is in a **stable, released state** at v0.2.0 on `main`. Latest commits: 
 
 ## Next Steps / Likely Future Work
 
-- Finish/commit `--json`/`--plain` output modes (in progress, uncommitted).
-- Push the 2 (soon 3) local commits to origin; consider a `0.3.0` bump + `v0.3.0` tag to cut a release with all new features.
+- Push the 4 local commits to origin; consider a `0.3.0` bump (both `pyproject.toml` and `src/kawa/__init__.py`) + `v0.3.0` tag to cut a release with all new features.
 - User will extend the coinflip `HEADS_MESSAGES` / `TAILS_MESSAGES` pools.
 - Add more "useless cute" tools (README hints at future features).
 - Introduce a real test suite (currently only CI smoke tests; no pytest).
@@ -42,7 +43,7 @@ Project is in a **stable, released state** at v0.2.0 on `main`. Latest commits: 
 
 - Commit messages: conventional-commit style with scopes — `feat(mc):`, `fix(ci):`, `chore(nix):`, `docs(readme):`, `refactor(cli):`.
 - Kaomoji differ per command family: `(σ･ω･)σ` for coordinates, `(σ≧∀≦)σ` for XP/level.
-- The string "Expreience" (sic) appears consistently in code and README output examples — **do not silently "fix" it** without asking; it's either intentional voice or a known typo baked into docs.
+- The "Expreience" → "Experience" typo was fixed everywhere in a single coordinated change (2026-10-16, user request) — for future typos, grep the whole tree (code + README + docs) and fix all occurrences together.
 
 ## Learnings & Project Insights
 
