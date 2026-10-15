@@ -9,6 +9,7 @@
   - [Uwuify](#uwuify)
   - [JSON](#json)
   - [Coinflip](#coinflip)
+  - [Output modes](#output-modes)
 - [Installation](#installation)
   - [Nix / NixOS (Flake)](#nix--nixos-flake)
   - [pip / pipx](#pip--pipx)
@@ -81,6 +82,32 @@ Flip a biased coin — Heads wins 51% of the time at AM, Tails wins 51% at PM, p
 $ kawa coinflip
 Heads! The universe has chosen for you.
 ```
+
+#### Output modes
+
+Every command supports `--json` and `--plain` — machine-readable JSON, or just the bare result with no decoration. The flags can go anywhere in the command, and if you put one on a group it applies to the whole command (`kawa --plain mc ntow ...` is the same as `kawa mc ntow ... --plain`).
+
+```bash
+$ kawa coinflip --plain
+heads
+```
+
+```bash
+$ kawa coinflip --json
+{"result": "heads", "message": "The universe has chosen for you."}
+```
+
+```bash
+$ kawa mc ntow 727 90.875 --plain
+5816, 727
+```
+
+```bash
+$ kawa mc ntow 727 90.875 --json
+{"x": 5816, "z": 727}
+```
+
+`kawa json pretty` already outputs valid JSON, so `--json`/`--plain` change nothing there.
 
 ### Installation
 

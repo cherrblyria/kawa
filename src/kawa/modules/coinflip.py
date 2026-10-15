@@ -1,3 +1,4 @@
+import json
 import random
 from time import localtime
 
@@ -18,13 +19,22 @@ TAILS_MESSAGES = [
 ]
 
 
-def coinflip(hour=None):
+def coinflip(hour=None, mode="cute"):
     if hour is None:
         hour = localtime().tm_hour
 
     heads_bias = 0.51 if hour < 12 else 0.49  # AM: 51/49, PM: 49/51
 
     if random.random() < heads_bias:
-        click.echo(f"Heads! {random.choice(HEADS_MESSAGES)}")
+        side, message = "Heads", random.choice(HEADS_MESSAGES)
     else:
-        click.echo(f"Tails! {random.choice(TAILS_MESSAGES)}")
+        side, message = "Tails", random.choice(TAILS_MESSAGES)
+
+    if mode == "json":
+        click.echo(
+            json.dumps({"result": side.lower(), "message": message}, ensure_ascii=False)
+        )
+    elif mode == "plain":
+        click.echo(side.lower())
+    else:
+        click.echo(f"{side}! {message}")
