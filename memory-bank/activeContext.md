@@ -2,13 +2,15 @@
 
 ## Current Work Focus
 
-Project is in a **stable, released state** at v0.2.0 on `main`. Last commits were documentation polish (`docs(readme)`, `Update README.md`), dependency hygiene (`chore(uv): remove unused dependency`), and `14da08b docs: initialize memory bank`.
+Project is in a **stable, released state** at v0.2.0 on `main`. Latest commits: `99d37df docs(memory-bank): sync state + json pretty feature` and `5e7a004 feat(json): pretty print command` (both pushed to origin — remote URL switched to SSH, `git@github.com:cherrblyria/kawa.git`, since HTTPS had no credentials).
 
-**In progress (uncommitted, 2026-10-15):** new `kawa json pretty <file-or-string>` command (stdlib `json`, no new deps) — implemented in `src/kawa/modules/json_tools.py`, wired in `cli.py` (`json` group) and `modules/__init__.py`, README documented. Validated via ruff (no new violations) and live CLI runs. Uncommitted alongside earlier memory-bank sync edits.
+**In progress (uncommitted, 2026-10-16):** new `kawa coinflip` command (stdlib `random` + `time.localtime`, no new deps) — implemented in `src/kawa/modules/coinflip.py`, wired in `cli.py` and `modules/__init__.py`, README documented. Separate `HEADS_MESSAGES` / `TAILS_MESSAGES` pools (user will add more). AM (hour < 12) → Heads 51%/Tails 49%, PM → 49/51. Validated: ruff clean on new files, live CLI runs, and a 20k-iteration bias check per hour (AM ~51.6% heads, PM ~49.5%).
 
 ## Recent Changes (from git history)
 
-- `14da08b` docs: initialize memory bank (latest, matches workspace hash)
+- `99d37df` docs(memory-bank): sync state + json pretty feature (latest, pushed)
+- `5e7a004` feat(json): pretty print command
+- `14da08b` docs: initialize memory bank
 - `5703e18` Update README.md
 - `d0973e4` chore(uv): remove unused dependency
 - `9222507` feat(mc): level ↔ xp calculator (`lvxp` / `xplv`)
@@ -19,7 +21,8 @@ Project is in a **stable, released state** at v0.2.0 on `main`. Last commits wer
 
 ## Next Steps / Likely Future Work
 
-- Commit `.clinerules/` (and `memory-bank/` once created) or add to `.gitignore`.
+- Finish/commit `kawa coinflip` (in progress, uncommitted).
+- User will extend the coinflip `HEADS_MESSAGES` / `TAILS_MESSAGES` pools.
 - Add more "useless cute" tools (README hints at future features).
 - Introduce a real test suite (currently only CI smoke tests; no pytest).
 - Consider making ruff lint/format CI checks **blocking** (currently `continue-on-error: true`).
@@ -45,3 +48,5 @@ Project is in a **stable, released state** at v0.2.0 on `main`. Last commits wer
 - CI smoke tests double as the only functional verification — always keep `kawa mc ntow/ownt` and `kawa uwuify` working.
 - Full-repo `ruff check src` reports **8 pre-existing errors** in old files (`cli.py` unsorted imports/blind `except`/`dict()`, `minecraft.py` unsorted imports, `uwuify.py` enumerate misuse) — CI lint is `continue-on-error`, so these never blocked. Keep new files clean; don't "fix" old ones unless asked.
 - `json_tools.py` error heuristic: file exists → read it; else parse arg as inline JSON; on failure, arg looks like a path (`.json` suffix or doesn't start with a JSON token) → "File not found", else "Invalid JSON" with line/column.
+- Ruff (running with this project's effective ruleset) enforces `DTZ005` (`datetime.now()` without tz) — `coinflip.py` uses `time.localtime().tm_hour` instead, which is lint-clean and unambiguously "local time". Keep new modules free of `noqa`.
+- `coinflip(hour=None)` takes an optional hour so bias can be tested by injection without touching the system clock — a good pattern for future random/time-based features.
