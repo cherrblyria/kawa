@@ -2,9 +2,9 @@
 
 ## Current Work Focus
 
-Project is in a **stable, released state** at **v0.3.0** on `main`, tagged `v0.3.0` and **pushed to origin** (2026-10-16). The tag triggers the release workflow (4-platform binaries + GitHub Release). Latest commits: `bef2494 chore(bump version): 0.3.0`, `34bfae5 fix(cli): correct Expreience typo to Experience`, `87d1d79 docs(memory-bank): sync...`. Working tree clean; `main` in sync with `origin/main`.
+Project is in a **stable, released state** at **v0.3.0** on `main`, tagged `v0.3.0` and **pushed to origin** (2026-10-16). Shipped and pushed: biased `kawa coinflip`, global `--json`/`--plain` output modes, `kawa json pretty`, ruff 100% clean, "Expreience"→"Experience" fix. `main` in sync with `origin/main`.
 
-Shipped since `origin/main`: biased `kawa coinflip`, global `--json`/`--plain` output modes on every command, full ruff lint+format cleanup, plus `kawa json pretty` (already pushed).
+**In progress (uncommitted):** `src/kawa/modules/coinflip.py` — special-event tiers for coinflip. Message pools expanded by the user (20-line `HEADS_MESSAGES`/`TAILS_MESSAGES`, 29-line `KAWA_MESSAGES`), plus the `SPECIAL_TIERS` registry: **kawa** (1 in 10,000, `KAWA_MESSAGES`) and **secret** (1 in 100,000, `KAWA_SECRET_PLACEHOLDER_MESSAGES` — placeholder until the user designs the real lore event). Cute-mode-only: `--json`/`--plain` never roll special tiers (deterministic heads/tails). `rng` injectable for tests.
 
 ## Recent Changes (from git history)
 
@@ -44,6 +44,7 @@ Shipped since `origin/main`: biased `kawa coinflip`, global `--json`/`--plain` o
 - Commit messages: conventional-commit style with scopes — `feat(mc):`, `fix(ci):`, `chore(nix):`, `docs(readme):`, `refactor(cli):`.
 - Kaomoji differ per command family: `(σ･ω･)σ` for coordinates, `(σ≧∀≦)σ` for XP/level.
 - The "Expreience" → "Experience" typo was fixed everywhere in a single coordinated change (2026-10-16, user request) — for future typos, grep the whole tree (code + README + docs) and fix all occurrences together.
+- **NO CODE COMMENTS** (user rule, 2026-10-16): the codebase is deliberately comment-free — zero `#` comments and zero docstrings anywhere except `cli.py` (Click uses command/group docstrings as `--help` text, so those stay). *Reason: the user writes their own comments to learn/verify they understand their own code.* Do not add comments to Python files; if a detail matters (math, TODOs, WIP, design intent, extension points), put it in the memory bank instead. `pick_special_tier`/`pretty_json` docstrings were removed as part of this sweep.
 
 ## Learnings & Project Insights
 
