@@ -8,6 +8,7 @@
   - [Minecraft](#minecraft)
   - [Uwuify](#uwuify)
   - [JSON](#json)
+  - [Coinflip](#coinflip)
 - [Installation](#installation)
   - [Nix / NixOS (Flake)](#nix--nixos-flake)
   - [pip / pipx](#pip--pipx)
@@ -70,6 +71,15 @@ $ kawa json pretty '{"b": 1, "a": 2}' --sort-keys
     "a": 2,
     "b": 1
 }
+```
+
+#### Coinflip
+
+Flip a biased coin — Heads wins 51% of the time at AM, Tails wins 51% at PM, powered by Python's built-in `random` module
+
+```bash
+$ kawa coinflip
+Heads! The universe has chosen for you.
 ```
 
 ### Installation

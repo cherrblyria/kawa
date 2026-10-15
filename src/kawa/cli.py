@@ -79,6 +79,12 @@ def uwuify_cmd(text):
     uwuify(list(text))
 
 
+@cli.command(name="coinflip")
+def coinflip_cmd():
+    """Flip a biased coin"""
+    coinflip()
+
+
 @cli.group(name="json")
 def json_group():
     """JSON tools"""
