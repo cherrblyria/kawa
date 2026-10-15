@@ -2,34 +2,30 @@
 
 ## Current Work Focus
 
-Project is in a **stable, released state** at **v0.3.0** on `main`, tagged `v0.3.0` and **pushed to origin** (2026-10-16). Shipped and pushed: biased `kawa coinflip`, global `--json`/`--plain` output modes, `kawa json pretty`, ruff 100% clean, "Expreience"→"Experience" fix. `main` in sync with `origin/main`.
+Project is **stable and pushed**, `main` in sync with `origin/main` (2026-10-16). Latest shipped: **coinflip special-event tiers** (`68c9ed1`) and the **comment-free codebase rule** (`580e36d`) — both pushed, **post-v0.3.0 (unreleased)**.
 
-**In progress (uncommitted):** `src/kawa/modules/coinflip.py` — special-event tiers for coinflip. Message pools expanded by the user (20-line `HEADS_MESSAGES`/`TAILS_MESSAGES`, 29-line `KAWA_MESSAGES`), plus the `SPECIAL_TIERS` registry: **kawa** (1 in 10,000, `KAWA_MESSAGES`) and **secret** (1 in 100,000, `KAWA_SECRET_PLACEHOLDER_MESSAGES` — placeholder until the user designs the real lore event). Cute-mode-only: `--json`/`--plain` never roll special tiers (deterministic heads/tails). `rng` injectable for tests.
+`src/kawa/modules/coinflip.py` now has the `SPECIAL_TIERS` registry: **kawa** (1 in 10,000, `KAWA_MESSAGES`, 29 lines) and **secret** (1 in 100,000, `KAWA_SECRET_PLACEHOLDER_MESSAGES`, 3 placeholder lines). Cute-mode-only — `--json`/`--plain` never roll special tiers. The `secret` tier is a **placeholder awaiting the user's lore/interactive-event design** (user has "a lore" in progress; will provide details later — wire it via the tier registry, `tier["name"]` dispatch).
 
 ## Recent Changes (from git history)
 
-- `d71ed5f` docs(memory-bank): output modes + ruff cleanup (latest, local only)
-- `78aade8` feat(cli): global --json/--plain output modes (local only; includes ruff cleanup + format pass)
-- `c7d84de` docs(memory-bank): coinflip feature + push state (local only)
-- `a6e7140` feat(coinflip): biased coinflip command (local only)
-- `99d37df` docs(memory-bank): sync state + json pretty feature
+- `580e36d` docs(memory-bank): special tiers pattern + comment-free rule (latest)
+- `68c9ed1` feat(coinflip): cute-mode-only special event tiers
+- `cfeb6a0` chore(uv): sync lockfile for 0.3.0 + memory-bank release status
+- `bef2494` chore(bump version): 0.3.0
+- `34bfae5` fix(cli): correct Expreience typo to Experience
+- `87d1d79` docs(memory-bank): sync with shipped output modes + record typo fix
+- `78aade8` feat(cli): global --json/--plain output modes
+- `a6e7140` feat(coinflip): biased coinflip command
 - `5e7a004` feat(json): pretty print command
 - `14da08b` docs: initialize memory bank
-- `5703e18` Update README.md
-- `d0973e4` chore(uv): remove unused dependency
-- `9222507` feat(mc): level ↔ xp calculator (`lvxp` / `xplv`)
-- `6a69fac` feat: auto complete (via `auto-click-auto`)
-- `aa4570c` feat(cli): banner is back!
-- `54c8c68` chore(bump version): 0.2.0
-- `0764012` refactor(cli): migrated to Click (from argparse presumably)
 
 ## Next Steps / Likely Future Work
 
-- Push the 4 local commits to origin; consider a `0.3.0` bump (both `pyproject.toml` and `src/kawa/__init__.py`) + `v0.3.0` tag to cut a release with all new features. — **done 2026-10-16**: v0.3.0 tagged & pushed; release workflow triggered (verify binaries on the Releases page — `gh` CLI unavailable locally).
-- User will extend the coinflip `HEADS_MESSAGES` / `TAILS_MESSAGES` pools.
+- Design + wire the **lore/interactive coinflip event** with the user (details pending from user); the `secret` tier's placeholder messages get replaced then. Extension point: `SPECIAL_TIERS` registry + `tier["name"]` dispatch in the cute branch.
+- Next release: post-v0.3.0 commits (`68c9ed1` special tiers, `580e36d` docs) are pushed but unreleased — bump (both `pyproject.toml` and `src/kawa/__init__.py`) + tag when the user wants them shipped (e.g. `v0.4.0`).
 - Add more "useless cute" tools (README hints at future features).
 - Introduce a real test suite (currently only CI smoke tests; no pytest).
-- Consider making ruff lint/format CI checks **blocking** (currently `continue-on-error: true`).
+- Consider making ruff lint/format CI checks **blocking** (currently `continue-on-error: true`; codebase is now 100% clean, so safe to flip).
 
 ## Active Decisions & Considerations
 

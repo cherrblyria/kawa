@@ -22,6 +22,7 @@ Kawa is a hobby/joy project: a bundle of tiny CLI utilities that are useful in p
 - Every command also accepts **`--plain`** (undecorated result only, e.g. `heads`, `5816, 727`) and **`--json`** (single-line JSON) output modes, usable anywhere on the command line; mode resolves as leaf flag > group flag > cute default.
 - `kawa --version` prints the ASCII banner (loaded from `src/kawa/assets/banner.txt`) plus the version.
 - Boundary values get playful easter-egg messages (max XP level 21863, `2147483647` XP, etc.).
+- **Special events are cute-mode-only easter eggs**: a rare (1/10K) roll makes Kawa herself replace the coin result (`Kawa! <message>`); `--json`/`--plain` are machine output and must stay deterministic heads/tails. A further `secret` tier (1/100K) is a placeholder for a planned interactive lore event.
 - Shell completion is available via the option injected by `auto-click-auto`.
 
 ## UX Goals

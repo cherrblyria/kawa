@@ -6,7 +6,7 @@ Small layered Click CLI with a strict split between command wiring, feature logi
 
 ```text
 src/kawa/
-├── __init__.py          # __version__ = "0.2.0"
+├── __init__.py          # __version__ = "0.3.0"
 ├── __main__.py          # python -m kawa → cli()
 ├── cli.py               # Click command tree (thin; delegates to modules)
 ├── modules/             # Feature logic, prints via click.echo

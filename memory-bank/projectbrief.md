@@ -11,7 +11,7 @@ A small, playful Python CLI tool collection. Current scope:
    - Level ↔ Experience calculator (`lvxp`, `xplv`)
 2. **Uwuify** (`kawa uwuify ...`) — text transformation powered by [uwuipy](https://github.com/Cuprum77/uwuipy)
 3. **JSON pretty printer** (`kawa json pretty ...`) — file path or raw string input, stdlib `json`
-4. **Coinflip** (`kawa coinflip`) — biased coinflip with swappable message pools (AM/PM bias)
+4. **Coinflip** (`kawa coinflip`) — biased coinflip with swappable message pools (AM/PM bias) + cute-mode-only special-event tiers (rare 1/10K Kawa encounter, placeholder secret 1/100K pending lore)
 
 ## Core Requirements & Goals
 
