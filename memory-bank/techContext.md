@@ -71,7 +71,7 @@ Nix: `nix run github:cherrblyria/kawa` (or consume `inputs.kawa.packages.${pkgs.
 - `no_dot_zero()`/`comma()` call `.is_integer()` — inputs must be `int`/`float` (never `str`).
 - Banner must remain in `kawa.spec` `datas` or `--version` degrades to the fallback message.
 - Version appears in both `pyproject.toml` and `src/kawa/__init__.py` — bump both on release.
-- `.gitignore` ignores `.vscode/*` except `extensions.json`; `memory-bank/` and `.clinerules/` are not yet ignored or committed.
+- `.gitignore` ignores `.vscode/*` except `extensions.json`; `memory-bank/` and `.clinerules/` are committed (since `14da08b`), not ignored.
 
 ## Tool Usage Patterns
 

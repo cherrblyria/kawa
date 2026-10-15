@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**v0.2.0 released and stable** on `main` (latest commit `5703e18` "Update README.md"). All documented features work; CI passes with smoke tests + binary build check; multi-platform releases are automated via tags.
+**v0.2.0 released and stable** on `main` (latest commit `14da08b` "docs: initialize memory bank"; prior `5703e18` "Update README.md"). **Working tree dirty (2026-10-15)**: new uncommitted `kawa json pretty` feature + memory-bank sync edits. All documented features work; CI passes with smoke tests + binary build check; multi-platform releases are automated via tags.
 
 ## What Works
 
@@ -11,6 +11,7 @@
 - [x] **`kawa mc lvxp <level>`** — Level → Experience with piecewise formulas + easter eggs (max level 21863).
 - [x] **`kawa mc xplv <xp>`** — Experience → Level (2-decimal output) + easter eggs (2147483647).
 - [x] **`kawa uwuify <text...>`** — per-word uwuification via uwuipy.
+- [x] **`kawa json pretty <source>`** (2026-10-15, uncommitted) — pretty-print JSON from a file path or raw string; stdlib `json`, no new deps. Options `-i/--indent` (default 4), `-s/--sort-keys`.
 - [x] **`kawa --version`** — ASCII banner + version (graceful fallback if asset missing).
 - [x] **`--help` / `-h`** on all groups/commands (Click docstrings).
 - [x] **Shell completion** via `auto-click-auto`.
@@ -27,7 +28,7 @@
 - Additional "cute" tools — README explicitly leaves the door open ("...that's it (for now)").
 - A real automated test suite (pytest or similar); currently CI smoke tests are the only verification.
 - Make ruff lint/format CI checks **blocking** (they're `continue-on-error` today, so regressions can slip through).
-- Decide whether to commit `.clinerules/` (untracked) and the new `memory-bank/` directory, or gitignore them.
+- ~~Decide whether to commit `.clinerules/` and `memory-bank/`~~ — **resolved**: both committed in `14da08b docs: initialize memory bank`.
 - Possible: `CHANGELOG.md`, PyPI publishing (currently git-based installs only), man page/`--json` output, richer completion.
 
 ## Known Issues / Quirks
@@ -47,4 +48,4 @@
 4. **uv adopted over pip/poetry** — `uv.lock` is canonical; all CI steps use `uv`.
 5. **uv2nix for Nix packaging** with `sourcePreference = "wheel"` — Nix build mirrors the uv workspace.
 6. **macOS runner fix** (`fix(ci): update macos runner`) — release matrix now uses `macos-15-intel` + `macos-15` for x86_64/arm64 split.
-7. **Feature growth**: portal calculator first, then level↔XP calculator — the `mc` group is the designated home for future Minecraft tools.
+7. **Feature growth**: portal calculator first, then level↔XP calculator, then `kawa json pretty` (2026-10-15, first non-`mc`/non-text tool; lives in `src/kawa/modules/json_tools.py` under the root `json` group) — future tools follow the thin-CLI + module-function pattern.

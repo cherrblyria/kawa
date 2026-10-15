@@ -2,13 +2,14 @@
 
 ## Current Work Focus
 
-Project is in a **stable, released state** at v0.2.0 on `main`. Last commits were documentation polish (`docs(readme)`, `Update README.md`) and dependency hygiene (`chore(uv): remove unused dependency`).
+Project is in a **stable, released state** at v0.2.0 on `main`. Last commits were documentation polish (`docs(readme)`, `Update README.md`), dependency hygiene (`chore(uv): remove unused dependency`), and `14da08b docs: initialize memory bank`.
 
-As of 2026-10-15 the working tree is clean except for the **untracked `.clinerules/` directory** (contains the Cline memory-bank rule) — likely candidate for committing.
+**In progress (uncommitted, 2026-10-15):** new `kawa json pretty <file-or-string>` command (stdlib `json`, no new deps) — implemented in `src/kawa/modules/json_tools.py`, wired in `cli.py` (`json` group) and `modules/__init__.py`, README documented. Validated via ruff (no new violations) and live CLI runs. Uncommitted alongside earlier memory-bank sync edits.
 
 ## Recent Changes (from git history)
 
-- `5703e18` Update README.md (latest, matches workspace hash)
+- `14da08b` docs: initialize memory bank (latest, matches workspace hash)
+- `5703e18` Update README.md
 - `d0973e4` chore(uv): remove unused dependency
 - `9222507` feat(mc): level ↔ xp calculator (`lvxp` / `xplv`)
 - `6a69fac` feat: auto complete (via `auto-click-auto`)
@@ -42,3 +43,5 @@ As of 2026-10-15 the working tree is clean except for the **untracked `.clinerul
 - `auto-click-auto` provides `enable_click_shell_completion_option` which injects a completion option into a Click group — used at the root `cli` group.
 - Banner asset must be listed in `kawa.spec` `datas` (`('src/kawa/assets', 'kawa/assets')`) for PyInstaller builds; loading uses `importlib.resources.files("kawa")`.
 - CI smoke tests double as the only functional verification — always keep `kawa mc ntow/ownt` and `kawa uwuify` working.
+- Full-repo `ruff check src` reports **8 pre-existing errors** in old files (`cli.py` unsorted imports/blind `except`/`dict()`, `minecraft.py` unsorted imports, `uwuify.py` enumerate misuse) — CI lint is `continue-on-error`, so these never blocked. Keep new files clean; don't "fix" old ones unless asked.
+- `json_tools.py` error heuristic: file exists → read it; else parse arg as inline JSON; on failure, arg looks like a path (`.json` suffix or doesn't start with a JSON token) → "File not found", else "Invalid JSON" with line/column.
