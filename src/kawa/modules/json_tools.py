@@ -27,8 +27,6 @@ JSON_STARTS = (
 def pretty_json(
     source: str, indent: int = 4, sort_keys: bool = False, mode: str = "cute"
 ) -> None:
-    # Output is valid JSON in every mode, so mode only affects nothing — flags
-    # are accepted for consistency with the rest of the CLI.
     path = Path(source)
 
     if path.is_file():
