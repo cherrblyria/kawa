@@ -7,6 +7,7 @@
 - [Features](#features)
   - [Minecraft](#minecraft)
   - [Uwuify](#uwuify)
+  - [JSON](#json)
 - [Installation](#installation)
   - [Nix / NixOS (Flake)](#nix--nixos-flake)
   - [pip / pipx](#pip--pipx)
@@ -49,6 +50,26 @@ powered by [uwuipy](https://github.com/Cuprum77/uwuipy)
 ```bash
 $ kawa uwuify The quick brown fox jumps over the lazy dog
 The q-q-quick bwown fox jyumps uvw the wazy dog
+```
+
+#### JSON
+
+Pretty-print JSON from a file path or a raw string, powered by Python's built-in `json` module
+
+```bash
+$ kawa json pretty data.json
+{
+    "name": "kawa",
+    "kawaii": true
+}
+```
+
+```bash
+$ kawa json pretty '{"b": 1, "a": 2}' --sort-keys
+{
+    "a": 2,
+    "b": 1
+}
 ```
 
 ### Installation

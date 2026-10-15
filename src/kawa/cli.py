@@ -79,5 +79,19 @@ def uwuify_cmd(text):
     uwuify(list(text))
 
 
+@cli.group(name="json")
+def json_group():
+    """JSON tools"""
+
+
+@json_group.command()
+@click.argument("source")
+@click.option("-i", "--indent", type=int, default=4, show_default=True)
+@click.option("-s", "--sort-keys", is_flag=True)
+def pretty(source, indent, sort_keys):
+    """Pretty-print JSON from a file path or raw string"""
+    pretty_json(source, indent, sort_keys)
+
+
 if __name__ == "__main__":
     cli()
