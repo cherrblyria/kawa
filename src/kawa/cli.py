@@ -90,7 +90,7 @@ def ownt(x, z, mode):
 @click.argument("level", type=int)
 @output_mode
 def lvxp(level, mode):
-    """Convert Level to Expreience"""
+    """Convert Level to Experience"""
     level_to_experience(level, mode)
 
 
@@ -98,7 +98,7 @@ def lvxp(level, mode):
 @click.argument("xp", type=int)
 @output_mode
 def xplv(xp, mode):
-    """Convert Expreience to Level"""
+    """Convert Experience to Level"""
     experience_to_level(xp, mode)
 
 

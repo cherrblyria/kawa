@@ -33,16 +33,16 @@ $ kawa mc ownt 727 5816
 Overworld: (727, 5816)  (σ･ω･)σ  Nether: (90.875, 727)
 ```
 
-##### Level ↔ Expreience calculator
+##### Level ↔ Experience calculator
 
 ```bash
 $ kawa mc lvxp 21864
-Level: 21,864  (σ≧∀≦)σ  Expreience: 2,147,604,552
+Level: 21,864  (σ≧∀≦)σ  Experience: 2,147,604,552
 ```
 
 ```bash
 $ kawa mc xplv 2147483647
-Expreience: 2,147,483,647  (σ≧∀≦)σ  Level: 21,863.39
+Experience: 2,147,483,647  (σ≧∀≦)σ  Level: 21,863.39
 ```
 
 #### Uwuify

@@ -53,7 +53,7 @@ def level_to_experience(level, mode="cute"):
         elif level > 21863:
             message = "\n\n - I think this amount of XP can break the game :3"
 
-        click.echo(f"Level: {comma(level)}  (σ≧∀≦)σ  Expreience: {comma(exp)}{message}")
+        click.echo(f"Level: {comma(level)}  (σ≧∀≦)σ  Experience: {comma(exp)}{message}")
 
 
 def experience_to_level(xp, mode="cute"):
@@ -75,4 +75,4 @@ def experience_to_level(xp, mode="cute"):
         elif xp > 2147483647:
             message = "\n\n - It's impossible to reach this level in survival btw :3"
 
-        click.echo(f"Expreience: {comma(xp)}  (σ≧∀≦)σ  Level: {comma(level)}{message}")
+        click.echo(f"Experience: {comma(xp)}  (σ≧∀≦)σ  Level: {comma(level)}{message}")
