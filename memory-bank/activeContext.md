@@ -37,7 +37,7 @@ Shipped since `origin/main`: biased `kawa coinflip`, global `--json`/`--plain` o
 - **Click** is the CLI framework (group-based command tree).
 - **Star-imports are the established pattern**: `from .utils import *`, `from .modules import *`, `from ..utils import *`. Follow it for consistency rather than switching to explicit imports.
 - Output goes through `click.echo` (not `print`) — keep this convention.
-- Version is declared in **two places** that must stay in sync: `pyproject.toml` (`version = "0.2.0"`) and `src/kawa/__init__.py` (`__version__ = "0.2.0"`); runtime display prefers `importlib.metadata.version("kawa")`.
+- Version is declared in **two places** that must stay in sync: `pyproject.toml` (`version = "0.3.0"`) and `src/kawa/__init__.py` (`__version__ = "0.3.0"`); runtime display prefers `importlib.metadata.version("kawa")`.
 
 ## Patterns & Preferences
 

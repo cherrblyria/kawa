@@ -41,7 +41,7 @@
 - `no_dot_zero()`/`comma()` require numeric input; any future command passing strings must format differently.
 - `uwuify` re-instantiates randomness per word (new `Uwuipy()` each call is per-invocation; words share one instance) — output varies run to run by design.
 - `.pyc` files from Python 3.11 **and** 3.14 coexist under `__pycache__/` (3.11 leftovers are ignored by `.gitignore`).
-- Version duplication: `pyproject.toml` and `src/kawa/__init__.py` both say `0.2.0`; `cli.py` prefers installed metadata, falling back to `"unknown"` — misalignment possible if only one is bumped.
+- Version duplication: `pyproject.toml` and `src/kawa/__init__.py` both say `0.3.0`; `cli.py` prefers installed metadata, falling back to `"unknown"` — misalignment possible if only one is bumped.
 
 ## Evolution of Project Decisions
 

@@ -29,7 +29,7 @@ A small, playful Python CLI tool collection. Current scope:
 - Repository: https://github.com/cherrblyria/kawa
 - License: MIT
 - Author: cherrblyria
-- Current version: **0.2.0** (tags: `v0.1.0`, `v0.2.0`)
+- Current version: **0.3.0** (tags: `v0.1.0`, `v0.2.0`, `v0.3.0`)
 - Branch: `main`
 
 ## Scope Boundaries
