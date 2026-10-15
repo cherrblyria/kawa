@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**v0.2.0 released and stable** on `main` (latest commit `99d37df` "docs(memory-bank): sync state + json pretty feature", pushed to origin over SSH; prior `5e7a004` "feat(json): pretty print command"). **Working tree dirty (2026-10-16)**: new uncommitted `kawa coinflip` feature + this memory-bank update. All documented features work; CI passes with smoke tests + binary build check; multi-platform releases are automated via tags.
+**v0.2.0 released and stable** on `main` (latest commit `c7d84de` "docs(memory-bank): coinflip feature + push state"; prior `a6e7140` "feat(coinflip): biased coinflip command" — both committed locally but **not pushed**, `main` ahead of `origin/main` by 2). **Working tree dirty (2026-10-16)**: in-progress `--json`/`--plain` output-modes feature + full ruff cleanup (lint + format now 100% clean) + this memory-bank update. All documented features work; CI passes with smoke tests + binary build check; multi-platform releases are automated via tags.
 
 ## What Works
 
@@ -12,7 +12,9 @@
 - [x] **`kawa mc xplv <xp>`** — Experience → Level (2-decimal output) + easter eggs (2147483647).
 - [x] **`kawa uwuify <text...>`** — per-word uwuification via uwuipy.
 - [x] **`kawa json pretty <source>`** (2026-10-15, committed `5e7a004`) — pretty-print JSON from a file path or raw string; stdlib `json`, no new deps. Options `-i/--indent` (default 4), `-s/--sort-keys`.
-- [x] **`kawa coinflip`** (2026-10-16, uncommitted) — biased coinflip: `Heads|Tails! <random message>`; separate `HEADS_MESSAGES`/`TAILS_MESSAGES` pools in `src/kawa/modules/coinflip.py`; AM (hour < 12) Heads 51%/Tails 49%, PM inverted; stdlib `random` + `time.localtime`, no new deps. `hour` param injectable for bias testing.
+- [x] **`kawa coinflip`** (2026-10-16, committed `a6e7140`) — biased coinflip: `Heads|Tails! <random message>`; separate `HEADS_MESSAGES`/`TAILS_MESSAGES` pools in `src/kawa/modules/coinflip.py`; AM (hour < 12) Heads 51%/Tails 49%, PM inverted; stdlib `random` + `time.localtime`, no new deps. `hour` param injectable for bias testing.
+- [x] **`--json` / `--plain` output modes** (2026-10-16, in progress, uncommitted) — every command accepts both flags anywhere (leaf or group level); `output_mode` decorator in `cli.py`; modules take `mode="cute"` param. `json pretty` accepts the flags but ignores them (already JSON).
+- [x] **ruff lint + format fully clean** (2026-10-16) — all 8 long-standing pre-existing lint errors fixed (blind `except` narrowed to `OSError`/`PackageNotFoundError`, import sorting, `dict()` → literal, redundant `pass` removed, enumerate misuse) plus a `ruff format` pass. `ruff check src` and `ruff format --check src` both pass with 0 issues.
 - [x] **`kawa --version`** — ASCII banner + version (graceful fallback if asset missing).
 - [x] **`--help` / `-h`** on all groups/commands (Click docstrings).
 - [x] **Shell completion** via `auto-click-auto`.
@@ -28,9 +30,9 @@
 
 - Additional "cute" tools — README explicitly leaves the door open ("...that's it (for now)").
 - A real automated test suite (pytest or similar); currently CI smoke tests are the only verification.
-- Make ruff lint/format CI checks **blocking** (they're `continue-on-error` today, so regressions can slip through).
+- ~~Make ruff lint/format CI checks **blocking** (they're `continue-on-error` today, so regressions can slip through).~~ — now much safer to flip: codebase is 100% lint + format clean as of 2026-10-16; just remove `continue-on-error` when ready.
 - ~~Decide whether to commit `.clinerules/` and `memory-bank/`~~ — **resolved**: both committed in `14da08b docs: initialize memory bank`.
-- Possible: `CHANGELOG.md`, PyPI publishing (currently git-based installs only), man page/`--json` output, richer completion.
+- Possible: `CHANGELOG.md`, PyPI publishing (currently git-based installs only), man page, richer completion. (`--json` output — **done**, see "What Works".)
 
 ## Known Issues / Quirks
 
@@ -51,3 +53,4 @@
 6. **macOS runner fix** (`fix(ci): update macos runner`) — release matrix now uses `macos-15-intel` + `macos-15` for x86_64/arm64 split.
 7. **Feature growth**: portal calculator first, then level↔XP calculator, then `kawa json pretty` (2026-10-15, first non-`mc`/non-text tool; lives in `src/kawa/modules/json_tools.py` under the root `json` group), then `kawa coinflip` (2026-10-16, first stdlib-`random` toy tool; `src/kawa/modules/coinflip.py`, top-level command) — future tools follow the thin-CLI + module-function pattern.
 8. **Git remote moved to SSH** (2026-10-16): `origin` now `git@github.com:cherrblyria/kawa.git` because HTTPS had no stored credentials — pushes work without prompting.
+9. **Global output modes** (2026-10-16, uncommitted): `--json`/`--plain` added via a shared `output_mode` decorator applied to every group and leaf command — mode resolves as leaf flag > group flag > cute default, flags may appear anywhere Click allows (interspersed args). Modules keep print-in-place but now branch on `mode`. `json pretty` deliberately ignores the flags since its output is already JSON.

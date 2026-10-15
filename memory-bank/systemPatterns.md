@@ -10,9 +10,11 @@ src/kawa/
 ├── __main__.py          # python -m kawa → cli()
 ├── cli.py               # Click command tree (thin; delegates to modules)
 ├── modules/             # Feature logic, prints via click.echo
-│   ├── __init__.py      # from .minecraft import *; from .uwuify import *
+│   ├── __init__.py      # from .minecraft import *; from .uwuify import *; from .coinflip import *; from .json_tools import *
 │   ├── minecraft.py     # coordinate + XP/level math
-│   └── uwuify.py        # uwuipy wrapper
+│   ├── uwuify.py        # uwuipy wrapper
+│   ├── coinflip.py      # biased coinflip + message pools
+│   └── json_tools.py    # JSON pretty printer
 ├── utils/               # Pure formatting helpers
 │   ├── __init__.py      # from .format import *
 │   └── format.py        # no_dot_zero(), comma()
@@ -29,7 +31,7 @@ cli.py ──imports──▶ modules/ ──imports──▶ utils/
    └── importlib.metadata.version("kawa")
 ```
 
-- **`cli.py`** defines the root group `cli` (with banner version option + shell completion), subgroup `mc`, and top-level command `uwuify`. Each command is a thin adapter: parse args with Click types (`float`/`int`/`nargs=-1`), call the module function.
+- **`cli.py`** defines the root group `cli` (with banner version option + shell completion), subgroup `mc`, and top-level commands `uwuify`, `coinflip`, plus the `json` group. Each command is a thin adapter: parse args with Click types (`float`/`int`/`nargs=-1`), call the module function. Every group and leaf command is wrapped by the shared `output_mode` decorator which attaches `--json`/`--plain` flags.
 - **`modules/`** own the domain math and all user-facing output. They print directly with `click.echo` — there is no return-value layer.
 - **`utils/`** are pure formatting functions shared by modules.
 
@@ -40,6 +42,7 @@ cli.py ──imports──▶ modules/ ──imports──▶ utils/
 3. **Print-in-place, not return**: module functions perform their own `click.echo`. New commands should follow the same shape (logic + output in the module, wiring in `cli.py`).
 4. **Defensive asset/metadata loading**: banner and version are loaded in `try/except` with graceful fallbacks (`"Oops!, seem like banner is missing..."`, `"unknown"`).
 5. **Float-typed coordinate args**: Click casts `x`/`z` to `float` so `no_dot_zero()` can call `.is_integer()`. XP/level args are `int` (Python 3.12+ ints also have `.is_integer()`, relied upon by `comma()`).
+6. **Global output modes via decorator** (2026-10-16): `output_mode` in `cli.py` adds `--json`/`--plain` to every group and leaf command. Resolution: leaf flag > nearest ancestor group flag > `"cute"` default (`--json` wins if both given on the same level). The mode travels via Click's parent-`ctx.obj` chain, and each wrapper's callback receives a `mode` kwarg it forwards to the module function. Modules branch `mode == "json"` / `"plain"` / else cute. `json pretty` is intentionally mode-agnostic (already JSON).
 
 ## Critical Implementation Paths
 
@@ -68,3 +71,4 @@ cli.py ──imports──▶ modules/ ──imports──▶ utils/
 - Adapter pattern: `cli.py` commands are adapters over module functions.
 - Facade: package `__init__.py` files act as facades via star-exports.
 - Graceful degradation for external resources (banner, distribution metadata).
+- Cross-cutting concern injection: the `output_mode` decorator applies output-formatting options uniformly (decorator pattern + context propagation via `ctx.obj`).

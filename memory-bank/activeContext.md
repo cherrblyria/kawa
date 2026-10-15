@@ -2,13 +2,15 @@
 
 ## Current Work Focus
 
-Project is in a **stable, released state** at v0.2.0 on `main`. Latest commits: `99d37df docs(memory-bank): sync state + json pretty feature` and `5e7a004 feat(json): pretty print command` (both pushed to origin — remote URL switched to SSH, `git@github.com:cherrblyria/kawa.git`, since HTTPS had no credentials).
+Project is in a **stable, released state** at v0.2.0 on `main`. Latest commits: `a6e7140 feat(coinflip): biased coinflip command` and `c7d84de docs(memory-bank): coinflip feature + push state` (committed locally, **not pushed** — `main` is ahead of `origin/main` by 2).
 
-**In progress (uncommitted, 2026-10-16):** new `kawa coinflip` command (stdlib `random` + `time.localtime`, no new deps) — implemented in `src/kawa/modules/coinflip.py`, wired in `cli.py` and `modules/__init__.py`, README documented. Separate `HEADS_MESSAGES` / `TAILS_MESSAGES` pools (user will add more). AM (hour < 12) → Heads 51%/Tails 49%, PM → 49/51. Validated: ruff clean on new files, live CLI runs, and a 20k-iteration bias check per hour (AM ~51.6% heads, PM ~49.5%).
+**In progress (uncommitted, 2026-10-16):** global `--json` / `--plain` output modes for every command. New `output_mode` decorator in `cli.py` attaches both flags to every group and leaf command (mode resolution: leaf flag > group flag > cute default, `--json` wins ties); modules gained a `mode="cute"` parameter with three-way output branches. `json pretty` is exempt from mode branching by design — its output is already JSON, so the flags change nothing (user's explicit request). Validated: full placement matrix, all `--json` outputs parse, and cute-mode outputs byte-identical to HEAD (diffed via stash). Also: **all pre-existing ruff errors fixed** (user request) — `ruff check src` and `ruff format --check src` are now fully clean.
 
 ## Recent Changes (from git history)
 
-- `99d37df` docs(memory-bank): sync state + json pretty feature (latest, pushed)
+- `c7d84de` docs(memory-bank): coinflip feature + push state (latest, local only)
+- `a6e7140` feat(coinflip): biased coinflip command (local only)
+- `99d37df` docs(memory-bank): sync state + json pretty feature
 - `5e7a004` feat(json): pretty print command
 - `14da08b` docs: initialize memory bank
 - `5703e18` Update README.md
@@ -21,7 +23,8 @@ Project is in a **stable, released state** at v0.2.0 on `main`. Latest commits: 
 
 ## Next Steps / Likely Future Work
 
-- Finish/commit `kawa coinflip` (in progress, uncommitted).
+- Finish/commit `--json`/`--plain` output modes (in progress, uncommitted).
+- Push the 2 (soon 3) local commits to origin; consider a `0.3.0` bump + `v0.3.0` tag to cut a release with all new features.
 - User will extend the coinflip `HEADS_MESSAGES` / `TAILS_MESSAGES` pools.
 - Add more "useless cute" tools (README hints at future features).
 - Introduce a real test suite (currently only CI smoke tests; no pytest).
@@ -46,7 +49,7 @@ Project is in a **stable, released state** at v0.2.0 on `main`. Latest commits: 
 - `auto-click-auto` provides `enable_click_shell_completion_option` which injects a completion option into a Click group — used at the root `cli` group.
 - Banner asset must be listed in `kawa.spec` `datas` (`('src/kawa/assets', 'kawa/assets')`) for PyInstaller builds; loading uses `importlib.resources.files("kawa")`.
 - CI smoke tests double as the only functional verification — always keep `kawa mc ntow/ownt` and `kawa uwuify` working.
-- Full-repo `ruff check src` reports **8 pre-existing errors** in old files (`cli.py` unsorted imports/blind `except`/`dict()`, `minecraft.py` unsorted imports, `uwuify.py` enumerate misuse) — CI lint is `continue-on-error`, so these never blocked. Keep new files clean; don't "fix" old ones unless asked.
+- Full-repo `ruff check src` was carrying **8 pre-existing errors** (unsorted imports, blind `except`, `dict()` call, unnecessary `pass`, enumerate misuse) — **all fixed 2026-10-16** (user request): safe fixes via `ruff check --fix`, BLE001 narrowed to `OSError` (banner read) and `PackageNotFoundError` (version lookup), plus a full `ruff format src` pass. `ruff check` + `ruff format --check` are now both fully clean — keep it that way.
 - `json_tools.py` error heuristic: file exists → read it; else parse arg as inline JSON; on failure, arg looks like a path (`.json` suffix or doesn't start with a JSON token) → "File not found", else "Invalid JSON" with line/column.
 - Ruff (running with this project's effective ruleset) enforces `DTZ005` (`datetime.now()` without tz) — `coinflip.py` uses `time.localtime().tm_hour` instead, which is lint-clean and unambiguously "local time". Keep new modules free of `noqa`.
 - `coinflip(hour=None)` takes an optional hour so bias can be tested by injection without touching the system clock — a good pattern for future random/time-based features.
