@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**v0.2.0 released and stable** on `main` (latest commit `d71ed5f` "docs(memory-bank): output modes + ruff cleanup"; prior `78aade8` "feat(cli): global --json/--plain output modes"). **Working tree clean**; `main` ahead of `origin/main` by **4** (`a6e7140`, `c7d84de`, `78aade8`, `d71ed5f`) — committed locally but **not pushed**. All documented features work; ruff lint + format are 100% clean; CI passes with smoke tests + binary build check; multi-platform releases are automated via tags.
+**v0.3.0 released** on `main` (tagged `v0.3.0`, pushed to origin 2026-10-16; tag triggers the release workflow). Shipped in this release since v0.2.0: `kawa json pretty`, `kawa coinflip`, global `--json`/`--plain` output modes, full ruff lint+format cleanup, "Expreience"→"Experience" typo fix. Working tree clean; `main` in sync with `origin/main`. All documented features work; ruff lint + format are 100% clean; CI passes with smoke tests + binary build check; multi-platform releases are automated via tags.
 
 ## What Works
 
@@ -24,7 +24,7 @@
 - [x] **Nix flake** packaging for 4 systems (uv2nix, wheel preference).
 - [x] **PyInstaller single-file binaries** (`kawa.spec` with bundled assets).
 - [x] **CI** (`.github/workflows/ci.yml`): ruff checks (non-blocking), smoke tests (blocking), `build-check` job that builds + runs the binary.
-- [x] **Release automation** (`.github/workflows/release.yml`): tag `v*.*.*` → 4-platform binaries → GitHub Release with generated notes. Tags `v0.1.0`, `v0.2.0` exist.
+- [x] **Release automation** (`.github/workflows/release.yml`): tag `v*.*.*` → 4-platform binaries → GitHub Release with generated notes. Tags `v0.1.0`, `v0.2.0`, `v0.3.0` exist.
 
 ## What's Left to Build
 

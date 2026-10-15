@@ -2,7 +2,7 @@
 
 ## Current Work Focus
 
-Project is in a **stable, released state** at v0.2.0 on `main`. Latest commits: `78aade8 feat(cli): global --json/--plain output modes` and `d71ed5f docs(memory-bank): output modes + ruff cleanup`. **Working tree clean**; `main` is ahead of `origin/main` by **4** (`a6e7140`, `c7d84de`, `78aade8`, `d71ed5f`) — committed locally but **not pushed**.
+Project is in a **stable, released state** at **v0.3.0** on `main`, tagged `v0.3.0` and **pushed to origin** (2026-10-16). The tag triggers the release workflow (4-platform binaries + GitHub Release). Latest commits: `bef2494 chore(bump version): 0.3.0`, `34bfae5 fix(cli): correct Expreience typo to Experience`, `87d1d79 docs(memory-bank): sync...`. Working tree clean; `main` in sync with `origin/main`.
 
 Shipped since `origin/main`: biased `kawa coinflip`, global `--json`/`--plain` output modes on every command, full ruff lint+format cleanup, plus `kawa json pretty` (already pushed).
 
@@ -25,7 +25,7 @@ Shipped since `origin/main`: biased `kawa coinflip`, global `--json`/`--plain` o
 
 ## Next Steps / Likely Future Work
 
-- Push the 4 local commits to origin; consider a `0.3.0` bump (both `pyproject.toml` and `src/kawa/__init__.py`) + `v0.3.0` tag to cut a release with all new features.
+- Push the 4 local commits to origin; consider a `0.3.0` bump (both `pyproject.toml` and `src/kawa/__init__.py`) + `v0.3.0` tag to cut a release with all new features. — **done 2026-10-16**: v0.3.0 tagged & pushed; release workflow triggered (verify binaries on the Releases page — `gh` CLI unavailable locally).
 - User will extend the coinflip `HEADS_MESSAGES` / `TAILS_MESSAGES` pools.
 - Add more "useless cute" tools (README hints at future features).
 - Introduce a real test suite (currently only CI smoke tests; no pytest).
