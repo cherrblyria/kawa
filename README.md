@@ -1,15 +1,14 @@
 <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Cascadia+Code&size=22&pause=1000&color=FED0FF&random=true&width=435&lines=Kawa;Kawa+~;Kawa;Kawa+%3C3;Kawaii+~;Kawaii+%2F%2F%2F;Kawa;Kawa;Kawa;Kawa+~;MudaKawa;Kawa;awaK;Kawa;Kawa;Kaw;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa;Kawa" alt="Typing SVG" /></a>
 
-> "A set of useless cute little CLI tools for Minecraft and.. ahh... that's it (for now)"
+> "A set of useless cute little CLI tools for... whatever."
 
 ##### on this page
 
 - [Features](#features)
   - [Minecraft](#minecraft)
   - [Uwuify](#uwuify)
-  - [JSON](#json)
   - [Coinflip](#coinflip)
-  - [Output modes](#output-modes)
+  - [JSON](#json)
 - [Installation](#installation)
   - [Nix / NixOS (Flake)](#nix--nixos-flake)
   - [pip / pipx](#pip--pipx)
@@ -54,6 +53,15 @@ $ kawa uwuify The quick brown fox jumps over the lazy dog
 The q-q-quick bwown fox jyumps uvw the wazy dog
 ```
 
+#### Coinflip
+
+Flip a coin
+
+```bash
+$ kawa coinflip
+Heads! The universe has chosen for you.
+```
+
 #### JSON
 
 Pretty-print JSON from a file path or a raw string, powered by Python's built-in `json` module
@@ -73,41 +81,6 @@ $ kawa json pretty '{"b": 1, "a": 2}' --sort-keys
     "b": 1
 }
 ```
-
-#### Coinflip
-
-Flip a biased coin — Heads wins 51% of the time at AM, Tails wins 51% at PM, powered by Python's built-in `random` module
-
-```bash
-$ kawa coinflip
-Heads! The universe has chosen for you.
-```
-
-#### Output modes
-
-Every command supports `--json` and `--plain` — machine-readable JSON, or just the bare result with no decoration. The flags can go anywhere in the command, and if you put one on a group it applies to the whole command (`kawa --plain mc ntow ...` is the same as `kawa mc ntow ... --plain`).
-
-```bash
-$ kawa coinflip --plain
-heads
-```
-
-```bash
-$ kawa coinflip --json
-{"result": "heads", "message": "The universe has chosen for you."}
-```
-
-```bash
-$ kawa mc ntow 727 90.875 --plain
-5816, 727
-```
-
-```bash
-$ kawa mc ntow 727 90.875 --json
-{"x": 5816, "z": 727}
-```
-
-`kawa json pretty` already outputs valid JSON, so `--json`/`--plain` change nothing there.
 
 ### Installation
 

@@ -4,7 +4,7 @@ from time import localtime
 
 import click
 
-HEADS_MESSAGES = [
+HEADS_MESSAGES = [  # TODO: Humanize?
     "Nya~! I-It's not like I rigged it for you!",
     "Hmph! The coin knows who's boss. (It's me.)",
     "Y-You won?! I mean... OF COURSE YOU DID!",
@@ -27,7 +27,7 @@ HEADS_MESSAGES = [
     "Mrrrow~! I could get used to you being lucky.",
 ]
 
-TAILS_MESSAGES = [
+TAILS_MESSAGES = [  # TODO: Humanize?
     "NYAAAA?! THAT WASN'T SUPPOSED TO HAPPEN!",
     "Hmph! I NEVER LIKED HEADS ANYWAY!",
     "The coin has betrayed me. It knows what it did.",
@@ -51,7 +51,7 @@ TAILS_MESSAGES = [
     "...Do you still like me? N-not that I care!",
 ]
 
-KAWA_MESSAGES = [
+KAWA_MESSAGES = [  # TODO: Humanize?
     "Nya~! Oh. You actually found me.",
     "W-WHAT?! THIS ISN'T PART OF THE PROGRAM!",
     "Forget the coin. Look at me instead! ...I MEAN, NYA?!",
@@ -83,7 +83,7 @@ KAWA_MESSAGES = [
     "You found me. Hehe. I knew you would. Eventually.",
 ]
 
-KAWA_SECRET_PLACEHOLDER_MESSAGES = [
+SECRET_PLACEHOLDER_MESSAGES = [  # TODO: Humanize?
     "Nya?! You found something SUPER rare! ...but the developer hasn't finished it yet. HMPH!",
     "Y-You weren't supposed to get this one! It's not ready!! Come back later, okay? ...N-not that I care!",
     "Mrrp. A secret event! ...Still under construction. Don't look at me, blame the developer!",
@@ -92,7 +92,7 @@ KAWA_SECRET_PLACEHOLDER_MESSAGES = [
 KAWA_CHANCE = 1 / 10_000
 SECRET_CHANCE = 1 / 100_000
 
-SPECIAL_TIERS = [
+EASTER_EGG_EVENTS = [
     {
         "name": "kawa",
         "chance": KAWA_CHANCE,
@@ -101,19 +101,19 @@ SPECIAL_TIERS = [
     {
         "name": "secret",
         "chance": SECRET_CHANCE,
-        "messages": KAWA_SECRET_PLACEHOLDER_MESSAGES,
+        "messages": SECRET_PLACEHOLDER_MESSAGES,
     },
 ]
 
 
-def pick_special_tier(mode, rng=None):
+def pick_event(mode, rng=None):
     if mode != "cute":
         return None
     if rng is None:
         rng = random.random
-    for tier in SPECIAL_TIERS:
-        if rng() < tier["chance"]:
-            return tier
+    for event in EASTER_EGG_EVENTS:
+        if rng() < event["chance"]:
+            return event
     return None
 
 
@@ -121,9 +121,9 @@ def coinflip(hour=None, mode="cute", rng=None):
     if hour is None:
         hour = localtime().tm_hour
 
-    tier = pick_special_tier(mode, rng)
-    if tier is not None:
-        side, message = "Kawa", random.choice(tier["messages"])
+    event = pick_event(mode, rng)
+    if event is not None:
+        side, message = "Kawa", random.choice(event["messages"])
     else:
         heads_bias = 0.51 if hour < 12 else 0.49
         if random.random() < heads_bias:

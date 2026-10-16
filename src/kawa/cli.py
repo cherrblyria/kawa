@@ -113,7 +113,7 @@ def uwuify_cmd(text, mode):
 @cli.command(name="coinflip")
 @output_mode
 def coinflip_cmd(mode):
-    """Flip a biased coin"""
+    """Flip a coin"""
     coinflip(mode=mode)
 
 
