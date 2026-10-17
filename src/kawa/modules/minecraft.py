@@ -35,6 +35,9 @@ def overworld_to_nether(x, z, mode="cute"):
 
 
 def level_to_experience(level, mode="cute"):
+    if level < 0:
+        raise click.BadParameter("level must be non-negative", param_hint="level")
+
     if level <= 16:
         exp = level**2 + 6 * level
     elif level <= 31:
@@ -49,14 +52,17 @@ def level_to_experience(level, mode="cute"):
     else:
         message = ""
         if level == 21863:
-            message = "\n - This's the maximum XP the game can handle btw :3"
+            message = "\\n - This's the maximum XP the game can handle btw :3"
         elif level > 21863:
-            message = "\n - I think this amount of XP can break the game :3"
+            message = "\\n - I think this amount of XP can break the game :3"
 
         click.echo(f"Level: {comma(level)}  (σ≧∀≦)σ  Experience: {comma(exp)}{message}")
 
 
 def experience_to_level(xp, mode="cute"):
+    if xp < 0:
+        raise click.BadParameter("xp must be non-negative", param_hint="xp")
+
     if xp <= 352:
         level = math.sqrt(xp + 9) - 3
     elif xp <= 1507:
@@ -71,8 +77,8 @@ def experience_to_level(xp, mode="cute"):
     else:
         message = ""
         if xp == 2147483647:
-            message = "\n - Have you ever reach this level before?"
+            message = "\\n - Have you ever reach this level before?"
         elif xp > 2147483647:
-            message = "\n - It's impossible to reach this level in survival btw :3"
+            message = "\\n - It's impossible to reach this level in survival btw :3"
 
         click.echo(f"Experience: {comma(xp)}  (σ≧∀≦)σ  Level: {comma(level)}{message}")
