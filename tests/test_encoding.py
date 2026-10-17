@@ -1,5 +1,5 @@
-import os
 from pathlib import Path
+import os
 import subprocess
 import sys
 import unittest
