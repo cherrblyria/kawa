@@ -12,6 +12,6 @@ def uwuify(text: list, mode="cute"):
     result = " ".join(uwuified)
 
     if mode == "json":
-        click.echo(json.dumps({"result": result}, ensure_ascii=False))
+        return json.dumps({"result": result}, ensure_ascii=False)
     else:
-        click.echo(result)
+        return result
