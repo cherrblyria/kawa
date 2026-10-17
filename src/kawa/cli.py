@@ -64,6 +64,8 @@ def output_mode(func):
     )
     @functools.wraps(func)
     def wrapper(*args, output_json, output_plain, **kwargs):
+        if output_json and output_plain:
+            raise click.UsageError("--json and --plain are mutually exclusive")
         ctx = click.get_current_context()
         inherited = (ctx.obj or {}).get("output", "cute")
         mode = "json" if output_json else "plain" if output_plain else inherited
@@ -135,14 +137,14 @@ def xplv(xp, mode):
 @output_mode
 def uwuify_cmd(text, mode):
     """Uwuify given text with uwuipy"""
-    uwuify(list(text), mode)
+    run_uwuify(list(text), mode)
 
 
 @cli.command(name="coinflip")
 @output_mode
 def coinflip_cmd(mode):
     """Flip a coin"""
-    coinflip(mode=mode)
+    run_coinflip(mode=mode)
 
 
 @cli.group(name="json")

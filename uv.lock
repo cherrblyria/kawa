@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.14"
 
 [[package]]
@@ -52,7 +52,7 @@ dev = [
 requires-dist = [
     { name = "auto-click-auto", specifier = ">=0.1.6" },
     { name = "click", specifier = ">=8.1.8" },
-    { name = "uwuipy", specifier = ">=0.1.5" },
+    { name = "uwuipy", specifier = ">=1.0.0" },
 ]
 
 [package.metadata.requires-dev]
