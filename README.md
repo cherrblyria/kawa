@@ -55,6 +55,8 @@ The q-q-quick bwown fox jyumps uvw the wazy dog
 
 #### Coinflip
 
+###### \*this feature is vibe coded
+
 Flip a coin
 
 ```bash
@@ -63,6 +65,8 @@ Heads! As I expected..
 ```
 
 #### JSON
+
+###### \*this feature is vibe coded
 
 Pretty-print JSON from a file path or a raw string, powered by Python's built-in `json` module
 
