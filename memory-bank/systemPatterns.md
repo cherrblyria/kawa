@@ -9,7 +9,7 @@ src/kawa/
 ├── __init__.py          # __version__ = "0.3.0"
 ├── __main__.py          # python -m kawa → cli()
 ├── cli.py               # Click command tree (thin; delegates to modules)
-├── modules/             # Feature logic (echoes or returns; see #8)
+├── modules/             # Feature logic (all echo; see #3, #8)
 │   ├── __init__.py      # from .minecraft import *; from .uwuify import *; from .coinflip import *; from .json_tools import *
 │   ├── minecraft.py     # coordinate + XP/level math
 │   ├── uwuify.py        # uwuipy wrapper — echoes per-invocation result

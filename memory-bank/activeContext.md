@@ -2,13 +2,14 @@
 
 ## Current Work Focus
 
-Project is **healthy and decoupled** (2026-10-17): `151b8cc` repaired the coinflip breakage `f69ecbe` introduced (pick-then-uwuify, `secret` event prints, ruff `I001`/`F401`, README example), then `3056e31` **decoupled coinflip from the uwuify module** — coinflip uses `uwuipy`'s `Uwuipy` directly and `uwuify.py` echoes in place again (print-in-place restored). **HEAD `3056e31` is unpushed — `main` is 4 ahead of `origin/main`** (`f69ecbe`, `151b8cc`, `4348b44`, `3056e31`), all post-v0.3.0/unreleased. `ruff check` + `ruff format --check` clean. Validated twice: 150 flips across all modes (0 crashes), forced `kawa`/`secret` events via `rng` injection, machine-mode zero-roll proof, full command smoke including `uwuify` cute + `--json`.
+Project is **healthy and decoupled** (2026-10-17): `151b8cc` repaired the coinflip breakage `f69ecbe` introduced (pick-then-uwuify, `secret` event prints, ruff `I001`/`F401`, README example), then `3056e31` **decoupled coinflip from the uwuify module** — coinflip uses `uwuipy`'s `Uwuipy` directly and `uwuify.py` echoes in place again (print-in-place restored). **HEAD `34d4f42` is unpushed — `main` is 5 ahead of `origin/main`** (`f69ecbe` → `34d4f42`), all post-v0.3.0/unreleased. `ruff check` + `ruff format --check` clean. Validated twice: 150 flips across all modes (0 crashes), forced `kawa`/`secret` events via `rng` injection, machine-mode zero-roll proof, full command smoke including `uwuify` cute + `--json`.
 
 `src/kawa/modules/coinflip.py` current shape: `EASTER_EGG_EVENTS`/`pick_event` (kawa **1/100**, secret **1/100,000**), pools `COINS_MESSAGES` (8 punctuation fragments), `KAWA_MESSAGES` (5 lines), `SECRET_PLACEHOLDER_MESSAGES` (4 lines, "nutty the dev" placeholder voice). Messages: one `Uwuipy()` instance per flip, `uwu.uwuify(<chosen string>)` — **no dependency on `modules/uwuify.py`** (`3056e31`). Only the `kawa` event is uwuified; `secret` prints raw. The `secret` event remains a **placeholder awaiting the user's lore/interactive-event design** (wire via `EASTER_EGG_EVENTS` + `event["name"]` dispatch).
 
 ## Recent Changes (from git history)
 
-- `3056e31` refactor(coinflip): use uwuipy directly, restore uwuify echo — **HEAD, unpushed**
+- `34d4f42` docs(memory-bank): module-decoupling convention + uwuify echo restore — **HEAD, unpushed**
+- `3056e31` refactor(coinflip): use uwuipy directly, restore uwuify echo
 - `4348b44` docs(memory-bank): sync coinflip repair state
 - `151b8cc` fix(coinflip): pick-then-uwuify messages + print secret event
 - `f69ecbe` feat(coinflip): uwuify coinflip (human slop code, lol)
@@ -28,10 +29,10 @@ Project is **healthy and decoupled** (2026-10-17): `151b8cc` repaired the coinfl
 
 ## Next Steps / Likely Future Work
 
-- **Push** — `main` is ahead of `origin/main` by 4 commits (`f69ecbe` → `3056e31`, plus this docs sync).
+- **Push** — `main` is ahead of `origin/main` by 5 commits (`f69ecbe` → `34d4f42`, all post-v0.3.0).
 - Optional: the README still has no Output-modes docs (user decision 2026-10-17 — keep deleted unless they change their mind).
 - Design + wire the **lore/interactive coinflip event** with the user (details pending from user); `secret`'s `SECRET_PLACEHOLDER_MESSAGES` get replaced then. Extension point: `EASTER_EGG_EVENTS` registry + `event["name"]` dispatch in the cute branch.
-- Next release: everything since `v0.3.0` (`68c9ed1`, `580e36d`, `90376f2`, `acc29c9`, `2e04c07`, `f69ecbe`, `151b8cc` + docs) is unreleased — bump (both `pyproject.toml` and `src/kawa/__init__.py`) + tag when the user wants it shipped (e.g. `v0.4.0`).
+- Next release: everything since `v0.3.0` (`68c9ed1` … `34d4f42`) is unreleased — bump (both `pyproject.toml` and `src/kawa/__init__.py`) + tag when the user wants it shipped (e.g. `v0.4.0`).
 - Add more "useless cute" tools (README tagline now open-ended: "...for... whatever.").
 - Introduce a real test suite (currently only CI smoke tests; no pytest — and CI does **not** exercise `coinflip`; worth adding it to the smoke list now that it works).
 - Consider making ruff lint/format CI checks **blocking** (currently `continue-on-error: true`) — ruff is clean as of `151b8cc`, so safe to flip.

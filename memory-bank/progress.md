@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**v0.3.0 released** on `main` (tagged `v0.3.0`, 2026-10-16); everything after it is **unreleased**. As of 2026-10-17, HEAD is `3056e31` (coinflip/uwuify decoupling) and **`main` is ahead of `origin/main` by 4 commits** (`f69ecbe`, `151b8cc`, `4348b44`, `3056e31` — not pushed). All healthy: coinflip works in all modes, `uwuify.py` echoes in place again (print-in-place restored), coinflip uses `uwuipy` directly (no module→module imports), `ruff check` + `ruff format --check` clean. Working tree clean except this memory-bank update. Multi-platform releases remain automated via tags.
+**v0.3.0 released** on `main` (tagged `v0.3.0`, 2026-10-16); everything after it is **unreleased**. As of 2026-10-17, HEAD is `34d4f42` (memory-bank decoupling sync) and **`main` is ahead of `origin/main` by 5 commits** (`f69ecbe` → `34d4f42` — not pushed). All healthy: coinflip works in all modes, `uwuify.py` echoes in place again (print-in-place restored), coinflip uses `uwuipy` directly (no module→module imports), `ruff check` + `ruff format --check` clean. Working tree clean. Multi-platform releases remain automated via tags.
 
 ## What Works
 
@@ -35,14 +35,14 @@
 - Additional "cute" tools — README tagline now open-ended ("...for... whatever.").
 - A real automated test suite (pytest or similar); currently CI smoke tests are the only verification.
 - ~~Make ruff lint/format CI checks **blocking** (they're `continue-on-error` today, so regressions can slip through).~~ — **safe to flip**: ruff check + format are clean as of `151b8cc`; just remove `continue-on-error` when ready.
-- **Push** — `main` is ahead of `origin/main` by 4 commits (all post-v0.3.0, `f69ecbe` → `3056e31`).
+- **Push** — `main` is ahead of `origin/main` by 5 commits (all post-v0.3.0, `f69ecbe` → `34d4f42`).
 - ~~Decide whether to commit `.clinerules/` and `memory-bank/`~~ — **resolved**: both committed in `14da08b docs: initialize memory bank`.
 - Possible: `CHANGELOG.md`, PyPI publishing (currently git-based installs only), man page, richer completion. (`--json` output — **done**, see "What Works".)
 
 ## Known Issues / Quirks
 
 - **README drift** (`acc29c9`): Output-modes section deleted while `--json`/`--plain` still work — left as-is per user decision (coinflip example fixed in `151b8cc`).
-- **Unpushed** — `main` is ahead of `origin/main` by 4 commits (`f69ecbe` → `3056e31`), plus this docs sync.
+- **Unpushed** — `main` is ahead of `origin/main` by 5 commits (`f69ecbe` → `34d4f42`).
 - *(Resolved 2026-10-17 in `151b8cc`: coinflip crash in all modes — nested-list `uwuify` calls; silent `secret` branch; ruff I001/F401.)*
 - **"Expreience" typo fixed → "Experience"** (2026-10-16, user request): corrected everywhere in one coordinated pass — CLI help docstrings, `minecraft.py` output strings, and README examples. Full-tree grep confirms no occurrences remain.
 - Lint/format failures do not fail CI (by design or oversight — unconfirmed intent).
