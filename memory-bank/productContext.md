@@ -22,7 +22,7 @@ Kawa is a hobby/joy project: a bundle of tiny CLI utilities that are useful in p
 - Every command also accepts **`--plain`** (undecorated result only, e.g. `heads`, `5816, 727`) and **`--json`** (single-line JSON) output modes, usable anywhere on the command line; mode resolves as leaf flag > group flag > cute default.
 - `kawa --version` prints the ASCII banner (loaded from `src/kawa/assets/banner.txt`) plus the version.
 - Boundary values get playful easter-egg messages (max XP level 21863, `2147483647` XP, etc.).
-- **Coinflip text is uwuified**: the flip prints `Heads`/`Tails` plus a random uwuified fragment from `COINS_MESSAGES` (e.g. `"! That's it"` — the fragment carries the punctuation), and the `uwuify` module now *returns* its result so `coinflip` can reuse it.
+- **Coinflip text is uwuified**: the flip prints `Heads`/`Tails` plus a random uwuified fragment from `COINS_MESSAGES` (e.g. `"! That's it"` — the fragment carries the punctuation), uwuified in-place via coinflip's own `Uwuipy` instance (independent of the `uwuify` command).
 - **Special events are cute-mode-only easter eggs**: a `kawa` roll (**1/100**, was 1/10K before `2e04c07`) replaces the coin result with a uwuified Kawa message; `--json`/`--plain` are machine output, never roll events, and must stay deterministic heads/tails. A further `secret` event (1/100K) is a placeholder for a planned interactive lore event.
 - Shell completion is available via the option injected by `auto-click-auto`.
 

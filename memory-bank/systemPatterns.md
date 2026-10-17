@@ -12,8 +12,8 @@ src/kawa/
 ├── modules/             # Feature logic (echoes or returns; see #8)
 │   ├── __init__.py      # from .minecraft import *; from .uwuify import *; from .coinflip import *; from .json_tools import *
 │   ├── minecraft.py     # coordinate + XP/level math
-│   ├── uwuify.py        # uwuipy wrapper — returns the result (no echo) since f69ecbe
-│   ├── coinflip.py      # biased coinflip + easter-egg events; uwuifies its messages
+│   ├── uwuify.py        # uwuipy wrapper — echoes per-invocation result
+│   ├── coinflip.py      # biased coinflip + easter-egg events; uwuifies via its own Uwuipy instance
 │   └── json_tools.py    # JSON pretty printer
 ├── utils/               # Pure formatting helpers
 │   ├── __init__.py      # from .format import *
@@ -32,19 +32,19 @@ cli.py ──imports──▶ modules/ ──imports──▶ utils/
 ```
 
 - **`cli.py`** defines the root group `cli` (with banner version option + shell completion), subgroup `mc`, and top-level commands `uwuify`, `coinflip`, plus the `json` group. Each command is a thin adapter: parse args with Click types (`float`/`int`/`nargs=-1`), call the module function. Every group and leaf command is wrapped by the shared `output_mode` decorator which attaches `--json`/`--plain` flags.
-- **`modules/`** own the domain math and all user-facing output. `minecraft.py`, `coinflip.py` and `json_tools.py` print directly with `click.echo`; `uwuify.py` **returns** its string/JSON instead (since `f69ecbe`) so `coinflip` can compose with it — the `uwuify` CLI command echoes the return value in `cli.py`. Modules may import sibling modules (`coinflip` → `uwuify`).
+- **`modules/`** own the domain math and all user-facing output. Every module prints directly with `click.echo` (print-in-place), and **modules never import other modules** — `coinflip` gets its uwuification from `uwuipy`'s `Uwuipy` directly rather than from `uwuify.py` (decided `3056e31`, after the `f69ecbe` return-value experiment proved coupling-prone).
 - **`utils/`** are pure formatting functions shared by modules.
 
 ## Key Technical Decisions
 
 1. **Click groups over subparsers**: `cli` → `mc` → `{ntow, ownt, lvxp, xplv}`; `uwuify` sits at the root. Help text lives in docstrings.
 2. **Star-import export pattern**: each package's `__init__.py` re-exports with `from .module import *`; consumers do `from .modules import *`. Convention over explicitness.
-3. **Print-in-place, not return** (default; nuanced by #8): module functions perform their own `click.echo` — except `uwuify()`, which returns so it can be composed with. New commands should follow the standard shape (logic + output in the module, wiring in `cli.py`); only make a helper return when other modules need its value.
+3. **Print-in-place, not return**: module functions perform their own `click.echo`. New commands should follow the same shape (logic + output in the module, wiring in `cli.py`). (Briefly violated 2026-10-17 by `f69ecbe`'s return-value `uwuify`; reverted `3056e31`.)
 4. **Defensive asset/metadata loading**: banner and version are loaded in `try/except` with graceful fallbacks (`"Oops!, seem like banner is missing..."`, `"unknown"`).
 5. **Float-typed coordinate args**: Click casts `x`/`z` to `float` so `no_dot_zero()` can call `.is_integer()`. XP/level args are `int` (Python 3.12+ ints also have `.is_integer()`, relied upon by `comma()`).
 6. **Global output modes via decorator** (2026-10-16): `output_mode` in `cli.py` adds `--json`/`--plain` to every group and leaf command. Resolution: leaf flag > nearest ancestor group flag > `"cute"` default (`--json` wins if both given on the same level). The mode travels via Click's parent-`ctx.obj` chain, and each wrapper's callback receives a `mode` kwarg it forwards to the module function. Modules branch `mode == "json"` / `"plain"` / else cute. `json pretty` is intentionally mode-agnostic (already JSON).
 7. **Coinflip easter-egg events** (`EASTER_EGG_EVENTS` in `coinflip.py`; originally `SPECIAL_TIERS`/`pick_special_tier`, renamed & simplified in `2e04c07`, 2026-10-17): ordered registry of rare outcomes; each event is `{name, chance, messages}` and gets its own independent roll, first hit wins (**kawa** 1/100 → **secret** 1/100,000 → normal biased flip). The kawa odds were tightened from the original 1/10,000 at rename time. Because rolls are sequential & independent, the effective secret chance is (1 − 1/100) × 1/100,000 (intentional). A hit replaces the coin flip entirely. **Extension point: append to `EASTER_EGG_EVENTS` — flip logic never changes**; future interactive/lore events can add fields (e.g. a handler) and switch on `event["name"]` in the cute branch. Two hard rules: **(a) cute-mode only** — `pick_event` returns `None` immediately for any non-cute mode, so `--json`/`--plain` make *zero* random rolls for events and always emit deterministic heads/tails; **(b) `rng` injection** — `pick_event(mode, rng=None)` / `coinflip(..., rng=None)` take a callable instead of calling `random.random` directly, so tests and future interactive events can force an event. The `secret` event's messages (`SECRET_PLACEHOLDER_MESSAGES`, formerly `KAWA_SECRET_PLACEHOLDER_MESSAGES`) stay placeholders until the user's lore design lands. Star-import caveat: `kawa.modules.coinflip` resolves to the *function* (star-export shadows the submodule) — tests must reach the module via `sys.modules["kawa.modules.coinflip"]`. (This entry preserves knowledge that used to live in code comments — removed 2026-10-16 by user preference.)
-8. **`uwuify` returns, callers echo** (`f69ecbe`, 2026-10-17): `modules/uwuify.py` switched from `click.echo`-in-place to returning the string (or JSON string); `cli.py` wraps the `uwuify` command call in `click.echo`, and `coinflip.py` imports it (`from .uwuify import uwuify`) to uwuify its own messages. Cute flip output is now `f"{side}{message}"` where `COINS_MESSAGES` fragments carry their own punctuation (no `! ` join), and a `kawa` event prints the bare uwuified message. The `mc`/`json`/`coinflip` outputs themselves still echo in place. (Authored by the user as WIP "human slop code"; the defects it shipped — nested-list `uwuify` calls, silent `secret`, ruff I001/F401 — were repaired in `151b8cc`. Don't copy the nested-list `uwuify([...])` call pattern.)
+8. **Modules never import modules; use third-party libs directly** (`3056e31`, 2026-10-17): `coinflip.py` imports `Uwuipy` from `uwuipy` (already a direct runtime dependency) and calls `uwu.uwuify(<string>)` on a single chosen message per flip — it does **not** go through `modules/uwuify.py`. `uwuify.py` echoes in place again like every other module (restored `import click`; `cli.py` calls `uwuify(list(text), mode)` unwrapped). History: `f69ecbe` had made `uwuify()` a return-value API so coinflip could compose with it — that cross-module coupling produced the nested-list crash (fixed `151b8cc`); `3056e31` removed the coupling entirely. Convention for new work: if two features need the same *library*, import the library in each module; don't make one module call another unless there's real shared domain logic.
 
 ## Critical Implementation Paths
 
@@ -67,7 +67,7 @@ cli.py ──imports──▶ modules/ ──imports──▶ utils/
 
 ### Uwuify
 - Words are uwuified **individually** (list of tokens), then rejoined with spaces — preserves word boundaries.
-- `uwuify()` returns the result (string or JSON string); callers decide whether to `click.echo`. It must be given a **flat list of strings** — passing a nested list (e.g. `uwuify([COINS_MESSAGES])`) crashes uwuipy with `AttributeError: 'list' object has no attribute 'split'`, and because it returns **one joined string**, a whole pool must never be passed either; the correct idiom is pick-then-uwuify: `uwuify([random.choice(pool)])` (the `151b8cc` repair).
+- `uwuify()` **echoes** its result (cute: the joined string; json: `{"result": ...}`) and must be given a **flat list of strings** — a nested list crashes uwuipy (`AttributeError: 'list' object has no attribute 'split'`). Coinflip does **not** use it (see decision #8).
 
 ### Coinflip output
 - Cute, no event: `f"{side}{message}"` — `side` is `Heads`/`Tails`, `message` is a uwuified `COINS_MESSAGES` fragment whose own punctuation provides the separator.

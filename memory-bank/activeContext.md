@@ -2,13 +2,15 @@
 
 ## Current Work Focus
 
-Project is **healthy again** (2026-10-17): `151b8cc` repaired the breakage `f69ecbe` introduced — pick-then-uwuify, `secret` event prints, ruff `I001`/`F401` fixed, README coinflip example refreshed. **HEAD `151b8cc` is unpushed — `main` is 2 ahead of `origin/main`** (`f69ecbe`, `151b8cc`), both post-v0.3.0/unreleased. `ruff check` + `ruff format --check` clean. Validated: 150 flips across all modes (0 crashes), forced `kawa`/`secret` events via `rng` injection, machine-mode zero-roll proof (`rng` that raises if called), full command smoke.
+Project is **healthy and decoupled** (2026-10-17): `151b8cc` repaired the coinflip breakage `f69ecbe` introduced (pick-then-uwuify, `secret` event prints, ruff `I001`/`F401`, README example), then `3056e31` **decoupled coinflip from the uwuify module** — coinflip uses `uwuipy`'s `Uwuipy` directly and `uwuify.py` echoes in place again (print-in-place restored). **HEAD `3056e31` is unpushed — `main` is 4 ahead of `origin/main`** (`f69ecbe`, `151b8cc`, `4348b44`, `3056e31`), all post-v0.3.0/unreleased. `ruff check` + `ruff format --check` clean. Validated twice: 150 flips across all modes (0 crashes), forced `kawa`/`secret` events via `rng` injection, machine-mode zero-roll proof, full command smoke including `uwuify` cute + `--json`.
 
-`src/kawa/modules/coinflip.py` current shape: `EASTER_EGG_EVENTS`/`pick_event` (kawa **1/100**, secret **1/100,000**), pools `COINS_MESSAGES` (8 punctuation fragments), `KAWA_MESSAGES` (5 lines), `SECRET_PLACEHOLDER_MESSAGES` (4 lines, "nutty the dev" placeholder voice). Messages: **pick first, then `uwuify([chosen])`** — `uwuify()` takes a flat list and returns one joined string, so a whole pool must never be passed. Only the `kawa` event is uwuified; `secret` prints raw. The `secret` event remains a **placeholder awaiting the user's lore/interactive-event design** (wire via `EASTER_EGG_EVENTS` + `event["name"]` dispatch).
+`src/kawa/modules/coinflip.py` current shape: `EASTER_EGG_EVENTS`/`pick_event` (kawa **1/100**, secret **1/100,000**), pools `COINS_MESSAGES` (8 punctuation fragments), `KAWA_MESSAGES` (5 lines), `SECRET_PLACEHOLDER_MESSAGES` (4 lines, "nutty the dev" placeholder voice). Messages: one `Uwuipy()` instance per flip, `uwu.uwuify(<chosen string>)` — **no dependency on `modules/uwuify.py`** (`3056e31`). Only the `kawa` event is uwuified; `secret` prints raw. The `secret` event remains a **placeholder awaiting the user's lore/interactive-event design** (wire via `EASTER_EGG_EVENTS` + `event["name"]` dispatch).
 
 ## Recent Changes (from git history)
 
-- `151b8cc` fix(coinflip): pick-then-uwuify messages + print secret event — **HEAD, unpushed**
+- `3056e31` refactor(coinflip): use uwuipy directly, restore uwuify echo — **HEAD, unpushed**
+- `4348b44` docs(memory-bank): sync coinflip repair state
+- `151b8cc` fix(coinflip): pick-then-uwuify messages + print secret event
 - `f69ecbe` feat(coinflip): uwuify coinflip (human slop code, lol)
 - `2e04c07` fix(coinflip): what — `EASTER_EGG_EVENTS` refactor
 - `acc29c9` docs: whatever — README trim + new tagline
@@ -26,7 +28,7 @@ Project is **healthy again** (2026-10-17): `151b8cc` repaired the breakage `f69e
 
 ## Next Steps / Likely Future Work
 
-- **Push `f69ecbe` + `151b8cc`** — `main` is 2 commits ahead of `origin/main`.
+- **Push** — `main` is ahead of `origin/main` by 4 commits (`f69ecbe` → `3056e31`, plus this docs sync).
 - Optional: the README still has no Output-modes docs (user decision 2026-10-17 — keep deleted unless they change their mind).
 - Design + wire the **lore/interactive coinflip event** with the user (details pending from user); `secret`'s `SECRET_PLACEHOLDER_MESSAGES` get replaced then. Extension point: `EASTER_EGG_EVENTS` registry + `event["name"]` dispatch in the cute branch.
 - Next release: everything since `v0.3.0` (`68c9ed1`, `580e36d`, `90376f2`, `acc29c9`, `2e04c07`, `f69ecbe`, `151b8cc` + docs) is unreleased — bump (both `pyproject.toml` and `src/kawa/__init__.py`) + tag when the user wants it shipped (e.g. `v0.4.0`).
@@ -39,7 +41,7 @@ Project is **healthy again** (2026-10-17): `151b8cc` repaired the breakage `f69e
 - **Python 3.14 is a hard floor** (`requires-python = ">=3.14"`, `.python-version` = `3.14`, flake uses `pkgs.python314`). Code relies on `int.is_integer()` (3.12+) via `comma()`.
 - **Click** is the CLI framework (group-based command tree).
 - **Star-imports are the established pattern**: `from .utils import *`, `from .modules import *`, `from ..utils import *`. Follow it for consistency rather than switching to explicit imports.
-- Output goes through `click.echo` (not `print`) — keep this convention. Since `f69ecbe`, `modules/uwuify.py` **returns** its result instead of echoing: the `uwuify` CLI command echoes in `cli.py`, and `coinflip` composes with it internally (`from .uwuify import uwuify`). `mc`/`json_tools`/`coinflip` still echo in place. New reusable helpers should prefer returning; leaf commands echo.
+- Output goes through `click.echo` (not `print`) — keep this convention. **All modules echo in place** (the `f69ecbe` return-value experiment in `uwuify.py` was reverted by `3056e31`). New convention (user decision, 2026-10-17, `systemPatterns.md` #8): modules do **not** import other modules — if two features need the same third-party lib, each imports it directly (coinflip → `uwuipy`).
 - Version is declared in **two places** that must stay in sync: `pyproject.toml` (`version = "0.3.0"`) and `src/kawa/__init__.py` (`__version__ = "0.3.0"`); runtime display prefers `importlib.metadata.version("kawa")`.
 
 ## Patterns & Preferences
@@ -58,6 +60,6 @@ Project is **healthy again** (2026-10-17): `151b8cc` repaired the breakage `f69e
 - `json_tools.py` error heuristic: file exists → read it; else parse arg as inline JSON; on failure, arg looks like a path (`.json` suffix or doesn't start with a JSON token) → "File not found", else "Invalid JSON" with line/column.
 - Ruff (running with this project's effective ruleset) enforces `DTZ005` (`datetime.now()` without tz) — `coinflip.py` uses `time.localtime().tm_hour` instead, which is lint-clean and unambiguously "local time". Keep new modules free of `noqa`.
 - `coinflip(hour=None)` takes an optional hour so bias can be tested by injection without touching the system clock — a good pattern for future random/time-based features.
-- **Coinflip breakage diagnosis (2026-10-17)**: `uwuify([COINS_MESSAGES])` (and `uwuify([event["messages"]])`) wrap the pool in a *second* list, so `uwuify()`'s loop hands uwuipy a `list` which dies on `_msg.split(" ")` → `AttributeError: 'list' object has no attribute 'split'`. The `else` branch runs for **all** modes before output, so even `--plain`/`--json` crash — `coinflip` is 100% broken, not just cute mode. CI stays green because its smoke tests only cover `ntow`/`ownt`/`uwuify`. (**Fixed in `151b8cc`**: pick the message first, then `uwuify([chosen])` — one fragment at a time; a whole pool must never be passed since `uwuify` returns one joined string.)
+- **Coinflip breakage diagnosis (2026-10-17)**: `uwuify([COINS_MESSAGES])` (and `uwuify([event["messages"]])`) wrap the pool in a *second* list, so `uwuify()`'s loop hands uwuipy a `list` which dies on `_msg.split(" ")` → `AttributeError: 'list' object has no attribute 'split'`. The `else` branch runs for **all** modes before output, so even `--plain`/`--json` crash — `coinflip` is 100% broken, not just cute mode. CI stays green because its smoke tests only cover `ntow`/`ownt`/`uwuify`. (**Fixed in `151b8cc`**: pick the message first, then `uwuify([chosen])` — one fragment at a time; a whole pool must never be passed since `uwuify` returns one joined string. **Superseded by `3056e31`**, which removed the `uwuify()` dependency from coinflip entirely — it now calls `uwu.uwuify(<string>)` directly.)
 - Cute-branch gap in `coinflip()`: output branches are `event is None` → normal flip, `event["name"] == "kawa"` → message; a **`secret` hit falls through and prints nothing** (no crash: `side` is only referenced in branches unreachable in machine modes, since `pick_event` returns `None` there). (**Fixed in `151b8cc`**: the branch collapsed to a plain `else` — any event prints its message.)
-- `f69ecbe` is self-described "human slop code, lol" — the user wrote it by hand. Treat it as a WIP snapshot, **not** a pattern to imitate (nested-list `uwuify` call and the unused-import fallout are defects, not conventions). Superseded by the `151b8cc` repair.
+- `f69ecbe` is self-described "human slop code, lol" — the user wrote it by hand. Treat it as a WIP snapshot, **not** a pattern to imitate (nested-list `uwuify` call and the unused-import fallout are defects, not conventions). Superseded by the `151b8cc` repair, then fully decoupled by `3056e31`.
