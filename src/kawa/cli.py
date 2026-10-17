@@ -1,4 +1,6 @@
 import functools
+import math
+import sys
 from importlib.metadata import PackageNotFoundError
 from importlib.metadata import version as _version
 from importlib.resources import files
@@ -14,7 +16,33 @@ try:
 except OSError:
     BANNER = "Oops!, seem like banner is missing..."
 
+for stream in (sys.stdout, sys.stderr):
+    if hasattr(stream, "reconfigure"):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except ValueError:
+            pass
+
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
+
+MC_CONTEXT_SETTINGS = {
+    "ignore_unknown_options": True,
+    "help_option_names": ["-h", "--help"],
+}
+
+
+class FiniteFloat(click.ParamType):
+    name = "float"
+
+    def convert(self, value, param, ctx):
+        try:
+            result = float(value)
+        except TypeError, ValueError:
+            self.fail(f"{value!r} is not a valid float", param, ctx)
+        if not math.isfinite(result):
+            self.fail("must be a finite number", param, ctx)
+        return result
+
 
 try:
     __version__ = _version("kawa")
@@ -36,6 +64,8 @@ def output_mode(func):
     )
     @functools.wraps(func)
     def wrapper(*args, output_json, output_plain, **kwargs):
+        if output_json and output_plain:
+            raise click.UsageError("--json and --plain are mutually exclusive")
         ctx = click.get_current_context()
         inherited = (ctx.obj or {}).get("output", "cute")
         mode = "json" if output_json else "plain" if output_plain else inherited
@@ -68,34 +98,34 @@ def mc(mode):
     """Minecraft tools"""
 
 
-@mc.command()
-@click.argument("x", type=float)
-@click.argument("z", type=float)
+@mc.command(context_settings=MC_CONTEXT_SETTINGS)
+@click.argument("x", type=FiniteFloat())
+@click.argument("z", type=FiniteFloat())
 @output_mode
 def ntow(x, z, mode):
     """Convert Nether coordinates to Overworld coordinates"""
     nether_to_overworld(x, z, mode)
 
 
-@mc.command()
-@click.argument("x", type=float)
-@click.argument("z", type=float)
+@mc.command(context_settings=MC_CONTEXT_SETTINGS)
+@click.argument("x", type=FiniteFloat())
+@click.argument("z", type=FiniteFloat())
 @output_mode
 def ownt(x, z, mode):
     """Convert Overworld coordinates to Nether coordinates"""
     overworld_to_nether(x, z, mode)
 
 
-@mc.command()
-@click.argument("level", type=int)
+@mc.command(context_settings=MC_CONTEXT_SETTINGS)
+@click.argument("level", type=click.IntRange(min=0, max=10**9))
 @output_mode
 def lvxp(level, mode):
     """Convert Level to Experience"""
     level_to_experience(level, mode)
 
 
-@mc.command()
-@click.argument("xp", type=int)
+@mc.command(context_settings=MC_CONTEXT_SETTINGS)
+@click.argument("xp", type=click.IntRange(min=0, max=10**18))
 @output_mode
 def xplv(xp, mode):
     """Convert Experience to Level"""
@@ -107,14 +137,14 @@ def xplv(xp, mode):
 @output_mode
 def uwuify_cmd(text, mode):
     """Uwuify given text with uwuipy"""
-    uwuify(list(text), mode)
+    run_uwuify(list(text), mode)
 
 
 @cli.command(name="coinflip")
 @output_mode
 def coinflip_cmd(mode):
     """Flip a coin"""
-    coinflip(mode=mode)
+    run_coinflip(mode=mode)
 
 
 @cli.group(name="json")
@@ -125,7 +155,9 @@ def json_group(mode):
 
 @json_group.command()
 @click.argument("source")
-@click.option("-i", "--indent", type=int, default=4, show_default=True)
+@click.option(
+    "-i", "--indent", type=click.IntRange(min=0, max=16), default=4, show_default=True
+)
 @click.option("-s", "--sort-keys", is_flag=True)
 @output_mode
 def pretty(source, indent, sort_keys, mode):

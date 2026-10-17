@@ -1,3 +1,4 @@
+import functools
 import json
 import random
 from time import localtime
@@ -45,32 +46,40 @@ EASTER_EGG_EVENTS = [
 ]
 
 
+@functools.cache
+def get_uwu():
+    return Uwuipy()
+
+
 def pick_event(mode, rng=None):
     if mode != "cute":
         return None
     if rng is None:
-        rng = random.random
+        rng = random.Random()
     for event in EASTER_EGG_EVENTS:
-        if rng() < event["chance"]:
+        if rng.random() < event["chance"]:
             return event
     return None
 
 
-def coinflip(hour=None, mode="cute", rng=None):
+def run_coinflip(hour=None, mode="cute", rng=None):
     if hour is None:
         hour = localtime().tm_hour
-
-    uwu = Uwuipy()
+    if rng is None:
+        rng = random.Random()
+    heads_bias = 0.51 if hour < 12 else 0.49
+    side = "Heads" if rng.random() < heads_bias else "Tails"
     event = pick_event(mode, rng)
     if event is not None:
-        message = random.choice(event["messages"])
+        message = rng.choice(event["messages"])
         if event["name"] == "kawa":
-            message = uwu.uwuify(message)
+            message = get_uwu().uwuify(message)
+    elif mode == "cute":
+        message = get_uwu().uwuify(rng.choice(COINS_MESSAGES))
+    elif mode == "json":
+        message = rng.choice(COINS_MESSAGES)
     else:
-        heads_bias = 0.51 if hour < 12 else 0.49
-        message = uwu.uwuify(random.choice(COINS_MESSAGES))
-        side = "Heads" if random.random() < heads_bias else "Tails"
-
+        message = ""
     if mode == "json":
         click.echo(
             json.dumps({"result": side.lower(), "message": message}, ensure_ascii=False)
