@@ -1,4 +1,5 @@
 import functools
+import math
 from importlib.metadata import PackageNotFoundError
 from importlib.metadata import version as _version
 from importlib.resources import files
@@ -15,6 +16,25 @@ except OSError:
     BANNER = "Oops!, seem like banner is missing..."
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
+
+MC_CONTEXT_SETTINGS = {
+    "ignore_unknown_options": True,
+    "help_option_names": ["-h", "--help"],
+}
+
+
+class FiniteFloat(click.ParamType):
+    name = "float"
+
+    def convert(self, value, param, ctx):
+        try:
+            result = float(value)
+        except TypeError, ValueError:
+            self.fail(f"{value!r} is not a valid float", param, ctx)
+        if not math.isfinite(result):
+            self.fail("must be a finite number", param, ctx)
+        return result
+
 
 try:
     __version__ = _version("kawa")
@@ -68,34 +88,34 @@ def mc(mode):
     """Minecraft tools"""
 
 
-@mc.command()
-@click.argument("x", type=float)
-@click.argument("z", type=float)
+@mc.command(context_settings=MC_CONTEXT_SETTINGS)
+@click.argument("x", type=FiniteFloat())
+@click.argument("z", type=FiniteFloat())
 @output_mode
 def ntow(x, z, mode):
     """Convert Nether coordinates to Overworld coordinates"""
     nether_to_overworld(x, z, mode)
 
 
-@mc.command()
-@click.argument("x", type=float)
-@click.argument("z", type=float)
+@mc.command(context_settings=MC_CONTEXT_SETTINGS)
+@click.argument("x", type=FiniteFloat())
+@click.argument("z", type=FiniteFloat())
 @output_mode
 def ownt(x, z, mode):
     """Convert Overworld coordinates to Nether coordinates"""
     overworld_to_nether(x, z, mode)
 
 
-@mc.command()
-@click.argument("level", type=int)
+@mc.command(context_settings=MC_CONTEXT_SETTINGS)
+@click.argument("level", type=click.IntRange(min=0, max=10**9))
 @output_mode
 def lvxp(level, mode):
     """Convert Level to Experience"""
     level_to_experience(level, mode)
 
 
-@mc.command()
-@click.argument("xp", type=int)
+@mc.command(context_settings=MC_CONTEXT_SETTINGS)
+@click.argument("xp", type=click.IntRange(min=0, max=10**18))
 @output_mode
 def xplv(xp, mode):
     """Convert Experience to Level"""
