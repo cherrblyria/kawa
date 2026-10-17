@@ -59,7 +59,7 @@ Flip a coin
 
 ```bash
 $ kawa coinflip
-Heads! The universe has chosen for you.
+Heads! As I expected..
 ```
 
 #### JSON

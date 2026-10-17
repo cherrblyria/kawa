@@ -1,9 +1,10 @@
 import json
 import random
-from .uwuify import uwuify
 from time import localtime
 
 import click
+
+from .uwuify import uwuify
 
 COINS_MESSAGES = [
     "!",
@@ -62,14 +63,12 @@ def coinflip(hour=None, mode="cute", rng=None):
 
     event = pick_event(mode, rng)
     if event is not None:
-        message = random.choice(
-            event["messages"]
-            if event["name"] != "kawa"
-            else uwuify([event["messages"]])
-        )
+        message = random.choice(event["messages"])
+        if event["name"] == "kawa":
+            message = uwuify([message])
     else:
         heads_bias = 0.51 if hour < 12 else 0.49
-        message = random.choice(uwuify([COINS_MESSAGES]))
+        message = uwuify([random.choice(COINS_MESSAGES)])
         side = "Heads" if random.random() < heads_bias else "Tails"
 
     if mode == "json":
@@ -80,5 +79,5 @@ def coinflip(hour=None, mode="cute", rng=None):
         click.echo(side.lower())
     elif event is None:
         click.echo(f"{side}{message}")
-    elif event is not None and event["name"] == "kawa":
+    else:
         click.echo(f"{message}")

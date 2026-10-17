@@ -1,6 +1,5 @@
 import json
 
-import click
 from uwuipy import Uwuipy
 
 
