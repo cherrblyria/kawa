@@ -26,17 +26,13 @@ class MinecraftCliTests(unittest.TestCase):
         result = self.runner.invoke(cli, ["mc", "lvxp", "17", "--json"])
 
         self.assertEqual(result.exit_code, 0)
-        self.assertEqual(
-            json.loads(result.output), {"level": 17, "experience": 394}
-        )
+        self.assertEqual(json.loads(result.output), {"level": 17, "experience": 394})
 
     def test_experience_to_level_json(self):
         result = self.runner.invoke(cli, ["mc", "xplv", "0", "--json"])
 
         self.assertEqual(result.exit_code, 0)
-        self.assertEqual(
-            json.loads(result.output), {"experience": 0, "level": 0}
-        )
+        self.assertEqual(json.loads(result.output), {"experience": 0, "level": 0})
 
 
 if __name__ == "__main__":
