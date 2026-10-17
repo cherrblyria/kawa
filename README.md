@@ -2,6 +2,9 @@
 
 > "A set of useless cute little CLI tools for... whatever."
 
+> [!WARNING]
+> USE THIS AS YOUR OWN RISK AND MENTAL, I vibe coded this FOR FUN not for real usage.
+
 ##### on this page
 
 - [Features](#features)
@@ -22,16 +25,9 @@
 
 ##### Nether ↔ Overworld coordinates calculator
 
-Negative numbers work directly, no `--` needed:
-
 ```bash
-$ kawa mc ntow -5 -3
-Nether: (-5, -3)  (σ･ω･)σ  Overworld: (-40, -24)
-```
-
-```bash
-$ kawa mc ntow 727 90.875
-Nether: (727, 90.875)  (σ･ω･)σ  Overworld: (5816, 727)
+$ kawa mc ntow 727 -90.875
+Nether: (727, -90.875)  (σ･ω･)σ  Overworld: (5816, -727)
 ```
 
 ```bash
@@ -62,8 +58,6 @@ The q-q-quick bwown fox jyumps uvw the wazy dog
 
 #### Coinflip
 
-###### \*this feature is vibe coded
-
 Flip a coin
 
 ```bash
@@ -73,9 +67,7 @@ Heads! As I expected..
 
 #### JSON
 
-###### \*this feature is vibe coded
-
-Pretty-print JSON from a file path or a raw string, powered by Python's built-in `json` module
+Pretty-print JSON from a file path or a raw string.
 
 ```bash
 $ kawa json pretty data.json
@@ -104,7 +96,7 @@ $ echo '{"a": 1}' | kawa json pretty -
 
 #### Output modes
 
-Every command accepts `--json` (machine-readable JSON) or `--plain`
+Every command accepts `--json` or `--plain`
 (undecorated result). The two flags are mutually exclusive.
 
 ```bash
