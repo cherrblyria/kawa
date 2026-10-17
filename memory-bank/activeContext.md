@@ -2,7 +2,9 @@
 
 ## Current Work Focus
 
-Project is **healthy and decoupled** (2026-10-17): `151b8cc` repaired the coinflip breakage `f69ecbe` introduced (pick-then-uwuify, `secret` event prints, ruff `I001`/`F401`, README example), then `3056e31` **decoupled coinflip from the uwuify module** — coinflip uses `uwuipy`'s `Uwuipy` directly and `uwuify.py` echoes in place again (print-in-place restored). **HEAD `34d4f42` is unpushed — `main` is 5 ahead of `origin/main`** (`f69ecbe` → `34d4f42`), all post-v0.3.0/unreleased. `ruff check` + `ruff format --check` clean. Validated twice: 150 flips across all modes (0 crashes), forced `kawa`/`secret` events via `rng` injection, machine-mode zero-roll proof, full command smoke including `uwuify` cute + `--json`.
+Edge-case audit complete (2026-10-18) on branch `fix/edge-cases`: 5 commits (`6611d10` → `e01def6` + docs), 57 `unittest` tests green (minecraft 25, json 17, coinflip 8, uwuify 5, encoding 2), `ruff check` + `ruff format --check` clean. Nothing pushed, tagged, or version-bumped — suggested next version `v0.3.1`.
+
+New conventions: `run_*` module function names (`run_coinflip`, `run_uwuify`) with explicit `__all__` exports (no star-import shadowing); lazy cached `Uwuipy` via `functools.cache get_uwu()` per module; `rng: random.Random` injection everywhere in coinflip; `click.IntRange` bounds (`level ≤ 10**9`, `xp ≤ 10**18`, `indent 0..16`); `--json` + `--plain` together raise `UsageError`; streams forced to UTF-8 at startup.
 
 `src/kawa/modules/coinflip.py` current shape: `EASTER_EGG_EVENTS`/`pick_event` (kawa **1/100**, secret **1/100,000**), pools `COINS_MESSAGES` (8 punctuation fragments), `KAWA_MESSAGES` (5 lines), `SECRET_PLACEHOLDER_MESSAGES` (4 lines, "nutty the dev" placeholder voice). Messages: one `Uwuipy()` instance per flip, `uwu.uwuify(<chosen string>)` — **no dependency on `modules/uwuify.py`** (`3056e31`). Only the `kawa` event is uwuified; `secret` prints raw. The `secret` event remains a **placeholder awaiting the user's lore/interactive-event design** (wire via `EASTER_EGG_EVENTS` + `event["name"]` dispatch).
 

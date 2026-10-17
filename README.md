@@ -22,6 +22,13 @@
 
 ##### Nether ↔ Overworld coordinates calculator
 
+Negative numbers work directly, no `--` needed:
+
+```bash
+$ kawa mc ntow -5 -3
+Nether: (-5, -3)  (σ･ω･)σ  Overworld: (-40, -24)
+```
+
 ```bash
 $ kawa mc ntow 727 90.875
 Nether: (727, 90.875)  (σ･ω･)σ  Overworld: (5816, 727)
@@ -85,6 +92,29 @@ $ kawa json pretty '{"b": 1, "a": 2}' --sort-keys
     "b": 1
 }
 ```
+
+Read from stdin with `-`:
+
+```bash
+$ echo '{"a": 1}' | kawa json pretty -
+{
+    "a": 1
+}
+```
+
+#### Output modes
+
+Every command accepts `--json` (machine-readable JSON) or `--plain`
+(undecorated result). The two flags are mutually exclusive.
+
+```bash
+$ kawa mc ntow 10 20 --json
+{"x": 80, "z": 160}
+$ kawa coinflip --plain
+heads
+```
+
+Shell completion is available via `--autocomplete`.
 
 ### Installation
 
