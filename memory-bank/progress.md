@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**v0.3.0 released** on `main` (tagged `v0.3.0`, pushed 2026-10-16), with **post-release commits pushed** (special-event tiers `68c9ed1`, comment-free rule `580e36d` — in `main`, **not yet in any release**). Working tree clean; `main` in sync with `origin/main`. All documented features work; ruff lint + format are 100% clean; CI passes with smoke tests + binary build check; multi-platform releases are automated via tags.
+**v0.3.0 released** on `main` (tagged `v0.3.0`, 2026-10-16); everything after it is **unreleased**. As of 2026-10-17, HEAD is `151b8cc` (coinflip repair) and **`main` is ahead of `origin/main` by 2 commits** (`f69ecbe`, `151b8cc` — not pushed). **Fixed & validated**: coinflip works in all modes again (crash + silent-`secret` repaired), `ruff check` + `ruff format --check` clean, README coinflip example matches real output. Working tree clean except this memory-bank update. Multi-platform releases remain automated via tags.
 
 ## What Works
 
@@ -12,11 +12,13 @@
 - [x] **`kawa mc xplv <xp>`** — Experience → Level (2-decimal output) + easter eggs (2147483647).
 - [x] **`kawa uwuify <text...>`** — per-word uwuification via uwuipy.
 - [x] **`kawa json pretty <source>`** (2026-10-15, committed `5e7a004`) — pretty-print JSON from a file path or raw string; stdlib `json`, no new deps. Options `-i/--indent` (default 4), `-s/--sort-keys`.
-- [x] **`kawa coinflip`** (2026-10-16, committed `a6e7140`) — biased coinflip: `Heads|Tails! <random message>`; separate `HEADS_MESSAGES`/`TAILS_MESSAGES` pools in `src/kawa/modules/coinflip.py`; AM (hour < 12) Heads 51%/Tails 49%, PM inverted; stdlib `random` + `time.localtime`, no new deps. `hour` param injectable for bias testing.
-- [x] **coinflip special events** (2026-10-16, committed `68c9ed1`, pushed; **post-v0.3.0/unreleased**) — `SPECIAL_TIERS` registry: `kawa` (1/10,000 → `KAWA_MESSAGES`, 29 lines) and `secret` (1/100,000 → `KAWA_SECRET_PLACEHOLDER_MESSAGES`, 3 placeholder lines **pending the user's lore design**); a hit sets `side = "Kawa"` (no coin flip). Cute-mode-only — `--json`/`--plain` always plain heads/tails. User expanded `HEADS_MESSAGES`/`TAILS_MESSAGES` to 20 lines each and merged 9 rare/ultra-rare lines into `KAWA_MESSAGES` (persistence-implying + "browser cookies" lines intentionally dropped — no session state, and it's a CLI). Validated: ruff clean, forced-tier/boundary tests, 1000-flip machine-mode immunity at 100% chances, AM/PM bias regression, 2M-roll rate sanity (210 kawa / 16 secret).
+- [x] **`kawa coinflip`** (2026-10-16, `a6e7140`; reworked `acc29c9` → `2e04c07` → `f69ecbe`; **repaired `151b8cc`**) — biased coinflip: AM (hour < 12) Heads 51%/Tails 49%, PM inverted; message is a random **uwuified** fragment from `COINS_MESSAGES` (8 punctuation fragments like `"! That's it"`), printed as `f"{side}{message}"`; stdlib `random` + `time.localtime`, no new deps. `hour` and `rng` injectable. Validated 2026-10-17: 150 flips across all modes, 0 crashes.
+- [x] **coinflip easter-egg events** (originally `68c9ed1`; refactored `2e04c07`, 2026-10-17, both pushed except HEAD) — `SPECIAL_TIERS`/`pick_special_tier` → **`EASTER_EGG_EVENTS`/`pick_event`**: `kawa` (**1/100**, was 1/10K; `KAWA_MESSAGES`, 5 lines) and `secret` (1/100,000, `SECRET_PLACEHOLDER_MESSAGES`, 4 lines **pending the user's lore design**); a kawa hit replaces the flip and prints a uwuified Kawa message (no `Kawa!` prefix anymore); a `secret` hit prints its raw placeholder message (since `151b8cc`). Cute-mode-only — `--json`/`--plain` always plain heads/tails (zero event rolls). Old 20-line `HEADS_MESSAGES`/`TAILS_MESSAGES` pools were dropped in favor of `COINS_MESSAGES` fragments.
 - [x] **Comment-free codebase** (2026-10-16, user rule) — all `#` comments and non-`cli.py` docstrings removed from every `.py` file; important content relocated here (special-tier semantics in `systemPatterns.md` #7). `cli.py` docstrings kept (Click `--help`). Rationale: user writes own comments to understand their code. Keep new code comment-free; document in memory bank instead.
 - [x] **`--json` / `--plain` output modes** (2026-10-16, committed `78aade8`) — every command accepts both flags anywhere (leaf or group level); `output_mode` decorator in `cli.py`; modules take `mode="cute"` param. `json pretty` accepts the flags but ignores them (already JSON).
-- [x] **ruff lint + format fully clean** (2026-10-16) — all 8 long-standing pre-existing lint errors fixed (blind `except` narrowed to `OSError`/`PackageNotFoundError`, import sorting, `dict()` → literal, redundant `pass` removed, enumerate misuse) plus a `ruff format` pass. `ruff check src` and `ruff format --check src` both pass with 0 issues.
+- [x] **ruff lint + format fully clean** (2026-10-16) — all 8 long-standing pre-existing lint errors fixed (blind `except` narrowed to `OSError`/`PackageNotFoundError`, import sorting, `dict()` → literal, redundant `pass` removed, enumerate misuse) plus a `ruff format` pass. Briefly regressed by `f69ecbe` (I001 + F401), **fixed again in `151b8cc`** — `ruff check src` and `ruff format --check src` both clean (10 files) as of 2026-10-17.
+- [x] **`uwuify` returns instead of echoing** (`f69ecbe`, 2026-10-17) — `modules/uwuify.py` returns the string/JSON; the CLI command echoes in `cli.py`, and `coinflip` reuses it internally. `kawa uwuify` verified working (`kawa uwuify hello world` → `hewwo wowwd`).
+- [x] **README trimmed** (`acc29c9`, 2026-10-16) — tagline now "A set of useless cute little CLI tools for... whatever."; **Output-modes section deleted** (the `--json`/`--plain` feature still exists in code), coinflip section shortened to "Flip a coin", features reordered (MC → Uwuify → Coinflip → JSON). Stale coinflip example replaced with real output in `151b8cc`; Output-modes section intentionally stays deleted (user decision).
 - [x] **`kawa --version`** — ASCII banner + version (graceful fallback if asset missing).
 - [x] **`--help` / `-h`** on all groups/commands (Click docstrings).
 - [x] **Shell completion** via `auto-click-auto`.
@@ -30,14 +32,18 @@
 
 ## What's Left to Build
 
-- Additional "cute" tools — README explicitly leaves the door open ("...that's it (for now)").
+- Additional "cute" tools — README tagline now open-ended ("...for... whatever.").
 - A real automated test suite (pytest or similar); currently CI smoke tests are the only verification.
-- ~~Make ruff lint/format CI checks **blocking** (they're `continue-on-error` today, so regressions can slip through).~~ — now much safer to flip: codebase is 100% lint + format clean as of 2026-10-16; just remove `continue-on-error` when ready.
+- ~~Make ruff lint/format CI checks **blocking** (they're `continue-on-error` today, so regressions can slip through).~~ — **safe to flip**: ruff check + format are clean as of `151b8cc`; just remove `continue-on-error` when ready.
+- **Push `f69ecbe` + `151b8cc`** — `main` is ahead of `origin/main` by 2 commits.
 - ~~Decide whether to commit `.clinerules/` and `memory-bank/`~~ — **resolved**: both committed in `14da08b docs: initialize memory bank`.
 - Possible: `CHANGELOG.md`, PyPI publishing (currently git-based installs only), man page, richer completion. (`--json` output — **done**, see "What Works".)
 
 ## Known Issues / Quirks
 
+- **README drift** (`acc29c9`): Output-modes section deleted while `--json`/`--plain` still work — left as-is per user decision (coinflip example fixed in `151b8cc`).
+- **`f69ecbe` + `151b8cc` unpushed** — `main` is ahead of `origin/main` by 2 commits.
+- *(Resolved 2026-10-17 in `151b8cc`: coinflip crash in all modes — nested-list `uwuify` calls; silent `secret` branch; ruff I001/F401.)*
 - **"Expreience" typo fixed → "Experience"** (2026-10-16, user request): corrected everywhere in one coordinated pass — CLI help docstrings, `minecraft.py` output strings, and README examples. Full-tree grep confirms no occurrences remain.
 - Lint/format failures do not fail CI (by design or oversight — unconfirmed intent).
 - `no_dot_zero()`/`comma()` require numeric input; any future command passing strings must format differently.
@@ -56,3 +62,7 @@
 7. **Feature growth**: portal calculator first, then level↔XP calculator, then `kawa json pretty` (2026-10-15, first non-`mc`/non-text tool; lives in `src/kawa/modules/json_tools.py` under the root `json` group), then `kawa coinflip` (2026-10-16, first stdlib-`random` toy tool; `src/kawa/modules/coinflip.py`, top-level command) — future tools follow the thin-CLI + module-function pattern.
 8. **Git remote moved to SSH** (2026-10-16): `origin` now `git@github.com:cherrblyria/kawa.git` because HTTPS had no stored credentials — pushes work without prompting.
 9. **Global output modes** (2026-10-16, committed `78aade8`): `--json`/`--plain` added via a shared `output_mode` decorator applied to every group and leaf command — mode resolves as leaf flag > group flag > cute default, flags may appear anywhere Click allows (interspersed args). Modules keep print-in-place but now branch on `mode`. `json pretty` deliberately ignores the flags since its output is already JSON.
+10. **README/tagline simplification** (2026-10-16, `acc29c9 docs: whatever`): tagline → "A set of useless cute little CLI tools for... whatever."; Output-modes docs removed from README, coinflip docs shortened to "Flip a coin", features reordered (MC → Uwuify → Coinflip → JSON); CLI help "Flip a biased coin" → "Flip a coin".
+11. **Coinflip restructured into easter-egg events** (2026-10-17, `2e04c07 fix(coinflip): what`): `SPECIAL_TIERS` → `EASTER_EGG_EVENTS`, `pick_special_tier` → `pick_event`; kawa odds 1/10K → **1/100**; `HEADS_MESSAGES`/`TAILS_MESSAGES` (20 lines each) replaced by 8 short `COINS_MESSAGES` punctuation fragments; `KAWA_SECRET_PLACEHOLDER_MESSAGES` → `SECRET_PLACEHOLDER_MESSAGES` ("nutty the dev" voice); KAWA_MESSAGES down to 5 lines. Net −61 lines.
+12. **Messages are uwuified** (2026-10-17, `f69ecbe`, user-authored WIP "human slop code, lol"): `uwuify()` switched to a return-value API so `coinflip` composes with it; cute output became `side + fragment` (no separator); `mc` easter-egg messages changed from `\n\n` to `\n`. Landed with defects (crash in all modes, 2 ruff errors, silent secret).
+13. **Coinflip repair** (2026-10-17, `151b8cc`): pick the message *first*, then `uwuify([chosen])` — the old code passed nested lists to `uwuify()` (crash) and had no `secret` output branch (silent). Also fixed ruff `I001`/`F401` and refreshed the README coinflip example. Key invariant now documented: `uwuify()` takes a flat list of strings and returns **one joined string** — never pass a whole pool.

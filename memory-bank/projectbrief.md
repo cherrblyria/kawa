@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Kawa** (`kawa`) — "A set of useless cute little CLI tools for Minecraft and.. ahh... that's it (for now)".
+**Kawa** (`kawa`) — "A set of useless cute little CLI tools for... whatever." (current README tagline, simplified in `acc29c9`; the original was "…for Minecraft and.. ahh... that's it (for now)").
 
 A small, playful Python CLI tool collection. Current scope:
 
@@ -10,8 +10,8 @@ A small, playful Python CLI tool collection. Current scope:
    - Nether ↔ Overworld coordinate calculator (`ntow`, `ownt`)
    - Level ↔ Experience calculator (`lvxp`, `xplv`)
 2. **Uwuify** (`kawa uwuify ...`) — text transformation powered by [uwuipy](https://github.com/Cuprum77/uwuipy)
-3. **JSON pretty printer** (`kawa json pretty ...`) — file path or raw string input, stdlib `json`
-4. **Coinflip** (`kawa coinflip`) — biased coinflip with swappable message pools (AM/PM bias) + cute-mode-only special-event tiers (rare 1/10K Kawa encounter, placeholder secret 1/100K pending lore)
+3. **Coinflip** (`kawa coinflip`) — biased coinflip (AM/PM) with short uwuified message fragments (`COINS_MESSAGES`) + cute-mode-only easter-egg events: kawa 1/100, secret 1/100K placeholder (pending lore)
+4. **JSON pretty printer** (`kawa json pretty ...`) — file path or raw string input, stdlib `json`
 
 ## Core Requirements & Goals
 
@@ -35,4 +35,4 @@ A small, playful Python CLI tool collection. Current scope:
 ## Scope Boundaries
 
 - No web UI, no server, no persistence — pure CLI.
-- "Useless cute" is the brand: features are intentionally small and fun; the README explicitly implies more tools may come later ("...that's it (for now)").
+- "Useless cute" is the brand: features are intentionally small and fun; the open-ended README tagline ("...for... whatever.") implies more tools may come later.
