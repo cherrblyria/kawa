@@ -145,7 +145,9 @@ def json_group(mode):
 
 @json_group.command()
 @click.argument("source")
-@click.option("-i", "--indent", type=int, default=4, show_default=True)
+@click.option(
+    "-i", "--indent", type=click.IntRange(min=0, max=16), default=4, show_default=True
+)
 @click.option("-s", "--sort-keys", is_flag=True)
 @output_mode
 def pretty(source, indent, sort_keys, mode):
