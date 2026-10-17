@@ -1,5 +1,6 @@
 import functools
 import math
+import sys
 from importlib.metadata import PackageNotFoundError
 from importlib.metadata import version as _version
 from importlib.resources import files
@@ -14,6 +15,13 @@ try:
     BANNER = files("kawa").joinpath("assets/banner.txt").read_text(encoding="utf-8")
 except OSError:
     BANNER = "Oops!, seem like banner is missing..."
+
+for stream in (sys.stdout, sys.stderr):
+    if hasattr(stream, "reconfigure"):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except ValueError:
+            pass
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 
