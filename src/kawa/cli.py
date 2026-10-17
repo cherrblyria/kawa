@@ -107,7 +107,7 @@ def xplv(xp, mode):
 @output_mode
 def uwuify_cmd(text, mode):
     """Uwuify given text with uwuipy"""
-    click.echo(uwuify(list(text), mode))
+    uwuify(list(text), mode)
 
 
 @cli.command(name="coinflip")

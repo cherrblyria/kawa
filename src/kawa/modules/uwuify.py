@@ -1,5 +1,6 @@
 import json
 
+import click
 from uwuipy import Uwuipy
 
 
@@ -11,6 +12,6 @@ def uwuify(text: list, mode="cute"):
     result = " ".join(uwuified)
 
     if mode == "json":
-        return json.dumps({"result": result}, ensure_ascii=False)
+        click.echo(json.dumps({"result": result}, ensure_ascii=False))
     else:
-        return result
+        click.echo(result)
