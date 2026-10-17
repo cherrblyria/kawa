@@ -35,6 +35,9 @@ def overworld_to_nether(x, z, mode="cute"):
 
 
 def level_to_experience(level, mode="cute"):
+    if level < 0:
+        raise click.BadParameter("level must be non-negative", param_hint="level")
+
     if level <= 16:
         exp = level**2 + 6 * level
     elif level <= 31:
@@ -57,6 +60,9 @@ def level_to_experience(level, mode="cute"):
 
 
 def experience_to_level(xp, mode="cute"):
+    if xp < 0:
+        raise click.BadParameter("xp must be non-negative", param_hint="xp")
+
     if xp <= 352:
         level = math.sqrt(xp + 9) - 3
     elif xp <= 1507:
