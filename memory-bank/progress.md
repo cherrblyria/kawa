@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**Code at 0.3.1** (`0a10611` == `origin/main`); tags `v0.3.1` (on `62a34a2`) and `v0.3.2` (on `b9fe2ac`) **both predate the code bump — version/tag mismatch**. Edge-case audit merged (PR #4). Suite: **58 `unittest` tests green on main** (minecraft 26, json 17, coinflip 8, uwuify 5, encoding 2). Ruff blocking + clean. **Tree: 58 run, all green** (drift fixed 2026-10-20). **Uncommitted working tree**: coordinate + XP cute-output rework (new kaomoji style, 4-message `BORDER_MESSAGE`, `rng` injection, `xp_for_level` renamed to `exp_for_level`), `cli.py` getattr-reconfigure fix, `coinflip.py` rng guards. README still asserts old format; 26 minecraft tests now assert new format (58/58 green). `ownt` tuple bug fixed (both use `rng.choice`).
+**Code at 0.3.1** (`0a10611` == `origin/main`); tags `v0.3.1` (on `62a34a2`) and `v0.3.2` (on `b9fe2ac`) **both predate the code bump — version/tag mismatch**. Edge-case audit merged (PR #4). Suite: **58 `unittest` tests green on main** (minecraft 26, json 17, coinflip 8, uwuify 5, encoding 2). Ruff blocking + clean. **Tree: 58 run, all green** (drift fixed 2026-10-20). **Uncommitted working tree**: coordinate + XP cute-output rework (new kaomoji style, 4-message `BORDER_MESSAGE`, `rng` injection, `xp_for_level` renamed to `exp_for_level`), `cli.py` getattr-reconfigure fix, `coinflip.py` rng guards. README + 26 minecraft tests now assert new format (58/58 green). `ownt` tuple bug fixed (both use `rng.choice`).
 
 ## What Works
 
@@ -23,7 +23,7 @@
 
 ## What's Left to Build
 
-- Decide the uncommitted mc cute rework (coords AND xp/level, 4 borders, exp_for_level rename; tests green, README still old) (`ownt` tuple bug, format change, README + 26 tests if kept).
+- Decide the uncommitted mc cute rework (coords AND xp/level, 4 borders, exp_for_level rename; tests + README updated) (`ownt` tuple bug, format change, README + 26 tests if kept).
 - Resolve version/tag mismatch (code 0.3.1 vs tag v0.3.2).
 - Additional "cute" tools (tagline is open-ended).
 - Possible: `CHANGELOG.md`, PyPI publishing, man page, richer completion.

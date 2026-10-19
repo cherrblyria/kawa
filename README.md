@@ -27,24 +27,26 @@
 
 ```bash
 $ kawa mc ntow 727 -90.875
-Nether: (727, -90.875)  (σ･ω･)σ  Overworld: (5816, -727)
+(x: 727 y: -90.875) in Nether is (x: 5816 y: -727) in Overworld  /ᐠ｡ꞈ｡ᐟ\
 ```
 
 ```bash
 $ kawa mc ownt 727 5816
-Overworld: (727, 5816)  (σ･ω･)σ  Nether: (90.875, 727)
+(x: 727 y: 5816) in Overworld is (x: 90.875 y: 727) in Nether  /ᐠ｡ꞈ｡ᐟ\
 ```
 
 ##### Level ↔ Experience calculator
 
 ```bash
 $ kawa mc lvxp 21864
-Level: 21,864  (σ≧∀≦)σ  Experience: 2,147,604,552
+Level 21,864 is 2,147,604,552 Experience /ᐠ｡‸｡ᐟ\
+ - I think this amount of XP can break the game :3
 ```
 
 ```bash
 $ kawa mc xplv 2147483647
-Experience: 2,147,483,647  (σ≧∀≦)σ  Level: 21,863.39
+2,147,483,647 Experience is Level 21,863.39 /ᐠ｡‸｡ᐟ\
+ - Have you ever reach this level before?
 ```
 
 #### Uwuify

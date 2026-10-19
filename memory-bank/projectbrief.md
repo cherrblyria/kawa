@@ -23,7 +23,7 @@ A small, playful Python CLI tool collection. Current scope:
   - **From source** with `uv sync --dev`
 - Keep the codebase tiny, dependency-light, and readable.
 - Support shell completion out of the box.
-- Real `unittest` suite (`tests/`, 58 tests on main; tree tests green, README still old format) + blocking ruff + smoke tests in CI.
+- Real `unittest` suite (`tests/`, 58 tests on main; tree tests + README match new format) + blocking ruff + smoke tests in CI.
 
 ## Project Identity
 
