@@ -31,13 +31,13 @@ cli.py ──imports──▶ modules/ ──imports──▶ utils/
    └── importlib.metadata.version("kawa")
 ```
 
-- **`cli.py`** defines root group `cli` (banner version + completion), subgroup `mc`, top-level `uwuify`/`coinflip`, and `json` group. Thin adapters: parse args with Click types, call module functions. Every group/leaf wrapped by `output_mode` (`--json`/`--plain`).
+- **`cli.py`** defines root group `cli` (a `ClickAliasedGroup`; banner version + completion), subgroup `minecraft` (alias `mc`, also `ClickAliasedGroup`), top-level `uwuify`/`coinflip`, and `json` group (plain, no aliases). Thin adapters: parse args with Click types, call module functions. Every group/leaf wrapped by `output_mode` (`--json`/`--plain`).
 - **`modules/`** own domain math and all output. Every module prints via `click.echo` (print-in-place), and **modules never import other modules** — coinflip uses `uwuipy` directly (`3056e31`).
 - **`utils/`** are pure formatting functions shared by modules.
 
 ## Key Technical Decisions
 
-1. **Click groups**: `cli` → `mc` → `{ntow, ownt, lvxp, xplv}`; `uwuify`/`coinflip` at root; `json` → `{pretty}`. Help text lives in docstrings.
+1. **Click groups + aliases** (`b937658`): `cli` → `minecraft` (alias `mc`) → `{nether` (aliases `ntow`,`nt`), `overworld` (`ownt`,`ow`), `level` (`lvxp`,`lv`), `xp` (`xplv`)}`; `uwuify` (alias `uwu`) / `coinflip` (alias `cf`) at root; `json` → `{pretty}`. Aliases via `click-aliases` `ClickAliasedGroup` (root + `minecraft` only; `json` stays a plain group). Help text lives in docstrings.
 2. **Explicit export pattern** (since `e01def6`): `modules/__init__.py` lists every name + `__all__` (`run_*` names avoid star-shadowing). `utils/__init__.py` still star-exports.
 3. **Print-in-place, not return**: module functions do their own `click.echo`. (Briefly violated by `f69ecbe`; reverted `3056e31`.)
 4. **Defensive asset/metadata loading**: banner/version in try/except with fallbacks.

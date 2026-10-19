@@ -6,6 +6,7 @@
 |---|---|
 | Language | Python **≥ 3.14** (`.python-version` = `3.14`; flake `pkgs.python314`) |
 | CLI framework | **Click ≥ 8.1.8** |
+| Command aliases | **click-aliases ≥ 1.0.7** (`ClickAliasedGroup`, since `b937658`) |
 | Shell completion | **auto-click-auto ≥ 0.1.6** |
 | Uwuify engine | **uwuipy ≥ 1.0.0** (bumped from 0.1.5 on main) |
 | Build backend | **hatchling** (wheel packages `src/kawa`) |

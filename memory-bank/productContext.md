@@ -11,9 +11,9 @@ Kawa is a hobby/joy project: a bundle of tiny CLI utilities that are useful in p
 
 ## How It Should Work
 
-- Run `kawa --help` (or `kawa -h`) to discover grouped commands.
+- Run `kawa --help` (or `kawa -h`) to discover grouped commands. Every command has a descriptive canonical name plus short/legacy aliases (`kawa minecraft`/`kawa mc`, `ntow`/`nt`, `ownt`/`ow`, `lvxp`/`lv`, `xplv`, `uwu`, `cf`), so old and short spellings both work.
 - Every command accepts **`--plain`** (undecorated result only, e.g. `heads`, `5816, 727`) and **`--json`** (single-line JSON) output modes, usable anywhere on the command line; mode resolves as leaf flag > group flag > cute default. The two flags together raise `UsageError`. `json pretty` accepts the flags but ignores them (already JSON).
-- Negative coordinates work directly with no `--` separator (`MC_CONTEXT_SETTINGS` sets `ignore_unknown_options` on all `mc` leaf commands).
+- Negative coordinates work directly with no `--` separator (`MC_CONTEXT_SETTINGS` sets `ignore_unknown_options` on all `minecraft` leaf commands (alias `mc`)).
 - Numbers are formatted prettily: integers with thousands separators and no `.0`; floats shown with 2 decimals (`comma`, `no_dot_zero` helpers).
 - `kawa --version` prints the ASCII banner (loaded from `src/kawa/assets/banner.txt`) plus the version.
 - Boundary values get playful easter-egg messages (max XP level 21863, `2147483647` XP; world-border coordinates pick randomly from a 4-line `BORDER_MESSAGE` list).
