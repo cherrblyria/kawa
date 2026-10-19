@@ -1,12 +1,20 @@
 import json
 import math
+import random
 
 import click
 
 from ..utils import *
 
+BORDER_MESSAGE = [
+    "\n - Well, that's past the world border, good luck getting there :3",
+    "\n - Are you going to build your base there??",
+    "\n - Have you ever reach that?",
+    "\n - Let's go Farland :3",
+]
 
-def xp_for_level(level):
+
+def exp_for_level(level):
     if level <= 16:
         return level**2 + 6 * level
     elif level <= 31:
@@ -25,15 +33,20 @@ def check_overflow(value):
         raise click.BadParameter("result out of range")
 
 
-def nether_to_overworld(x, z, mode="cute"):
+def nether_to_overworld(x, z, mode="cute", rng=None):
     check_finite(x)
     check_finite(z)
     raw_x = x * 8
     raw_z = z * 8
+
     check_overflow(raw_x)
     check_overflow(raw_z)
     ow_x = no_dot_zero(raw_x)
     ow_z = no_dot_zero(raw_z)
+
+    if rng is None:
+        rng = random.Random()
+
     if mode == "json":
         click.echo(json.dumps({"x": ow_x, "z": ow_z}, allow_nan=False))
     elif mode == "plain":
@@ -41,23 +54,26 @@ def nether_to_overworld(x, z, mode="cute"):
     else:
         border = ""
         if abs(x) > 30000000 or abs(z) > 30000000:
-            border = (
-                "\n - Well, that's past the world border, good luck getting there :3"
-            )
+            border = rng.choice(BORDER_MESSAGE)
         click.echo(
-            f"Nether: ({no_dot_zero(x)}, {no_dot_zero(z)})  (σ･ω･)σ  Overworld: ({ow_x}, {ow_z}){border}"
+            f"(x: {no_dot_zero(x)} y: {no_dot_zero(z)}) in Nether is (x: {ow_x} y: {ow_z}) in Overworld  /ᐠ｡ꞈ｡ᐟ\\{border}"
         )
 
 
-def overworld_to_nether(x, z, mode="cute"):
+def overworld_to_nether(x, z, mode="cute", rng=None):
     check_finite(x)
     check_finite(z)
     raw_x = x / 8
     raw_z = z / 8
+
     check_overflow(raw_x)
     check_overflow(raw_z)
     ow_x = no_dot_zero(raw_x)
     ow_z = no_dot_zero(raw_z)
+
+    if rng is None:
+        rng = random.Random()
+
     if mode == "json":
         click.echo(json.dumps({"x": ow_x, "z": ow_z}, allow_nan=False))
     elif mode == "plain":
@@ -65,43 +81,45 @@ def overworld_to_nether(x, z, mode="cute"):
     else:
         border = ""
         if abs(x) > 30000000 or abs(z) > 30000000:
-            border = (
-                "\n - Well, that's past the world border, good luck getting there :3"
-            )
+            border = rng.choice(BORDER_MESSAGE)
         click.echo(
-            f"Overworld: ({no_dot_zero(x)}, {no_dot_zero(z)})  (σ･ω･)σ  Nether: ({ow_x}, {ow_z}){border}"
+            f"(x: {no_dot_zero(x)} y: {no_dot_zero(z)}) in Overworld is (x: {ow_x} y: {ow_z}) in Nether  /ᐠ｡ꞈ｡ᐟ\\{border}"
         )
 
 
 def level_to_experience(level, mode="cute"):
     if level < 0:
         raise click.BadParameter("level must be non-negative", param_hint="level")
-    exp = xp_for_level(level)
+
+    xp = exp_for_level(level)
     if mode == "json":
-        click.echo(json.dumps({"level": level, "experience": no_dot_zero(exp)}))
+        click.echo(json.dumps({"level": level, "experience": no_dot_zero(xp)}))
     elif mode == "plain":
-        click.echo(str(no_dot_zero(exp)))
+        click.echo(str(no_dot_zero(xp)))
     else:
         message = ""
         if level == 21863:
             message = "\n - This's the maximum XP the game can handle btw :3"
         elif level > 21863:
             message = "\n - I think this amount of XP can break the game :3"
-        click.echo(f"Level: {comma(level)}  (σ≧∀≦)σ  Experience: {comma(exp)}{message}")
+        click.echo(f"Level {comma(level)} is {comma(xp)} Experience /ᐠ｡‸｡ᐟ\\{message}")
 
 
 def experience_to_level(xp, mode="cute"):
     if xp < 0:
         raise click.BadParameter("xp must be non-negative", param_hint="xp")
+
     if xp <= 352:
         level = math.sqrt(xp + 9) - 3
     elif xp <= 1507:
         level = (81 / 10) + math.sqrt((2 / 5) * (xp - (7839 / 40)))
     else:
         level = (325 / 18) + math.sqrt((2 / 9) * (xp - (54215 / 72)))
+
     candidate = round(level)
-    if candidate >= 0 and xp_for_level(candidate) == xp:
+    if candidate >= 0 and exp_for_level(candidate) == xp:
         level = candidate
+
     if mode == "json":
         click.echo(json.dumps({"experience": xp, "level": no_dot_zero(level)}))
     elif mode == "plain":
@@ -112,4 +130,4 @@ def experience_to_level(xp, mode="cute"):
             message = "\n - Have you ever reach this level before?"
         elif xp > 2147483647:
             message = "\n - It's impossible to reach this level in survival btw :3"
-        click.echo(f"Experience: {comma(xp)}  (σ≧∀≦)σ  Level: {comma(level)}{message}")
+        click.echo(f"{comma(xp)} Experience is Level {comma(level)} /ᐠ｡‸｡ᐟ\\{message}")

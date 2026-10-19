@@ -2,67 +2,58 @@
 
 ## Current Work Focus
 
-Edge-case audit complete (2026-10-18) on branch `fix/edge-cases`: 5 commits (`6611d10` → `e01def6` + docs), 57 `unittest` tests green (minecraft 25, json 17, coinflip 8, uwuify 5, encoding 2), `ruff check` + `ruff format --check` clean. Nothing pushed, tagged, or version-bumped — suggested next version `v0.3.1`.
+Edge-case audit **merged** (PR #4, `fix/edge-cases` into `main`, HEAD `0a10611` == `origin/main`). Follow-ups: README trim (`b9fe2ac`, tagged `v0.3.2`), code bumped to **0.3.1** (`2dd4856`/`d758923`/`9083713`), test PR #3, ruff-enforcement PR #2, negative-input PR #1. Suite is **58 tests on main** (minecraft 26, json 17, coinflip 8, uwuify 5, encoding 2) via `python -m unittest discover -s tests -v` in CI (ubuntu + windows jobs); **working tree runs 58 green** (format drift resolved, see below).
 
-New conventions: `run_*` module function names (`run_coinflip`, `run_uwuify`) with explicit `__all__` exports (no star-import shadowing); lazy cached `Uwuipy` via `functools.cache get_uwu()` per module; `rng: random.Random` injection everywhere in coinflip; `click.IntRange` bounds (`level ≤ 10**9`, `xp ≤ 10**18`, `indent 0..16`); `--json` + `--plain` together raise `UsageError`; streams forced to UTF-8 at startup.
+**Uncommitted working tree (all differ from `0a10611`):** `cli.py` UTF-8 startup uses `getattr`+`callable` (fixes Pylance `reconfigure` unknown-attribute on `TextIO`); `minecraft.py` cute-output rework (kaomoji style, 4-message `BORDER_MESSAGE` list, `rng` injection, `xp_for_level` renamed to `exp_for_level`); `coinflip.py` blank-line reformat + `rng` None-guards; `tests/test_minecraft_cli.py` asserts the new kaomoji format (4 drifted tests fixed 2026-10-20: `test_negative_coordinates`, `test_double_dash_still_works`, `test_readme_examples` updated; `test_world_border_quip` now asserts `any(BORDER_MESSAGE)` since only 1 of 4 random messages matched the old `world border` substring; dead `test_xp_boundaries` revived from under `if __name__`, suite 57 to 58). README still asserts old kaomoji style. Old `ownt` tuple bug is fixed - both converters use `rng.choice(BORDER_MESSAGE)`.
 
-`src/kawa/modules/coinflip.py` current shape: `EASTER_EGG_EVENTS`/`pick_event` (kawa **1/100**, secret **1/100,000**), pools `COINS_MESSAGES` (8 punctuation fragments), `KAWA_MESSAGES` (5 lines), `SECRET_PLACEHOLDER_MESSAGES` (4 lines, "nutty the dev" placeholder voice). Messages: one `Uwuipy()` instance per flip, `uwu.uwuify(<chosen string>)` — **no dependency on `modules/uwuify.py`** (`3056e31`). Only the `kawa` event is uwuified; `secret` prints raw. The `secret` event remains a **placeholder awaiting the user's lore/interactive-event design** (wire via `EASTER_EGG_EVENTS` + `event["name"]` dispatch).
+Conventions: `run_*` names (`run_coinflip`, `run_uwuify`) with explicit `__all__`; lazy cached `Uwuipy` via `functools.cache get_uwu()` per module; `rng` injection in coinflip + minecraft converters; `click.IntRange` bounds (level ≤ 1e9, xp ≤ 1e18, indent 0..16); `--json`+`--plain` → `UsageError`; UTF-8 streams forced at startup; `FiniteFloat` rejects NaN/inf; `MC_CONTEXT_SETTINGS` on `mc` leaves for negative numbers.
 
-## Recent Changes (from git history)
+Coinflip shape: `EASTER_EGG_EVENTS`/`pick_event` (kawa 1/100, secret 1/100K), `COINS_MESSAGES` (8 fragments), `KAWA_MESSAGES` (5), `SECRET_PLACEHOLDER_MESSAGES` (4, "nutty the dev" voice). No dependency on `modules/uwuify.py` (`3056e31`). Only `kawa` is uwuified; `secret` prints raw and awaits the user's lore design.
 
-- `34d4f42` docs(memory-bank): module-decoupling convention + uwuify echo restore — **HEAD, unpushed**
-- `3056e31` refactor(coinflip): use uwuipy directly, restore uwuify echo
-- `4348b44` docs(memory-bank): sync coinflip repair state
-- `151b8cc` fix(coinflip): pick-then-uwuify messages + print secret event
-- `f69ecbe` feat(coinflip): uwuify coinflip (human slop code, lol)
-- `2e04c07` fix(coinflip): what — `EASTER_EGG_EVENTS` refactor
-- `acc29c9` docs: whatever — README trim + new tagline
-- `90376f2` docs(memory-bank): sync post-v0.3.0 state
-- `580e36d` docs(memory-bank): special tiers pattern + comment-free rule
-- `68c9ed1` feat(coinflip): cute-mode-only special event tiers
-- `cfeb6a0` chore(uv): sync lockfile for 0.3.0 + memory-bank release status
-- `bef2494` chore(bump version): 0.3.0
-- `34bfae5` fix(cli): correct Expreience typo to Experience
-- `87d1d79` docs(memory-bank): sync with shipped output modes + record typo fix
-- `78aade8` feat(cli): global --json/--plain output modes
-- `a6e7140` feat(coinflip): biased coinflip command
-- `5e7a004` feat(json): pretty print command
-- `14da08b` docs: initialize memory bank
+## Recent Changes (newest first)
+
+- `0a10611` merge main (HEAD == origin/main)
+- `9083713` + `2dd4856` + `d758923` bump code to 0.3.1
+- `b9fe2ac` docs(readme): human slop (tag **v0.3.2**) — warning banner, trimmed sections, Output-modes restored
+- `c74297a` Merge PR #4 `fix/edge-cases` (`6611d10` mc → `9ef1b2d` json → `adc030f` UTF-8 → `e01def6` internals → `0a8543a` docs/sync)
+- `f9f39ad` Merge PR #3 test suite; `3eafe87` Merge PR #2 blocking ruff; `15d3f89` Merge PR #1 non-negative XP/level
+- `62a34a2` docs(readme): sort (tag **v0.3.1**)
+- Older: `34d4f42` memory-bank sync; `3056e31` coinflip→uwuipy direct; `151b8cc` coinflip repair; `f69ecbe` uwuify-coinflip WIP; `2e04c07` EASTER_EGG_EVENTS refactor; `acc29c9` README trim
 
 ## Next Steps / Likely Future Work
 
-- **Push** — `main` is ahead of `origin/main` by 5 commits (`f69ecbe` → `34d4f42`, all post-v0.3.0).
-- Optional: the README still has no Output-modes docs (user decision 2026-10-17 — keep deleted unless they change their mind).
-- Design + wire the **lore/interactive coinflip event** with the user (details pending from user); `secret`'s `SECRET_PLACEHOLDER_MESSAGES` get replaced then. Extension point: `EASTER_EGG_EVENTS` registry + `event["name"]` dispatch in the cute branch.
-- Next release: everything since `v0.3.0` (`68c9ed1` … `34d4f42`) is unreleased — bump (both `pyproject.toml` and `src/kawa/__init__.py`) + tag when the user wants it shipped (e.g. `v0.4.0`).
-- Add more "useless cute" tools (README tagline now open-ended: "...for... whatever.").
-- Introduce a real test suite (currently only CI smoke tests; no pytest — and CI does **not** exercise `coinflip`; worth adding it to the smoke list now that it works).
-- Consider making ruff lint/format CI checks **blocking** (currently `continue-on-error: true`) — ruff is clean as of `151b8cc`, so safe to flip.
+- **Resolve version/tag mismatch**: code is 0.3.1 but latest tag is v0.3.2, and both v0.3.1/v0.3.2 predate the code bump. Pick one version, bump both files together, retag if needed.
+- ~~Fix uncommitted `ownt` bug~~ **done in tree** (both converters use `rng.choice`); still uncommitted.
+- Decide the mc cute rework (coords AND xp/level + 4 random borders + exp_for_level rename): commit or revert. Tests now green (58/58); README still asserts old format. Old line below superseded: (new `/ᐠ｡ꞈ｡ᐟ\` style + random borders): commit (fixing `ownt`) or revert. If kept, update README + 26 minecraft tests.
+- Design the **lore/interactive coinflip event** with the user; replace `SECRET_PLACEHOLDER_MESSAGES` then.
+- Add more "useless cute" tools; possible `CHANGELOG.md`, PyPI publishing, man page.
+
 
 ## Active Decisions & Considerations
 
 - **Python 3.14 is a hard floor** (`requires-python = ">=3.14"`, `.python-version` = `3.14`, flake uses `pkgs.python314`). Code relies on `int.is_integer()` (3.12+) via `comma()`.
 - **Click** is the CLI framework (group-based command tree).
-- **Star-imports are the established pattern**: `from .utils import *`, `from .modules import *`, `from ..utils import *`. Follow it for consistency rather than switching to explicit imports.
-- Output goes through `click.echo` (not `print`) — keep this convention. **All modules echo in place** (the `f69ecbe` return-value experiment in `uwuify.py` was reverted by `3056e31`). New convention (user decision, 2026-10-17, `systemPatterns.md` #8): modules do **not** import other modules — if two features need the same third-party lib, each imports it directly (coinflip → `uwuipy`).
-- Version is declared in **two places** that must stay in sync: `pyproject.toml` (`version = "0.3.0"`) and `src/kawa/__init__.py` (`__version__ = "0.3.0"`); runtime display prefers `importlib.metadata.version("kawa")`.
+- **Explicit imports in `modules/__init__.py`** (since `e01def6`): `from .coinflip import (...)` with `__all__` — no longer star-imports there (star-imports remain in `utils/__init__.py` and consumers). Do not reintroduce shadowing.
+- Output goes through `click.echo` (not `print`). **All modules echo in place**. Modules do **not** import other modules — each imports third-party libs directly (coinflip → `uwuipy`).
+- Version lives in **two files** kept in sync: `pyproject.toml` + `src/kawa/__init__.py` (both `0.3.1`); runtime prefers `importlib.metadata.version("kawa")`.
 
 ## Patterns & Preferences
 
-- Commit messages: conventional-commit style with scopes — `feat(mc):`, `fix(ci):`, `chore(nix):`, `docs(readme):`, `refactor(cli):`.
-- Kaomoji differ per command family: `(σ･ω･)σ` for coordinates, `(σ≧∀≦)σ` for XP/level.
-- The "Expreience" → "Experience" typo was fixed everywhere in a single coordinated change (2026-10-16, user request) — for future typos, grep the whole tree (code + README + docs) and fix all occurrences together.
-- **NO CODE COMMENTS** (user rule, 2026-10-16): the codebase is deliberately comment-free — zero `#` comments and zero docstrings anywhere except `cli.py` (Click uses command/group docstrings as `--help` text, so those stay). *Reason: the user writes their own comments to learn/verify they understand their own code.* Do not add comments to Python files; if a detail matters (math, TODOs, WIP, design intent, extension points), put it in the memory bank instead. `pick_special_tier`/`pretty_json` docstrings were removed as part of this sweep (`pick_special_tier` was later renamed `pick_event` in `2e04c07`).
+- Commits: conventional-commit with scopes — `feat(mc):`, `fix(ci):`, `chore(nix):`, `docs(readme):`, `refactor(cli):`.
+- Kaomoji per family — **in flux**: committed code uses `(σ･ω･)σ` (coords) / `(σ≧∀≦)σ` (XP); uncommitted tree switches coords to `/ᐠ｡ꞈ｡ᐟ\`.
+- Typo fixes: grep the whole tree (code + README + docs) in one pass (cf. "Expreience" → "Experience", 2026-10-16).
+- **NO CODE COMMENTS** (user rule, 2026-10-16): zero `#` comments and zero docstrings except `cli.py` (Click `--help` text). Reason: the user writes their own comments to learn. Put details in the memory bank instead.
 
 ## Learnings & Project Insights
 
-- `auto-click-auto` provides `enable_click_shell_completion_option` which injects a completion option into a Click group — used at the root `cli` group.
-- Banner asset must be listed in `kawa.spec` `datas` (`('src/kawa/assets', 'kawa/assets')`) for PyInstaller builds; loading uses `importlib.resources.files("kawa")`.
-- CI smoke tests double as the only functional verification — always keep `kawa mc ntow/ownt` and `kawa uwuify` working.
-- Full-repo `ruff check src` was carrying **8 pre-existing errors** (unsorted imports, blind `except`, `dict()` call, unnecessary `pass`, enumerate misuse) — **all fixed 2026-10-16** (user request): safe fixes via `ruff check --fix`, BLE001 narrowed to `OSError` (banner read) and `PackageNotFoundError` (version lookup), plus a full `ruff format src` pass. `ruff check` + `ruff format --check` were 100% clean after that — **regressed 2026-10-17**: `f69ecbe` introduced 2 new `ruff check` errors (`I001` unsorted imports in `coinflip.py`, `F401` unused `click` in `uwuify.py`); `ruff format --check src` still passes (10 files) — both errors fixed again in `151b8cc` (import sorted into the local block; unused `click` removed).
-- `json_tools.py` error heuristic: file exists → read it; else parse arg as inline JSON; on failure, arg looks like a path (`.json` suffix or doesn't start with a JSON token) → "File not found", else "Invalid JSON" with line/column.
-- Ruff (running with this project's effective ruleset) enforces `DTZ005` (`datetime.now()` without tz) — `coinflip.py` uses `time.localtime().tm_hour` instead, which is lint-clean and unambiguously "local time". Keep new modules free of `noqa`.
-- `coinflip(hour=None)` takes an optional hour so bias can be tested by injection without touching the system clock — a good pattern for future random/time-based features.
-- **Coinflip breakage diagnosis (2026-10-17)**: `uwuify([COINS_MESSAGES])` (and `uwuify([event["messages"]])`) wrap the pool in a *second* list, so `uwuify()`'s loop hands uwuipy a `list` which dies on `_msg.split(" ")` → `AttributeError: 'list' object has no attribute 'split'`. The `else` branch runs for **all** modes before output, so even `--plain`/`--json` crash — `coinflip` is 100% broken, not just cute mode. CI stays green because its smoke tests only cover `ntow`/`ownt`/`uwuify`. (**Fixed in `151b8cc`**: pick the message first, then `uwuify([chosen])` — one fragment at a time; a whole pool must never be passed since `uwuify` returns one joined string. **Superseded by `3056e31`**, which removed the `uwuify()` dependency from coinflip entirely — it now calls `uwu.uwuify(<string>)` directly.)
-- Cute-branch gap in `coinflip()`: output branches are `event is None` → normal flip, `event["name"] == "kawa"` → message; a **`secret` hit falls through and prints nothing** (no crash: `side` is only referenced in branches unreachable in machine modes, since `pick_event` returns `None` there). (**Fixed in `151b8cc`**: the branch collapsed to a plain `else` — any event prints its message.)
-- `f69ecbe` is self-described "human slop code, lol" — the user wrote it by hand. Treat it as a WIP snapshot, **not** a pattern to imitate (nested-list `uwuify` call and the unused-import fallout are defects, not conventions). Superseded by the `151b8cc` repair, then fully decoupled by `3056e31`.
+- `auto-click-auto` injects shell completion at the root `cli` group.
+- Banner must stay in `kawa.spec` `datas`; loading uses `importlib.resources.files("kawa")`.
+- `ruff check` + `ruff format --check` clean since the 2026-10-16 sweep (`f69ecbe` regressed I001+F401, fixed `151b8cc`). Ruff is now **blocking in CI** (PR #2).
+- `json_tools.py` heuristic: file exists → read; else inline JSON; on failure path-like → "File not found", else "Invalid JSON".
+- Ruff enforces `DTZ005` — coinflip uses `time.localtime().tm_hour`. Keep modules free of `noqa`.
+- `coinflip(hour=None)` + `rng` injection lets tests force bias/events — reuse for future random/time features.
+- **Coinflip crash (2026-10-17)**: nested-list `uwuify([pool])` broke uwuipy in ALL modes. Fixed `151b8cc`, superseded by `3056e31` (direct `uwu.uwuify(<string>)`). `f69ecbe` ("human slop code, lol") is user WIP — not a pattern.
+- `secret` hits printed nothing before `151b8cc` (now plain `else`).
+- **Pylance `reconfigure` false positive (2026-10-20)**: `sys.stdout` is typed `TextIO` (no `reconfigure` in stubs), so `hasattr` narrowing doesn't help. Fix: `getattr(stream, "reconfigure", None)` + `callable()` — no direct attribute access.
+- **`except X, Y` is valid Python 3 (2026-10-20)**: comma form parses as tuple (`BUILD_TUPLE` + `CHECK_EXC_MATCH`, verified via `dis`); ruff format on this repo rewrites parenthesized `except (X, Y)` back to comma form. Keep comma form or `ruff format --check` fails CI.
+- **Finite/overflow layering (2026-10-20)**: coords need BOTH `FiniteFloat` (parse-time) + `check_finite`/`check_overflow` (module-side: direct calls bypass Click, and `1e308*8 -> inf` overflows post-parse). Level/XP need neither (`int`: no NaN/inf, arbitrary precision).

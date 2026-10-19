@@ -17,9 +17,10 @@ except OSError:
     BANNER = "Oops!, seem like banner is missing..."
 
 for stream in (sys.stdout, sys.stderr):
-    if hasattr(stream, "reconfigure"):
+    reconfigure = getattr(stream, "reconfigure", None)
+    if callable(reconfigure):
         try:
-            stream.reconfigure(encoding="utf-8", errors="replace")
+            reconfigure(encoding="utf-8", errors="replace")
         except ValueError:
             pass
 

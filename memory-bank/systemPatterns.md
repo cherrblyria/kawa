@@ -6,15 +6,15 @@ Small layered Click CLI with a strict split between command wiring, feature logi
 
 ```text
 src/kawa/
-├── __init__.py          # __version__ = "0.3.0"
+├── __init__.py          # __version__ = "0.3.1"
 ├── __main__.py          # python -m kawa → cli()
 ├── cli.py               # Click command tree (thin; delegates to modules)
 ├── modules/             # Feature logic (all echo; see #3, #8)
-│   ├── __init__.py      # from .minecraft import *; from .uwuify import *; from .coinflip import *; from .json_tools import *
+│   ├── __init__.py      # explicit imports + __all__ (since e01def6)
 │   ├── minecraft.py     # coordinate + XP/level math
 │   ├── uwuify.py        # uwuipy wrapper — echoes per-invocation result
-│   ├── coinflip.py      # biased coinflip + easter-egg events; uwuifies via its own Uwuipy instance
-│   └── json_tools.py    # JSON pretty printer
+│   ├── coinflip.py      # biased coinflip + easter-egg events, own Uwuipy
+│   └── json_tools.py    # JSON pretty printer (file / inline / stdin -)
 ├── utils/               # Pure formatting helpers
 │   ├── __init__.py      # from .format import *
 │   └── format.py        # no_dot_zero(), comma()
@@ -31,51 +31,44 @@ cli.py ──imports──▶ modules/ ──imports──▶ utils/
    └── importlib.metadata.version("kawa")
 ```
 
-- **`cli.py`** defines the root group `cli` (with banner version option + shell completion), subgroup `mc`, and top-level commands `uwuify`, `coinflip`, plus the `json` group. Each command is a thin adapter: parse args with Click types (`float`/`int`/`nargs=-1`), call the module function. Every group and leaf command is wrapped by the shared `output_mode` decorator which attaches `--json`/`--plain` flags.
-- **`modules/`** own the domain math and all user-facing output. Every module prints directly with `click.echo` (print-in-place), and **modules never import other modules** — `coinflip` gets its uwuification from `uwuipy`'s `Uwuipy` directly rather than from `uwuify.py` (decided `3056e31`, after the `f69ecbe` return-value experiment proved coupling-prone).
+- **`cli.py`** defines root group `cli` (banner version + completion), subgroup `mc`, top-level `uwuify`/`coinflip`, and `json` group. Thin adapters: parse args with Click types, call module functions. Every group/leaf wrapped by `output_mode` (`--json`/`--plain`).
+- **`modules/`** own domain math and all output. Every module prints via `click.echo` (print-in-place), and **modules never import other modules** — coinflip uses `uwuipy` directly (`3056e31`).
 - **`utils/`** are pure formatting functions shared by modules.
 
 ## Key Technical Decisions
 
-1. **Click groups over subparsers**: `cli` → `mc` → `{ntow, ownt, lvxp, xplv}`; `uwuify` sits at the root. Help text lives in docstrings.
-2. **Star-import export pattern**: each package's `__init__.py` re-exports with `from .module import *`; consumers do `from .modules import *`. Convention over explicitness.
-3. **Print-in-place, not return**: module functions perform their own `click.echo`. New commands should follow the same shape (logic + output in the module, wiring in `cli.py`). (Briefly violated 2026-10-17 by `f69ecbe`'s return-value `uwuify`; reverted `3056e31`.)
-4. **Defensive asset/metadata loading**: banner and version are loaded in `try/except` with graceful fallbacks (`"Oops!, seem like banner is missing..."`, `"unknown"`).
-5. **Float-typed coordinate args**: Click casts `x`/`z` to `float` so `no_dot_zero()` can call `.is_integer()`. XP/level args are `int` (Python 3.12+ ints also have `.is_integer()`, relied upon by `comma()`).
-6. **Global output modes via decorator** (2026-10-16): `output_mode` in `cli.py` adds `--json`/`--plain` to every group and leaf command. Resolution: leaf flag > nearest ancestor group flag > `"cute"` default (`--json` wins if both given on the same level). The mode travels via Click's parent-`ctx.obj` chain, and each wrapper's callback receives a `mode` kwarg it forwards to the module function. Modules branch `mode == "json"` / `"plain"` / else cute. `json pretty` is intentionally mode-agnostic (already JSON).
-7. **Coinflip easter-egg events** (`EASTER_EGG_EVENTS` in `coinflip.py`; originally `SPECIAL_TIERS`/`pick_special_tier`, renamed & simplified in `2e04c07`, 2026-10-17): ordered registry of rare outcomes; each event is `{name, chance, messages}` and gets its own independent roll, first hit wins (**kawa** 1/100 → **secret** 1/100,000 → normal biased flip). The kawa odds were tightened from the original 1/10,000 at rename time. Because rolls are sequential & independent, the effective secret chance is (1 − 1/100) × 1/100,000 (intentional). A hit replaces the coin flip entirely. **Extension point: append to `EASTER_EGG_EVENTS` — flip logic never changes**; future interactive/lore events can add fields (e.g. a handler) and switch on `event["name"]` in the cute branch. Two hard rules: **(a) cute-mode only** — `pick_event` returns `None` immediately for any non-cute mode, so `--json`/`--plain` make *zero* random rolls for events and always emit deterministic heads/tails; **(b) `rng` injection** — `pick_event(mode, rng=None)` / `coinflip(..., rng=None)` take a callable instead of calling `random.random` directly, so tests and future interactive events can force an event. The `secret` event's messages (`SECRET_PLACEHOLDER_MESSAGES`, formerly `KAWA_SECRET_PLACEHOLDER_MESSAGES`) stay placeholders until the user's lore design lands. Star-import caveat: `kawa.modules.coinflip` resolves to the *function* (star-export shadows the submodule) — tests must reach the module via `sys.modules["kawa.modules.coinflip"]`. (This entry preserves knowledge that used to live in code comments — removed 2026-10-16 by user preference.)
-8. **Modules never import modules; use third-party libs directly** (`3056e31`, 2026-10-17): `coinflip.py` imports `Uwuipy` from `uwuipy` (already a direct runtime dependency) and calls `uwu.uwuify(<string>)` on a single chosen message per flip — it does **not** go through `modules/uwuify.py`. `uwuify.py` echoes in place again like every other module (restored `import click`; `cli.py` calls `uwuify(list(text), mode)` unwrapped). History: `f69ecbe` had made `uwuify()` a return-value API so coinflip could compose with it — that cross-module coupling produced the nested-list crash (fixed `151b8cc`); `3056e31` removed the coupling entirely. Convention for new work: if two features need the same *library*, import the library in each module; don't make one module call another unless there's real shared domain logic.
+1. **Click groups**: `cli` → `mc` → `{ntow, ownt, lvxp, xplv}`; `uwuify`/`coinflip` at root; `json` → `{pretty}`. Help text lives in docstrings.
+2. **Explicit export pattern** (since `e01def6`): `modules/__init__.py` lists every name + `__all__` (`run_*` names avoid star-shadowing). `utils/__init__.py` still star-exports.
+3. **Print-in-place, not return**: module functions do their own `click.echo`. (Briefly violated by `f69ecbe`; reverted `3056e31`.)
+4. **Defensive asset/metadata loading**: banner/version in try/except with fallbacks.
+5. **Typed args**: coords use custom `FiniteFloat` (rejects NaN/inf at parse) + `check_finite`/`check_overflow` in-module (pre-math AND post-math: finite inputs can still overflow on `x*8`, e.g. `1e308*8 -> inf`); XP/level use `click.IntRange` (level 0..1e9, xp 0..1e18, indent 0..16) with no finite/overflow checks (`int` has no NaN/inf, arbitrary precision never overflows); all `mc` leaves set `MC_CONTEXT_SETTINGS` (`ignore_unknown_options`) so negatives need no `--`.
+6. **Global output modes** (`output_mode` in `cli.py`): `--json`/`--plain` on every group+leaf; leaf > group > cute; both together → `UsageError`; travels via `ctx.obj`; modules branch json/plain/cute. `json pretty` ignores mode (already JSON).
+7. **Coinflip easter-egg events** (`EASTER_EGG_EVENTS`; renamed from `SPECIAL_TIERS` in `2e04c07`): ordered registry `{name, chance, messages}`, independent rolls, first hit wins (kawa 1/100 → secret 1/100K → normal flip). Effective secret chance is (1-1/100)×1/100K. Rules: **(a)** cute-only (`pick_event` returns None off-cute, zero event rolls in machine modes); **(b)** `rng` injection (`pick_event(mode, rng)` / `run_coinflip(hour, mode, rng)`). `secret` messages stay placeholders. Cached `Uwuipy` via `functools.cache get_uwu()` per module.
+8. **Modules never import modules** (`3056e31`): shared third-party libs get imported per-module instead.
+9. **JSON hardening** (`9ef1b2d`): stdin `-`, broken-symlink/dir errors, `utf-8-sig` reads, duplicate-key stderr warnings, `NaN/Infinity` rejected, `looks_like_path` decides File-not-found vs Invalid-JSON.
+10. **Exact XP math** (`6611d10` + PR #1): `xp_for_level` uses integer `//2` formulas; `experience_to_level` snaps exact hits via `round`+`xp_for_level` check; negatives rejected.
 
 ## Critical Implementation Paths
 
 ### Minecraft coordinate conversion
-- Nether → Overworld: multiply by **8**; Overworld → Nether: divide by **8**.
-- Output format: `Nether: (x, z)  (σ･ω･)σ  Overworld: (X, Z)` (two spaces around kaomoji).
 
-### Level ↔ Experience (piecewise formulas)
-- `level_to_experience(level)`:
-  - `level ≤ 16`: `level² + 6·level`
-  - `16 < level ≤ 31`: `2.5·level² − 40.5·level + 360`
-  - `level > 31`: `4.5·level² − 162.5·level + 2220`
-  - Easter eggs: `level == 21863` (max XP message), `level > 21863` (break-the-game message).
-- `experience_to_level(xp)`:
-  - `xp ≤ 352`: `√(xp + 9) − 3`
-  - `352 < xp ≤ 1507`: `8.1 + √(0.4·(xp − 195.975))` i.e. `(81/10) + sqrt((2/5)*(xp − 7839/40))`
-  - `xp > 1507`: `(325/18) + √((2/9)·(xp − 54215/72))`
-  - Easter eggs: `xp == 2147483647`, `xp > 2147483647`.
-  - Level results print with 2 decimals via `comma()`.
+- Nether → Overworld ×**8**; Overworld → Nether ÷**8**.
+- Committed format: `Nether: (x, z)  (σ･ω･)σ  Overworld: (X, Z)`. **Uncommitted tree changes this** to `(x: ..) in Nether is ... /ᐠ｡ꞈ｡ᐟ\` + random `BORDER_MESSAGE` — undecided, see activeContext.
+- World border: `|x|>30M or |z|>30M` appends border message (cute only).
+
+### Level ↔ Experience (piecewise)
+
+- `level_to_experience`: `≤16`: `l²+6l`; `≤31`: `(5l²-81l+720)//2`; else `(9l²-325l+4440)//2`. Eggs: `==21863` max-XP msg, `>21863` break msg.
+- `experience_to_level`: `≤352`: `√(xp+9)-3`; `≤1507`: `8.1+√(0.4·(xp-195.975))`; else `(325/18)+√((2/9)·(xp-54215/72))`; exact-hit snap; 2-decimal via `comma()`. Eggs at `==2147483647` / above.
 
 ### Uwuify
-- Words are uwuified **individually** (list of tokens), then rejoined with spaces — preserves word boundaries.
-- `uwuify()` **echoes** its result (cute: the joined string; json: `{"result": ...}`) and must be given a **flat list of strings** — a nested list crashes uwuipy (`AttributeError: 'list' object has no attribute 'split'`). Coinflip does **not** use it (see decision #8).
+
+- Words uwuified **individually**, rejoined with spaces. Echoes result (cute: string; json: `{"result": …}`). Needs flat list — nested lists crash uwuipy. Coinflip does **not** use it.
 
 ### Coinflip output
-- Cute, no event: `f"{side}{message}"` — `side` is `Heads`/`Tails`, `message` is a uwuified `COINS_MESSAGES` fragment whose own punctuation provides the separator.
-- Cute, `kawa` event: bare uwuified Kawa message. Cute, `secret` event: bare **raw** (non-uwuified) placeholder message — prints since `151b8cc` (was silently dropped before).
+
+- Cute, no event: `f"{side}{message}"` (fragment punctuation is the separator). Cute kawa: bare uwuified message. Cute secret: bare raw placeholder. `--json`: `{"result": side.lower(), "message": raw-fragment}`. `--plain`: `side.lower()` only.
 
 ## Design Patterns
 
-- Adapter pattern: `cli.py` commands are adapters over module functions.
-- Facade: package `__init__.py` files act as facades via star-exports.
-- Graceful degradation for external resources (banner, distribution metadata).
-- Cross-cutting concern injection: the `output_mode` decorator applies output-formatting options uniformly (decorator pattern + context propagation via `ctx.obj`).
+- Adapter: `cli.py` over module functions. Facade: package `__init__` files. Graceful degradation for banner/metadata. Cross-cutting decorator (`output_mode` + `ctx.obj` propagation).

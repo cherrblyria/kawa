@@ -4,7 +4,7 @@ import unittest
 from click.testing import CliRunner
 
 from kawa.cli import cli
-from kawa.modules.minecraft import xp_for_level
+from kawa.modules.minecraft import BORDER_MESSAGE, exp_for_level
 
 
 class MinecraftCliTests(unittest.TestCase):
@@ -36,7 +36,7 @@ class MinecraftCliTests(unittest.TestCase):
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(
             result.output.strip(),
-            "Nether: (-5, -3)  (σ･ω･)σ  Overworld: (-40, -24)",
+            "(x: -5 y: -3) in Nether is (x: -40 y: -24) in Overworld  /ᐠ｡ꞈ｡ᐟ\\",
         )
 
     def test_negative_coordinates_json(self):
@@ -52,7 +52,7 @@ class MinecraftCliTests(unittest.TestCase):
     def test_double_dash_still_works(self):
         result = self.runner.invoke(cli, ["mc", "ntow", "--", "-5", "-3"])
         self.assertEqual(result.exit_code, 0)
-        self.assertIn("Overworld: (-40, -24)", result.output)
+        self.assertIn("(x: -40 y: -24) in Overworld", result.output)
 
     def test_negative_level_rejected(self):
         result = self.runner.invoke(cli, ["mc", "lvxp", "-1"])
@@ -92,7 +92,7 @@ class MinecraftCliTests(unittest.TestCase):
 
     def test_roundtrip_every_level(self):
         for level in range(21864):
-            xp = xp_for_level(level)
+            xp = exp_for_level(level)
             result = self.runner.invoke(cli, ["mc", "xplv", str(xp), "--plain"])
             self.assertEqual(result.exit_code, 0, f"level {level}")
             self.assertEqual(int(result.output.strip()), level, f"level {level}")
@@ -152,28 +152,31 @@ class MinecraftCliTests(unittest.TestCase):
         result = self.runner.invoke(cli, ["mc", "ntow", "727", "90.875"])
         self.assertEqual(
             result.output.strip(),
-            "Nether: (727, 90.875)  (σ･ω･)σ  Overworld: (5816, 727)",
+            "(x: 727 y: 90.875) in Nether is (x: 5816 y: 727) in Overworld  /ᐠ｡ꞈ｡ᐟ\\",
         )
         result = self.runner.invoke(cli, ["mc", "lvxp", "21864"])
         self.assertIn(
-            "Level: 21,864  (σ≧∀≦)σ  Experience: 2,147,604,552", result.output
+            "Level 21,864 is 2,147,604,552 Experience /ᐠ｡‸｡ᐟ\\", result.output
         )
         result = self.runner.invoke(cli, ["mc", "xplv", "2147483647"])
         self.assertIn(
-            "Experience: 2,147,483,647  (σ≧∀≦)σ  Level: 21,863.39", result.output
+            "2,147,483,647 Experience is Level 21,863.39 /ᐠ｡‸｡ᐟ\\", result.output
         )
 
     def test_world_border_quip(self):
         result = self.runner.invoke(cli, ["mc", "ntow", "40000000", "0"])
         self.assertEqual(result.exit_code, 0)
-        self.assertIn("world border", result.output)
-
-
-if __name__ == "__main__":
-    unittest.main()
+        self.assertTrue(
+            any(msg in result.output for msg in BORDER_MESSAGE),
+            f"expected one of {BORDER_MESSAGE!r}, got {result.output!r}",
+        )
 
     def test_xp_boundaries(self):
         cases = [(16, 352), (17, 394), (30, 1395), (31, 1507), (32, 1628)]
         for level, expected in cases:
             with self.subTest(level=level):
-                self.assertEqual(xp_for_level(level), expected)
+                self.assertEqual(exp_for_level(level), expected)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -54,22 +54,28 @@ def get_uwu():
 def pick_event(mode, rng=None):
     if mode != "cute":
         return None
+
     if rng is None:
         rng = random.Random()
+
     for event in EASTER_EGG_EVENTS:
         if rng.random() < event["chance"]:
             return event
+
     return None
 
 
 def run_coinflip(hour=None, mode="cute", rng=None):
     if hour is None:
         hour = localtime().tm_hour
+
     if rng is None:
         rng = random.Random()
+
     heads_bias = 0.51 if hour < 12 else 0.49
     side = "Heads" if rng.random() < heads_bias else "Tails"
     event = pick_event(mode, rng)
+
     if event is not None:
         message = rng.choice(event["messages"])
         if event["name"] == "kawa":
@@ -80,6 +86,7 @@ def run_coinflip(hour=None, mode="cute", rng=None):
         message = rng.choice(COINS_MESSAGES)
     else:
         message = ""
+
     if mode == "json":
         click.echo(
             json.dumps({"result": side.lower(), "message": message}, ensure_ascii=False)

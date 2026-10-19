@@ -6,25 +6,21 @@ Kawa is a hobby/joy project: a bundle of tiny CLI utilities that are useful in p
 
 - Save Minecraft players from mental math when linking Nether/Overworld portals or planning XP grinds.
 - Provide a fun `uwuify` text command in the same binary.
+- Pretty-print JSON from files, inline strings, or stdin pipes.
 - Act as a personal, well-packaged CLI project that ships everywhere (PyPI-style installs, Nix, standalone binaries).
 
 ## How It Should Work
 
 - Run `kawa --help` (or `kawa -h`) to discover grouped commands.
-- Every command prints a single human-readable line with a kaomoji separator between input and result, e.g.:
-
-  ```text
-  $ kawa mc ntow 727 90.875
-  Nether: (727, 90.875)  (σ･ω･)σ  Overworld: (5816, 727)
-  ```
-
+- Every command accepts **`--plain`** (undecorated result only, e.g. `heads`, `5816, 727`) and **`--json`** (single-line JSON) output modes, usable anywhere on the command line; mode resolves as leaf flag > group flag > cute default. The two flags together raise `UsageError`. `json pretty` accepts the flags but ignores them (already JSON).
+- Negative coordinates work directly with no `--` separator (`MC_CONTEXT_SETTINGS` sets `ignore_unknown_options` on all `mc` leaf commands).
 - Numbers are formatted prettily: integers with thousands separators and no `.0`; floats shown with 2 decimals (`comma`, `no_dot_zero` helpers).
-- Every command also accepts **`--plain`** (undecorated result only, e.g. `heads`, `5816, 727`) and **`--json`** (single-line JSON) output modes, usable anywhere on the command line; mode resolves as leaf flag > group flag > cute default.
 - `kawa --version` prints the ASCII banner (loaded from `src/kawa/assets/banner.txt`) plus the version.
-- Boundary values get playful easter-egg messages (max XP level 21863, `2147483647` XP, etc.).
-- **Coinflip text is uwuified**: the flip prints `Heads`/`Tails` plus a random uwuified fragment from `COINS_MESSAGES` (e.g. `"! That's it"` — the fragment carries the punctuation), uwuified in-place via coinflip's own `Uwuipy` instance (independent of the `uwuify` command).
-- **Special events are cute-mode-only easter eggs**: a `kawa` roll (**1/100**, was 1/10K before `2e04c07`) replaces the coin result with a uwuified Kawa message; `--json`/`--plain` are machine output, never roll events, and must stay deterministic heads/tails. A further `secret` event (1/100K) is a placeholder for a planned interactive lore event.
+- Boundary values get playful easter-egg messages (max XP level 21863, `2147483647` XP, world-border coordinates — committed single message; tree randomizes over 4 `BORDER_MESSAGE` lines).
+- **Coinflip text is uwuified**: the flip prints `Heads`/`Tails` plus a random uwuified fragment from `COINS_MESSAGES` (e.g. `"! That's it"` — the fragment carries the punctuation), uwuified in-place via coinflip's own cached `get_uwu()` `Uwuipy` instance (independent of the `uwuify` command).
+- **Special events are cute-mode-only easter eggs**: a `kawa` roll (**1/100**) replaces the coin result with a uwuified Kawa message; `--json`/`--plain` are machine output, never roll events, and must stay deterministic heads/tails. A further `secret` event (1/100K) is a placeholder for a planned interactive lore event. `--json` coinflip now also ships a raw (non-uwuified) `message` field.
 - Shell completion is available via the option injected by `auto-click-auto`.
+- README carries a vibe-coded warning banner ("USE THIS AS YOUR OWN RISK AND MENTAL, I vibe coded this FOR FUN").
 
 ## UX Goals
 
