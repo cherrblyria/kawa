@@ -14,7 +14,7 @@
 | Binary packaging | **PyInstaller ≥ 6.10** via `kawa.spec` |
 | Nix packaging | flake with **uv2nix + pyproject-nix + pyproject-build-systems**, `sourcePreference = "wheel"` |
 | CI/CD | GitHub Actions (`ci.yml`, `release.yml`) |
-| Tests | **`unittest` stdlib, 58 tests on main** in `tests/` (`test_minecraft_cli` 26, `test_json_cli` 17, `test_coinflip` 8, `test_uwuify` 5, `test_encoding` 2) — no pytest |
+| Tests | **`unittest` stdlib, 58 tests** in `tests/` (`test_minecraft_cli` 26, `test_json_cli` 17, `test_coinflip` 8, `test_uwuify` 5, `test_encoding` 2) — no pytest |
 
 ## Development Setup
 
@@ -66,7 +66,7 @@ Nix: `nix run github:cherrblyria/kawa` (or consume `inputs.kawa.packages.${pkgs.
 - `modules/__init__.py` is explicit (`__all__`) — new helpers must be added there to be exported; `utils/__init__.py` still star-exports.
 - `no_dot_zero()`/`comma()` call `.is_integer()` — inputs must be `int`/`float` (never `str`); coords additionally pass through `FiniteFloat`.
 - Banner must remain in `kawa.spec` `datas` or `--version` degrades to fallback.
-- Version in both `pyproject.toml` and `src/kawa/__init__.py` — bump both (currently 0.3.1 vs latest tag v0.3.2 — mismatched).
+- Version in both `pyproject.toml` and `src/kawa/__init__.py` — bump both (currently 0.3.1, matching latest tag `v0.3.1`).
 - `.gitignore` ignores `.vscode/*` except `extensions.json`; `memory-bank/` and `.clinerules/` are committed, not ignored.
 
 ## Tool Usage Patterns

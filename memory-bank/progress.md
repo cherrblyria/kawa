@@ -2,11 +2,11 @@
 
 ## Current Status
 
-**Code at 0.3.1** (`0a10611` == `origin/main`); tags `v0.3.1` (on `62a34a2`) and `v0.3.2` (on `b9fe2ac`) **both predate the code bump — version/tag mismatch**. Edge-case audit merged (PR #4). Suite: **58 `unittest` tests green on main** (minecraft 26, json 17, coinflip 8, uwuify 5, encoding 2). Ruff blocking + clean. **Tree: 58 run, all green** (drift fixed 2026-10-20). **Uncommitted working tree**: coordinate + XP cute-output rework (new kaomoji style, 4-message `BORDER_MESSAGE`, `rng` injection, `xp_for_level` renamed to `exp_for_level`), `cli.py` getattr-reconfigure fix, `coinflip.py` rng guards. README + 26 minecraft tests now assert new format (58/58 green). `ownt` tuple bug fixed (both use `rng.choice`).
+**Code at 0.3.1** (HEAD `e18e992` == `origin/main`, **working tree clean**); tags `v0.1.0`–`v0.3.1` with **`v0.3.1` on `0a10611`** — **version/tag aligned, old mismatch resolved** (stray `v0.3.2` tag gone). Edge-case audit merged (PR #4); the cute-output rework + README refresh **committed** (`a8f696f`/`e18e992`, 2 commits past the tag). Suite: **58 `unittest` tests green** (re-run 2026-10-20: minecraft 26, json 17, coinflip 8, uwuify 5, encoding 2). Ruff blocking + clean.
 
 ## What Works
 
-- [x] **`kawa mc ntow / ownt`** — ×8 / ÷8, `FiniteFloat` + finite/overflow guards, cute/json/plain, world-border egg. (Committed cute: `Nether: (x, z)  (σ･ω･)σ  Overworld: (X, Z)`.)
+- [x] **`kawa mc ntow / ownt`** — ×8 / ÷8, `FiniteFloat` + finite/overflow guards, cute/json/plain, world-border egg (4-message random `BORDER_MESSAGE` since `a8f696f`; both converters use `rng.choice` — old `ownt` tuple bug gone).
 - [x] **`kawa mc lvxp / xplv`** — exact integer XP math + snap-back levels, `IntRange` bounds, easter eggs (21863, 2147483647).
 - [x] **`kawa uwuify`** — per-word uwuification, cached `Uwuipy`, cute/json.
 - [x] **`kawa json pretty`** — file / inline / stdin `-`; `-i/--indent 0..16`, `-s/--sort-keys`; hardened errors (broken symlink, dir, BOM, dup-key warnings, NaN/Infinity rejected, path-vs-JSON heuristic).
@@ -18,22 +18,21 @@
 - [x] **ruff blocking + clean** (PR #2 removed `continue-on-error`).
 - [x] **Module decoupling** (`3056e31`) — modules never import modules.
 - [x] **README** — human-slop trim (`b9fe2ac`): warning banner, short sections, Output-modes docs restored.
-- [x] **`--version` / `--help` / completion / `python -m kawa` / uv workflow / Nix flake / PyInstaller binaries / release automation** — all working. Tags `v0.1.0`–`v0.3.2` exist.
+- [x] **`--version` / `--help` / completion / `python -m kawa` / uv workflow / Nix flake / PyInstaller binaries / release automation** — all working. Tags `v0.1.0`–`v0.3.1` exist (code and latest tag agree).
 
 
 ## What's Left to Build
 
-- Decide the uncommitted mc cute rework (coords AND xp/level, 4 borders, exp_for_level rename; tests + README updated) (`ownt` tuple bug, format change, README + 26 tests if kept).
-- Resolve version/tag mismatch (code 0.3.1 vs tag v0.3.2).
 - Additional "cute" tools (tagline is open-ended).
 - Possible: `CHANGELOG.md`, PyPI publishing, man page, richer completion.
 - Design the **lore/interactive coinflip event** with the user; replace `SECRET_PLACEHOLDER_MESSAGES` then.
+- Next release (0.3.2?): HEAD is 2 commits past tag `v0.3.1`.
 
 ## Known Issues / Quirks
 
-- ~~UNCOMMITTED BUG~~ **fixed in tree**: both converters now use `rng.choice(BORDER_MESSAGE)` — still uncommitted.
-- **Version/tag mismatch**: code 0.3.1, latest tag v0.3.2, both tags older than the bump commits.
-- Resolved 2026-10-20 (tests updated + dead `test_xp_boundaries` revived + `__init__` import sort fixed): uncommitted format drift had tree printing `(x: ..) ... /ᐠ｡ꞈ｡ᐟ\`; README + tests expect `(σ･ω･)σ` style.
+- **Version/tag alignment fixed 2026-10-20**: `v0.3.1` now sits on `0a10611` (the bump merge) and `v0.3.2` was removed — code 0.3.1 = latest tag.
+- ~~UNCOMMITTED rework~~ **committed** in `a8f696f` (code) + `e18e992` (README); `ownt` tuple bug fixed there (both converters use `rng.choice(BORDER_MESSAGE)`).
+- ~~Format drift~~ **resolved**: README + 26 minecraft tests assert the new `/ᐠ｡ꞈ｡ᐟ\` style; old `σ` kaomoji gone from the tree (verified by grep 2026-10-20; suite 58 green).
 - "Expreience" typo fixed 2026-10-16 — grep whole tree for future typos.
 - `no_dot_zero()`/`comma()` need numerics; version duplicated in two files (`cli.py` prefers installed metadata).
 
@@ -57,5 +56,6 @@
 16. **Real test suite** (PR #3 + audit): 58 `unittest` tests, CI on ubuntu + windows.
 17. **Blocking ruff** (PR #2): `continue-on-error` removed.
 18. **Non-negative XP/level** (PR #1): negatives rejected.
-19. **0.3.1 code bump** (`2dd4856`/`d758923`/`9083713`) landed *after* tags v0.3.1/v0.3.2 — mismatch to resolve.
+19. **0.3.1 code bump** (`2dd4856`/`d758923`/`9083713`, merged `0a10611`) — `v0.3.1` tag moved to that merge and stray `v0.3.2` removed, so tag and code now both read 0.3.1.
+20. **Cute-output rework committed** (`a8f696f` + README refresh `e18e992`, 2026-10-20): kaomoji coords `/ᐠ｡ꞈ｡ᐟ\`, xp `/ᐠ｡‸｡ᐟ\`, 4-message random `BORDER_MESSAGE`, `xp_for_level` → `exp_for_level`, `rng` injection everywhere, CLI UTF-8 `getattr`+`callable` fix; tests + README assert the new format (58/58 green).
 

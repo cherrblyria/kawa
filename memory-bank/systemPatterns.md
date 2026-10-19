@@ -53,7 +53,7 @@ cli.py ──imports──▶ modules/ ──imports──▶ utils/
 ### Minecraft coordinate conversion
 
 - Nether → Overworld ×**8**; Overworld → Nether ÷**8**.
-- Committed format: `Nether: (x, z)  (σ･ω･)σ  Overworld: (X, Z)`. **Uncommitted tree changes this** to `(x: ..) in Nether is ... /ᐠ｡ꞈ｡ᐟ\` + random `BORDER_MESSAGE` — undecided, see activeContext.
+- Cute format (since `a8f696f`): `(x: .. y: ..) in Nether is (x: .. y: ..) in Overworld  /ᐠ｡ꞈ｡ᐟ\` with random `BORDER_MESSAGE` appended; XP/level lines use `/ᐠ｡‸｡ᐟ\`.
 - World border: `|x|>30M or |z|>30M` appends border message (cute only).
 
 ### Level ↔ Experience (piecewise)

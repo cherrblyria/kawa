@@ -23,15 +23,15 @@ A small, playful Python CLI tool collection. Current scope:
   - **From source** with `uv sync --dev`
 - Keep the codebase tiny, dependency-light, and readable.
 - Support shell completion out of the box.
-- Real `unittest` suite (`tests/`, 58 tests on main; tree tests + README match new format) + blocking ruff + smoke tests in CI.
+- Real `unittest` suite (`tests/`, 58 tests, green as of 2026-10-20) + blocking ruff + smoke tests in CI.
 
 ## Project Identity
 
 - Repository: https://github.com/cherrblyria/kawa
 - License: MIT
 - Author: cherrblyria
-- Current version: **0.3.1 in code** (`pyproject.toml`, `src/kawa/__init__.py`, `uv.lock` — bumped `9083713` + `2dd4856`/`d758923`, merged as `0a10611`). Tags: `v0.1.0`, `v0.2.0`, `v0.3.0`, `v0.3.1` (on `62a34a2`), `v0.3.2` (on `b9fe2ac`) — **both tags predate HEAD, so code (0.3.1) disagrees with latest tag (v0.3.2): version/tag mismatch, see activeContext.md**.
-- Branch: `main` (HEAD `0a10611`, in sync with `origin/main`; `fix/edge-cases` merged via PR #4)
+- Current version: **0.3.1 in code** (`pyproject.toml`, `src/kawa/__init__.py`, `uv.lock` — bumped `9083713` + `2dd4856`/`d758923`, merged `0a10611`). Tags: `v0.1.0`, `v0.2.0`, `v0.3.0`, `v0.3.1` (on `0a10611`). **Version/tag aligned — the old mismatch is resolved** (the stray `v0.3.2` tag no longer exists; see activeContext.md).
+- Branch: `main` (HEAD `e18e992`, in sync with `origin/main`; `fix/edge-cases` merged via PR #4; cute rework + README refresh committed in `a8f696f`/`e18e992`)
 
 ## Scope Boundaries
 
