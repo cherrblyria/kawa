@@ -7,6 +7,7 @@ from importlib.resources import files
 
 import click
 from auto_click_auto import enable_click_shell_completion_option
+from click_aliases import ClickAliasedGroup
 
 from .modules import *
 from .utils import *
@@ -76,7 +77,7 @@ def output_mode(func):
     return wrapper
 
 
-@click.group(context_settings=CONTEXT_SETTINGS)
+@click.group(context_settings=CONTEXT_SETTINGS, cls=ClickAliasedGroup)
 @enable_click_shell_completion_option(program_name="kawa")
 @click.version_option(
     __version__,
@@ -93,47 +94,47 @@ def cli(mode):
     """Useless cute little CLI tool"""
 
 
-@cli.group()
+@cli.group(aliases=["mc"], cls=ClickAliasedGroup)
 @output_mode
-def mc(mode):
+def minecraft(mode):
     """Minecraft tools"""
 
 
-@mc.command(context_settings=MC_CONTEXT_SETTINGS)
+@minecraft.command(context_settings=MC_CONTEXT_SETTINGS, aliases=["ntow", "nt"])
 @click.argument("x", type=FiniteFloat())
 @click.argument("z", type=FiniteFloat())
 @output_mode
-def ntow(x, z, mode):
+def nether(x, z, mode):
     """Convert Nether coordinates to Overworld coordinates"""
     nether_to_overworld(x, z, mode)
 
 
-@mc.command(context_settings=MC_CONTEXT_SETTINGS)
+@minecraft.command(context_settings=MC_CONTEXT_SETTINGS, aliases=["ownt", "ow"])
 @click.argument("x", type=FiniteFloat())
 @click.argument("z", type=FiniteFloat())
 @output_mode
-def ownt(x, z, mode):
+def overworld(x, z, mode):
     """Convert Overworld coordinates to Nether coordinates"""
     overworld_to_nether(x, z, mode)
 
 
-@mc.command(context_settings=MC_CONTEXT_SETTINGS)
+@minecraft.command(context_settings=MC_CONTEXT_SETTINGS, aliases=["lvxp", "lv"])
 @click.argument("level", type=click.IntRange(min=0, max=10**9))
 @output_mode
-def lvxp(level, mode):
+def level(level, mode):
     """Convert Level to Experience"""
     level_to_experience(level, mode)
 
 
-@mc.command(context_settings=MC_CONTEXT_SETTINGS)
+@minecraft.command(context_settings=MC_CONTEXT_SETTINGS, aliases=["xplv", "xp"])
 @click.argument("xp", type=click.IntRange(min=0, max=10**18))
 @output_mode
-def xplv(xp, mode):
+def xp(xp, mode):
     """Convert Experience to Level"""
     experience_to_level(xp, mode)
 
 
-@cli.command(name="uwuify")
+@cli.command(name="uwuify", aliases=["uwu"])
 @click.argument("text", nargs=-1, required=True)
 @output_mode
 def uwuify_cmd(text, mode):
@@ -141,7 +142,7 @@ def uwuify_cmd(text, mode):
     run_uwuify(list(text), mode)
 
 
-@cli.command(name="coinflip")
+@cli.command(name="coinflip", aliases=["cf"])
 @output_mode
 def coinflip_cmd(mode):
     """Flip a coin"""

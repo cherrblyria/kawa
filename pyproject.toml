@@ -13,6 +13,7 @@ authors = [{ name = "cherrblyria" }]
 dependencies = [
     "auto-click-auto>=0.1.6",
     "click>=8.1.8",
+    "click-aliases>=1.0.7",
     "uwuipy>=1.0.0",
 ]
 
