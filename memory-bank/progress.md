@@ -62,3 +62,11 @@
 20. **Cute-output rework committed** (`a8f696f` + README refresh `e18e992`, 2026-10-20): kaomoji coords `/ᐠ｡ꞈ｡ᐟ\`, xp `/ᐠ｡‸｡ᐟ\`, 4-message random `BORDER_MESSAGE`, `xp_for_level` → `exp_for_level`, `rng` injection everywhere, CLI UTF-8 `getattr`+`callable` fix; tests + README assert the new format (58/58 green).
 21. **Command aliases** (`b937658`, 2026-10-20): `click-aliases` `ClickAliasedGroup` on root + `minecraft`; descriptive canonical names (`minecraft`, `nether`, `overworld`, `level`, `xp`) with legacy/short aliases (`mc`, `ntow`/`nt`, `ownt`/`ow`, `lvxp`/`lv`, `xplv`, `uwu`, `cf`) — old invocations and README examples unaffected; `json` group left plain. New runtime dep `click-aliases>=1.0.7`.
 
+
+
+## Storage converter (in progress)
+
+- [x] Added `item`, `stack`, and `shulker` (`sb`) command wiring with `to-item`, `to-stack`, `to-shulker` (`to-sb`) targets.
+- [x] Added conversion via integer item counts and non-whole breakdowns; stack size is intentionally uncapped.
+- [x] Added README examples, CI smoke command, and storage CLI tests.
+- [ ] Run `uv sync --dev`, full unittest suite, `ruff check .`, `ruff format`, and `ruff format --check .`; manually verify all directions, edge cases, and output modes. Remote GitHub edits have not been executed in a local environment, so test status is unverified.
