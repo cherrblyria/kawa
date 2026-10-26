@@ -72,3 +72,11 @@ cli.py ──imports──▶ modules/ ──imports──▶ utils/
 ## Design Patterns
 
 - Adapter: `cli.py` over module functions. Facade: package `__init__` files. Graceful degradation for banner/metadata. Cross-cutting decorator (`output_mode` + `ctx.obj` propagation).
+
+
+### Minecraft item / stack / container conversion
+
+- Leaf commands are `kawa mc item AMOUNT TARGET`, `kawa mc stack AMOUNT TARGET`, and `kawa mc shulker AMOUNT TARGET` (`sb` alias). Target choices are `to-item`, `to-stack`, `to-shulker`, and `to-sb`.
+- `convert_storage` pivots through exact integer item counts: `items = amount * size[source]`, then `divmod(items, size[target])`. Exact results remain integers; fractional results include a descending shulker/stack/item breakdown.
+- Stack size is deliberately uncapped (`IntRange(min=1)`) per design; Python integer-to-string digit-limit failures should surface as Click `BadParameter` rather than a traceback.
+- `-l/--large-chest` selects 54 slots instead of 27 and is ignored when the conversion does not involve a container. JSON includes result metadata and adds `breakdown` only for non-whole results.
