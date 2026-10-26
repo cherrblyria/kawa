@@ -30,19 +30,17 @@ Convert items, stacks, and shulker boxes with an optional custom stack size.
 ```bash
 $ kawa mc item 128 to-stack
 that's 2 stack(s) of item(s) /ᐠ_ ꞈ _ᐟ\ɴʏᴀ~
+```
+
+```
 $ kawa mc item 1800 to-shulker
 that's 1 shulker box(es), 1 stack(s) and 8 item(s) /ᐠ_ ꞈ _ᐟ\ɴʏᴀ~
+```
+
+```
 $ kawa mc stack 9 to-item -s 16
 that's 144 item(s) /ᐠ_ ꞈ _ᐟ\ɴʏᴀ~
 ```
-
-Commands: `item`, `stack`, and `shulker` (alias `sb`). Targets are
-`to-item`, `to-stack`, `to-shulker` (alias `to-sb`).
-
-- `-s, --stack N`: items per stack (default: 64; minimum: 1).
-- `-l, --large-chest`: use 54-slot large chests instead of 27-slot shulker boxes.
-- `--json`: emit structured JSON; non-whole conversions include a breakdown.
-- `--plain`: emit only the numeric result.
 
 ##### Nether ↔ Overworld coordinates calculator
 
@@ -125,6 +123,9 @@ Every command accepts `--json` or `--plain`
 ```bash
 $ kawa mc ntow 10 20 --json
 {"x": 80, "z": 160}
+```
+
+```
 $ kawa coinflip --plain
 heads
 ```
