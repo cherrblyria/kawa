@@ -178,7 +178,6 @@ class MinecraftCliTests(unittest.TestCase):
                 self.assertEqual(exp_for_level(level), expected)
 
 
-
 class MinecraftStorageCliTests(unittest.TestCase):
     def setUp(self):
         self.runner = CliRunner()
@@ -251,7 +250,6 @@ class MinecraftStorageCliTests(unittest.TestCase):
         self.assertEqual(result.output.strip(), "1728")
         result = self.invoke("item", "128", "to-sb", "--plain")
         self.assertEqual(result.output.strip(), "0.07407407407407407")
-
 
     def test_large_chest_json_breakdown_uses_container_name(self):
         result = self.invoke("item", "3457", "to-shulker", "-l", "--json")
