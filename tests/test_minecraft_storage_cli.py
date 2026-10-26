@@ -41,9 +41,15 @@ class MinecraftStorageCliTests(unittest.TestCase):
     def test_breakdowns(self):
         cases = [
             (("item", "100", "to-stack"), "that's 1 stack(s) and 36 item(s)"),
-            (("item", "1800", "to-shulker"), "that's 1 shulker box(es), 1 stack(s) and 8 item(s)"),
+            (
+                ("item", "1800", "to-shulker"),
+                "that's 1 shulker box(es), 1 stack(s) and 8 item(s)",
+            ),
             (("stack", "30", "to-shulker"), "that's 1 shulker box(es) and 3 stack(s)"),
-            (("stack", "60", "to-shulker", "-l"), "that's 1 large chest(s) and 6 stack(s)"),
+            (
+                ("stack", "60", "to-shulker", "-l"),
+                "that's 1 large chest(s) and 6 stack(s)",
+            ),
             (("item", "100", "to-stack", "-s", "16"), "that's 6 stack(s) and 4 item(s)"),
         ]
         for args, expected in cases:
@@ -73,11 +79,17 @@ class MinecraftStorageCliTests(unittest.TestCase):
     def test_stack_sizes_and_zero_identity(self):
         for size in (1, 16, 64, 1000):
             with self.subTest(size=size):
-                result = self.invoke("stack", "9", "to-item", "-s", str(size), "--plain")
+                result = self.invoke(
+                    "stack", "9", "to-item", "-s", str(size), "--plain"
+                )
                 self.assertEqual(result.exit_code, 0)
                 self.assertEqual(result.output.strip(), str(9 * size))
-        self.assertEqual(self.invoke("item", "0", "to-stack", "--plain").output.strip(), "0")
-        self.assertEqual(self.invoke("item", "9", "to-item", "--plain").output.strip(), "9")
+        self.assertEqual(
+            self.invoke("item", "0", "to-stack", "--plain").output.strip(), "0"
+        )
+        self.assertEqual(
+            self.invoke("item", "9", "to-item", "--plain").output.strip(), "9"
+        )
 
     def test_maximum_amount_and_large_stack_size(self):
         result = self.invoke("item", "1000000000000000000", "to-item", "--plain")
