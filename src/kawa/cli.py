@@ -39,7 +39,7 @@ class FiniteFloat(click.ParamType):
     def convert(self, value, param, ctx):
         try:
             result = float(value)
-        except TypeError, ValueError:
+        except (TypeError, ValueError):
             self.fail(f"{value!r} is not a valid float", param, ctx)
         if not math.isfinite(result):
             self.fail("must be a finite number", param, ctx)
