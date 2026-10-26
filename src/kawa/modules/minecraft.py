@@ -208,7 +208,9 @@ def convert_storage(
                 "stack": STORAGE_LABELS["stack"],
                 "item": STORAGE_LABELS["item"],
             }
-            parts = [f"{comma(count)} {labels[unit]}" for unit, count in breakdown.items()]
+            parts = [
+                f"{comma(count)} {labels[unit]}" for unit, count in breakdown.items()
+            ]
             if len(parts) == 1:
                 joined = parts[0]
             elif len(parts) == 2:
