@@ -197,5 +197,5 @@ def convert_storage(amount, source, target, stack_size=64, large_chest=False, mo
             else:
                 joined = ", ".join(parts[:-1]) + " and " + parts[-1]
             click.echo(f"that's {joined} /ᐠ_ ꞈ _ᐟ\\ɴʏᴀ~")
-    except ValueError as exc:
+    except (ValueError, OverflowError) as exc:
         raise click.BadParameter("result too large") from exc
