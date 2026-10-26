@@ -156,7 +156,10 @@ def convert_storage(amount, source, target, stack_size=64, large_chest=False, mo
     target_size = sizes[target]
     quotient, remainder = divmod(items, target_size)
     whole = remainder == 0
-    result = quotient if whole else items / target_size
+    try:
+        result = quotient if whole else items / target_size
+    except OverflowError as exc:
+        raise click.BadParameter("result too large") from exc
     container = "large_chest" if large_chest and (source == "shulker" or target == "shulker") else "shulker_box"
     payload = {
         "result": result,
