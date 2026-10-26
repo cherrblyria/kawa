@@ -23,6 +23,25 @@
 
 #### Minecraft
 
+##### Stack / Shulker box converter
+
+Convert items, stacks, and shulker boxes with an optional custom stack size.
+
+```bash
+$ kawa mc item 128 to-stack
+that's 2 stack(s) of item(s) /ᐠ_ ꞈ _ᐟ\ɴʏᴀ~
+```
+
+```
+$ kawa mc item 1800 to-shulker
+that's 1 shulker box(es), 1 stack(s) and 8 item(s) /ᐠ_ ꞈ _ᐟ\ɴʏᴀ~
+```
+
+```
+$ kawa mc stack 9 to-item -s 16
+that's 144 item(s) /ᐠ_ ꞈ _ᐟ\ɴʏᴀ~
+```
+
 ##### Nether ↔ Overworld coordinates calculator
 
 ```bash
@@ -104,6 +123,9 @@ Every command accepts `--json` or `--plain`
 ```bash
 $ kawa mc ntow 10 20 --json
 {"x": 80, "z": 160}
+```
+
+```
 $ kawa coinflip --plain
 heads
 ```

@@ -131,3 +131,93 @@ def experience_to_level(xp, mode="cute"):
         elif xp > 2147483647:
             message = "\n - It's impossible to reach this level in survival btw :3"
         click.echo(f"{comma(xp)} Experience is Level {comma(level)} /ᐠ｡‸｡ᐟ\\{message}")
+
+
+STORAGE_LABELS = {
+    "item": "item(s)",
+    "stack": "stack(s)",
+    "shulker": "shulker box(es)",
+    "large_chest": "large chest(s)",
+}
+
+
+def convert_storage(
+    amount, source, target, stack_size=64, large_chest=False, mode="cute"
+):
+    if target == "sb":
+        target = "shulker"
+    if source == "sb":
+        source = "shulker"
+    slots = 54 if large_chest else 27
+    sizes = {
+        "item": 1,
+        "stack": stack_size,
+        "shulker": slots * stack_size,
+    }
+    items = amount * sizes[source]
+    target_size = sizes[target]
+    quotient, remainder = divmod(items, target_size)
+    whole = remainder == 0
+    try:
+        result = quotient if whole else items / target_size
+    except OverflowError as exc:
+        raise click.BadParameter("result too large") from exc
+    container = (
+        "large_chest"
+        if large_chest and (source == "shulker" or target == "shulker")
+        else "shulker_box"
+    )
+    payload = {
+        "result": result,
+        "from": source,
+        "to": target,
+        "amount": amount,
+        "stack_size": stack_size,
+        "container": container,
+    }
+    breakdown = {}
+    if not whole:
+        remaining = items
+        for unit in ("shulker", "stack", "item"):
+            count, remaining = divmod(remaining, sizes[unit])
+            if count:
+                breakdown[unit] = count
+        payload["breakdown"] = {
+            ("large_chest" if large_chest and unit == "shulker" else unit): count
+            for unit, count in breakdown.items()
+        }
+    try:
+        if mode == "json":
+            click.echo(json.dumps(payload))
+        elif mode == "plain":
+            click.echo(str(result) if not whole else str(quotient))
+        elif whole:
+            label = (
+                STORAGE_LABELS["large_chest"]
+                if target == "shulker" and large_chest
+                else STORAGE_LABELS[target]
+            )
+            suffix = " of item(s)" if target in ("stack", "shulker") else ""
+            click.echo(f"that's {comma(quotient)} {label}{suffix} /ᐠ_ ꞈ _ᐟ\\ɴʏᴀ~")
+        else:
+            labels = {
+                "shulker": (
+                    STORAGE_LABELS["large_chest"]
+                    if large_chest
+                    else STORAGE_LABELS["shulker"]
+                ),
+                "stack": STORAGE_LABELS["stack"],
+                "item": STORAGE_LABELS["item"],
+            }
+            parts = [
+                f"{comma(count)} {labels[unit]}" for unit, count in breakdown.items()
+            ]
+            if len(parts) == 1:
+                joined = parts[0]
+            elif len(parts) == 2:
+                joined = " and ".join(parts)
+            else:
+                joined = ", ".join(parts[:-1]) + " and " + parts[-1]
+            click.echo(f"that's {joined} /ᐠ_ ꞈ _ᐟ\\ɴʏᴀ~")
+    except (ValueError, OverflowError) as exc:
+        raise click.BadParameter("result too large") from exc

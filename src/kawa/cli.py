@@ -39,7 +39,9 @@ class FiniteFloat(click.ParamType):
     def convert(self, value, param, ctx):
         try:
             result = float(value)
-        except TypeError, ValueError:
+        except TypeError:
+            self.fail(f"{value!r} is not a valid float", param, ctx)
+        except ValueError:
             self.fail(f"{value!r} is not a valid float", param, ctx)
         if not math.isfinite(result):
             self.fail("must be a finite number", param, ctx)
@@ -132,6 +134,56 @@ def level(level, mode):
 def xp(xp, mode):
     """Convert Experience to Level"""
     experience_to_level(xp, mode)
+
+
+def storage_arguments(func):
+    func = click.option(
+        "-l", "--large-chest", is_flag=True, help="Use 54-slot large chests"
+    )(func)
+    func = click.option(
+        "-s",
+        "--stack",
+        "stack_size",
+        type=click.IntRange(min=1),
+        default=64,
+        show_default=True,
+        help="Items per stack",
+    )(func)
+    func = click.argument(
+        "target", type=click.Choice(["to-item", "to-stack", "to-shulker", "to-sb"])
+    )(func)
+    func = click.argument("amount", type=click.IntRange(min=0, max=10**18))(func)
+    return func
+
+
+@minecraft.command(context_settings=MC_CONTEXT_SETTINGS)
+@storage_arguments
+@output_mode
+def item(amount, target, stack_size, large_chest, mode):
+    """Convert items, stacks, and shulker boxes."""
+    convert_storage(
+        amount, "item", target.removeprefix("to-"), stack_size, large_chest, mode
+    )
+
+
+@minecraft.command(context_settings=MC_CONTEXT_SETTINGS)
+@storage_arguments
+@output_mode
+def stack(amount, target, stack_size, large_chest, mode):
+    """Convert stacks, items, and shulker boxes."""
+    convert_storage(
+        amount, "stack", target.removeprefix("to-"), stack_size, large_chest, mode
+    )
+
+
+@minecraft.command(context_settings=MC_CONTEXT_SETTINGS, aliases=["sb"])
+@storage_arguments
+@output_mode
+def shulker(amount, target, stack_size, large_chest, mode):
+    """Convert shulker boxes, stacks, and items."""
+    convert_storage(
+        amount, "shulker", target.removeprefix("to-"), stack_size, large_chest, mode
+    )
 
 
 @cli.command(name="uwuify", aliases=["uwu"])

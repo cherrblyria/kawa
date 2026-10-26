@@ -34,6 +34,7 @@ jobs:
         run: |
           uv run kawa mc ntow 10 20
           uv run kawa mc ownt 80 160
+          uv run kawa mc item 128 to-stack
           uv run kawa mc ntow -5 -3
           uv run kawa uwuify The quick brown fox jumps over the lazy dog
           uv run kawa coinflip

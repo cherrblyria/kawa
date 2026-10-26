@@ -11,6 +11,7 @@ from .json_tools import looks_like_path, pretty_json
 from .minecraft import (
     check_finite,
     check_overflow,
+    convert_storage,
     exp_for_level,
     experience_to_level,
     level_to_experience,
@@ -26,6 +27,7 @@ __all__ = [
     "SECRET_PLACEHOLDER_MESSAGES",
     "check_finite",
     "check_overflow",
+    "convert_storage",
     "exp_for_level",
     "experience_to_level",
     "get_uwu",
