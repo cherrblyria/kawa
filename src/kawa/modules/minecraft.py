@@ -195,7 +195,7 @@ def convert_storage(
                 else STORAGE_LABELS[target]
             )
             suffix = " of item(s)" if target in ("stack", "shulker") else ""
-            click.echo(f"that's {comma(quotient)} {label}{suffix} /ᐠ_ ꞈ _ᐟ\\ɴʏᴀ~)
+            click.echo(f"that's {comma(quotient)} {label}{suffix} /ᐠ_ ꞈ _ᐟ\\ɴʏᴀ~")
         else:
             labels = {
                 "shulker": (
