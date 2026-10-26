@@ -16,7 +16,9 @@ class MinecraftStorageCliTests(unittest.TestCase):
     def test_exact_cute_examples(self):
         result = self.invoke("item", "128", "to-stack")
         self.assertEqual(result.exit_code, 0)
-        self.assertEqual(result.output.strip(), "that's 2 stack(s) of item(s) /ᐠ_ ꞈ _ᐟ\\ɴʏᴀ~")
+        self.assertEqual(
+            result.output.strip(), "that's 2 stack(s) of item(s) /ᐠ_ ꞈ _ᐟ\\ɴʏᴀ~"
+        )
         result = self.invoke("stack", "9", "to-item", "-s", "16")
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(result.output.strip(), "that's 144 item(s) /ᐠ_ ꞈ _ᐟ\\ɴʏᴀ~")
@@ -82,7 +84,9 @@ class MinecraftStorageCliTests(unittest.TestCase):
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(result.output.strip(), "1000000000000000000")
         large_stack_size = "9" * 400
-        result = self.invoke("stack", "1", "to-item", "-s", large_stack_size, "--plain")
+        result = self.invoke(
+            "stack", "1", "to-item", "-s", large_stack_size, "--plain"
+        )
         self.assertEqual(result.exit_code, 0, result.output)
         self.assertEqual(result.output.strip(), large_stack_size)
 
