@@ -50,7 +50,10 @@ class MinecraftStorageCliTests(unittest.TestCase):
                 ("stack", "60", "to-shulker", "-l"),
                 "that's 1 large chest(s) and 6 stack(s)",
             ),
-            (("item", "100", "to-stack", "-s", "16"), "that's 6 stack(s) and 4 item(s)"),
+            (
+                ("item", "100", "to-stack", "-s", "16"),
+                "that's 6 stack(s) and 4 item(s)",
+            ),
         ]
         for args, expected in cases:
             with self.subTest(args=args):
