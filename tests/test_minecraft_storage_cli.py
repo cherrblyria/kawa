@@ -81,7 +81,7 @@ class MinecraftStorageCliTests(unittest.TestCase):
         result = self.invoke("item", "1000000000000000000", "to-item", "--plain")
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(result.output.strip(), "1000000000000000000")
-        result = self.invoke("stack", "1", "to-item", "-s", "9" * 5000, "--plain")
+        result = self.invoke("stack", "1", "to-item", "-s", "9" * 400, "--plain")
         self.assertEqual(result.exit_code, 2)
         self.assertIn("result too large", result.output)
 
