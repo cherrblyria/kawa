@@ -182,7 +182,10 @@ def convert_storage(
             count, remaining = divmod(remaining, sizes[unit])
             if count:
                 breakdown[unit] = count
-        payload["breakdown"] = breakdown
+        payload["breakdown"] = {
+            ("large_chest" if large_chest and unit == "shulker" else unit): count
+            for unit, count in breakdown.items()
+        }
     try:
         if mode == "json":
             click.echo(json.dumps(payload))
