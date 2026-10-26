@@ -141,7 +141,9 @@ STORAGE_LABELS = {
 }
 
 
-def convert_storage(amount, source, target, stack_size=64, large_chest=False, mode="cute"):
+def convert_storage(
+    amount, source, target, stack_size=64, large_chest=False, mode="cute"
+):
     if target == "sb":
         target = "shulker"
     if source == "sb":
@@ -160,7 +162,11 @@ def convert_storage(amount, source, target, stack_size=64, large_chest=False, mo
         result = quotient if whole else items / target_size
     except OverflowError as exc:
         raise click.BadParameter("result too large") from exc
-    container = "large_chest" if large_chest and (source == "shulker" or target == "shulker") else "shulker_box"
+    container = (
+        "large_chest"
+        if large_chest and (source == "shulker" or target == "shulker")
+        else "shulker_box"
+    )
     payload = {
         "result": result,
         "from": source,
@@ -183,12 +189,22 @@ def convert_storage(amount, source, target, stack_size=64, large_chest=False, mo
         elif mode == "plain":
             click.echo(str(result) if not whole else str(quotient))
         elif whole:
-            label = STORAGE_LABELS["large_chest"] if target == "shulker" and large_chest else STORAGE_LABELS[target]
+            label = (
+                STORAGE_LABELS["large_chest"]
+                if target == "shulker" and large_chest
+                else STORAGE_LABELS[target]
+            )
             suffix = " of item(s)" if target in ("stack", "shulker") else ""
-            click.echo(f"that's {comma(quotient)} {label}{suffix} /ᐠ_ ꞈ _ᐟ\\ɴʏᴀ~")
+            click.echo(
+                f"that's {comma(quotient)} {label}{suffix} /ᐠ_ ꞈ _ᐟ\\ɴʏᴀ~"
+            )
         else:
             labels = {
-                "shulker": STORAGE_LABELS["large_chest"] if large_chest else STORAGE_LABELS["shulker"],
+                "shulker": (
+                    STORAGE_LABELS["large_chest"]
+                    if large_chest
+                    else STORAGE_LABELS["shulker"]
+                ),
                 "stack": STORAGE_LABELS["stack"],
                 "item": STORAGE_LABELS["item"],
             }
