@@ -133,7 +133,6 @@ def experience_to_level(xp, mode="cute"):
         click.echo(f"{comma(xp)} Experience is Level {comma(level)} /ᐠ｡‸｡ᐟ\\{message}")
 
 
-STORAGE_UNIT_SIZES = {"item": 1, "stack": None, "shulker": None}
 STORAGE_LABELS = {
     "item": "item(s)",
     "stack": "stack(s)",
@@ -158,7 +157,7 @@ def convert_storage(amount, source, target, stack_size=64, large_chest=False, mo
     quotient, remainder = divmod(items, target_size)
     whole = remainder == 0
     result = quotient if whole else items / target_size
-    container = "large_chest" if large_chest else "shulker_box"
+    container = "large_chest" if large_chest and (source == "shulker" or target == "shulker") else "shulker_box"
     payload = {
         "result": result,
         "from": source,
@@ -179,11 +178,11 @@ def convert_storage(amount, source, target, stack_size=64, large_chest=False, mo
         if mode == "json":
             click.echo(json.dumps(payload))
         elif mode == "plain":
-            click.echo(str(no_dot_zero(result)))
+            click.echo(str(result) if not whole else str(quotient))
         elif whole:
             label = STORAGE_LABELS["large_chest"] if target == "shulker" and large_chest else STORAGE_LABELS[target]
             suffix = " of item(s)" if target in ("stack", "shulker") else ""
-            click.echo(f"that's {comma(quotient)} {label}{suffix} /ᐠ_ ꞈ _ᐟ\\\\ɴʏᴀ~")
+            click.echo(f"that's {comma(quotient)} {label}{suffix} /ᐠ_ ꞈ _ᐟ\\ɴʏᴀ~")
         else:
             labels = {
                 "shulker": STORAGE_LABELS["large_chest"] if large_chest else STORAGE_LABELS["shulker"],
@@ -197,6 +196,6 @@ def convert_storage(amount, source, target, stack_size=64, large_chest=False, mo
                 joined = " and ".join(parts)
             else:
                 joined = ", ".join(parts[:-1]) + " and " + parts[-1]
-            click.echo(f"that's {joined} /ᐠ_ ꞈ _ᐟ\\\\ɴʏᴀ~")
+            click.echo(f"that's {joined} /ᐠ_ ꞈ _ᐟ\\ɴʏᴀ~")
     except ValueError as exc:
         raise click.BadParameter("result too large") from exc
