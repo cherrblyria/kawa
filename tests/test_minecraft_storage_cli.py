@@ -77,6 +77,14 @@ class MinecraftStorageCliTests(unittest.TestCase):
         self.assertEqual(self.invoke("item", "0", "to-stack", "--plain").output.strip(), "0")
         self.assertEqual(self.invoke("item", "9", "to-item", "--plain").output.strip(), "9")
 
+    def test_maximum_amount_and_oversized_stack(self):
+        result = self.invoke("item", "1000000000000000000", "to-item", "--plain")
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.output.strip(), "1000000000000000000")
+        result = self.invoke("stack", "1", "to-item", "-s", "9" * 5000, "--plain")
+        self.assertEqual(result.exit_code, 2)
+        self.assertIn("result too large", result.output)
+
     def test_invalid_arguments(self):
         for args in (
             ("item", "-5", "to-stack"),
