@@ -139,7 +139,12 @@ def storage_arguments(func):
         "-l", "--large-chest", is_flag=True, help="Use 54-slot large chests"
     )(func)
     func = click.option(
-        "-s", "--stack", "stack_size", type=click.IntRange(min=1), default=64, show_default=True,
+        "-s",
+        "--stack",
+        "stack_size",
+        type=click.IntRange(min=1),
+        default=64,
+        show_default=True,
         help="Items per stack",
     )(func)
     func = click.argument(
@@ -154,7 +159,9 @@ def storage_arguments(func):
 @output_mode
 def item(amount, target, stack_size, large_chest, mode):
     """Convert items, stacks, and shulker boxes."""
-    convert_storage(amount, "item", target.removeprefix("to-"), stack_size, large_chest, mode)
+    convert_storage(
+        amount, "item", target.removeprefix("to-"), stack_size, large_chest, mode
+    )
 
 
 @minecraft.command(context_settings=MC_CONTEXT_SETTINGS)
@@ -162,7 +169,9 @@ def item(amount, target, stack_size, large_chest, mode):
 @output_mode
 def stack(amount, target, stack_size, large_chest, mode):
     """Convert stacks, items, and shulker boxes."""
-    convert_storage(amount, "stack", target.removeprefix("to-"), stack_size, large_chest, mode)
+    convert_storage(
+        amount, "stack", target.removeprefix("to-"), stack_size, large_chest, mode
+    )
 
 
 @minecraft.command(context_settings=MC_CONTEXT_SETTINGS, aliases=["sb"])
@@ -170,7 +179,9 @@ def stack(amount, target, stack_size, large_chest, mode):
 @output_mode
 def shulker(amount, target, stack_size, large_chest, mode):
     """Convert shulker boxes, stacks, and items."""
-    convert_storage(amount, "shulker", target.removeprefix("to-"), stack_size, large_chest, mode)
+    convert_storage(
+        amount, "shulker", target.removeprefix("to-"), stack_size, large_chest, mode
+    )
 
 
 @cli.command(name="uwuify", aliases=["uwu"])
