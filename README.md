@@ -24,9 +24,20 @@
 
 #### Minecraft
 
+Minecraft calculators for coordinates and XP, plus a storage converter. All
+commands work in cute, plain, and JSON output modes.
+
 ##### Stack / Shulker box converter
 
-Convert items, stacks, and shulker boxes with an optional custom stack size.
+Convert items, stacks, and shulker boxes. Pick the input command: `item`,
+`stack`, or `shulker` (alias `sb`), then choose `to-item`, `to-stack`, or
+`to-shulker` (alias `to-sb`).
+
+- `-s, --stack` sets how many items make a stack (default `64`).
+- `-l, --large-chest` uses 54-slot containers instead of the default
+  27-slot shulker boxes.
+- Results that do not divide evenly include a breakdown of full containers,
+  full stacks, and leftover items.
 
 ```bash
 $ kawa mc item 128 to-stack
@@ -43,7 +54,16 @@ $ kawa mc stack 9 to-item -s 16
 that's 144 item(s) /ᐠ_ ꞈ _ᐟ\ɴʏᴀ~
 ```
 
+```bash
+$ kawa mc item 100 to-stack
+that's 1 stack(s) and 36 item(s) /ᐠ_ ꞈ _ᐟ\ɴʏᴀ~
+```
+
 ##### Nether ↔ Overworld coordinates calculator
+
+Convert between Nether and Overworld coordinates using the vanilla 1:8 ratio.
+`ntow`/`nt` goes Nether → Overworld, while `ownt`/`ow` goes the other way.
+Decimal and negative coordinates are supported.
 
 ```bash
 $ kawa mc ntow 727 -90.875
@@ -55,7 +75,15 @@ $ kawa mc ownt 727 5816
 (x: 727 y: 5816) in Overworld is (x: 90.875 y: 727) in Nether  /ᐠ｡ꞈ｡ᐟ\
 ```
 
+Plain mode prints `x, z`; JSON mode prints `{"x": ..., "z": ...}`. Cute mode
+adds a world-border quip for coordinates past ±30,000,000.
+
 ##### Level ↔ Experience calculator
+
+Convert levels to total experience with `lvxp`/`lv`, or experience back into a
+level with `xplv`/`xp`. Both directions use the vanilla XP formulas. Reverse
+conversion stays fractional when the XP amount does not land exactly on a
+level.
 
 ```bash
 $ kawa mc lvxp 21864
@@ -71,16 +99,22 @@ $ kawa mc xplv 2147483647
 
 #### Uwuify
 
-powered by [uwuipy](https://github.com/Cuprum77/uwuipy)
+Powered by [uwuipy](https://github.com/Cuprum77/uwuipy). Pass one or more words
+as arguments; multiple arguments are joined with spaces. Quote text that
+contains shell-sensitive characters.
 
 ```bash
 $ kawa uwuify The quick brown fox jumps over the lazy dog
 The q-q-quick bwown fox jyumps uvw the wazy dog
 ```
 
+`--json` wraps the text as `{"result": "..."}`.
+
 #### Coinflip
 
-Flip a coin
+Flip a coin. Cute mode may add a random message (and very rarely an easter egg);
+plain mode prints only `heads` or `tails`, while JSON mode returns
+`{"result": ..., "message": ...}`.
 
 ```bash
 $ kawa coinflip
@@ -89,7 +123,7 @@ Heads! As I expected..
 
 #### UUID
 
-Generate a random UUID. Defaults to version 4; use `--v7` for a time-ordered
+Generate a random UUID. Defaults to version 4; pass `--v7` for a time-ordered
 version 7 UUID.
 
 ```bash
@@ -98,13 +132,31 @@ $ kawa uuid
 ```
 
 ```bash
-$ kawa uuid --v7 --plain
-0199e1a0-1a2b-7c3d-8e4f-5a6b7c8d9e0f
+$ kawa uuid --v7
+0199e1a0-1a2b-7c3d-8e4f-5a6b7c8d9e0f /ᐠ‸⑅‸ ᐟ\ﾉ
+```
+
+Use `--plain` for just the UUID, or `--json` for the UUID and its version:
+
+```bash
+$ kawa uuid --plain
+63a5860d-22c0-45ab-92be-c9f2a158baef
+```
+
+```bash
+$ kawa uuid --v7 --json
+{"uuid": "0199e1a0-1a2b-7c3d-8e4f-5a6b7c8d9e0f", "version": 7}
 ```
 
 #### JSON
 
-Pretty-print JSON from a file path or a raw string.
+Pretty-print JSON from a file path, a raw JSON string, or stdin. Use `-i` /
+`--indent` to set indentation (`0`–`16`, default `4`) and `-s` / `--sort-keys`
+to sort object keys alphabetically.
+
+Duplicate keys print a warning to stderr and the last value wins. Non-standard
+values such as `NaN` and `Infinity` are rejected, and UTF-8 BOM files are
+supported.
 
 ```bash
 $ kawa json pretty data.json
@@ -133,18 +185,26 @@ $ echo '{"a": 1}' | kawa json pretty -
 
 #### Output modes
 
-Every command accepts `--json` or `--plain`
-(undecorated result). The two flags are mutually exclusive.
+Every command accepts `--json` or `--plain` (undecorated result). The two flags
+are mutually exclusive. Flags can be passed to a command or to its group, so
+`kawa --json mc ntow 10 20` and `kawa mc ntow 10 20 --json` behave the same.
 
 ```bash
 $ kawa mc ntow 10 20 --json
 {"x": 80, "z": 160}
 ```
 
+```bash
+$ kawa mc ntow 10 20 --plain
+80, 160
+```
+
 ```
 $ kawa coinflip --plain
 heads
 ```
+
+JSON output is always strict (`NaN` and `Infinity` are never emitted).
 
 Shell completion is available via `--autocomplete`.
 
