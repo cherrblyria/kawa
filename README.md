@@ -11,6 +11,7 @@
   - [Minecraft](#minecraft)
   - [Uwuify](#uwuify)
   - [Coinflip](#coinflip)
+  - [UUID](#uuid)
   - [JSON](#json)
 - [Installation](#installation)
   - [Nix / NixOS (Flake)](#nix--nixos-flake)
@@ -84,6 +85,21 @@ Flip a coin
 ```bash
 $ kawa coinflip
 Heads! As I expected..
+```
+
+#### UUID
+
+Generate a random UUID. Defaults to version 4; use `--v7` for a time-ordered
+version 7 UUID.
+
+```bash
+$ kawa uuid
+63a5860d-22c0-45ab-92be-c9f2a158baef /ᐠ‸⑅‸ ᐟ\ﾉ
+```
+
+```bash
+$ kawa uuid --v7 --plain
+0199e1a0-1a2b-7c3d-8e4f-5a6b7c8d9e0f
 ```
 
 #### JSON

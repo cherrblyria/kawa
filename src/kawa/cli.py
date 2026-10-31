@@ -201,6 +201,16 @@ def coinflip_cmd(mode):
     run_coinflip(mode=mode)
 
 
+@cli.command(name="uuid")
+@click.option(
+    "-7", "--v7", "use_v7", is_flag=True, help="Generate a v7 (time-ordered) UUID"
+)
+@output_mode
+def uuid_cmd(use_v7, mode):
+    """Generate a random UUID"""
+    run_uuid(version=7 if use_v7 else 4, mode=mode)
+
+
 @cli.group(name="json")
 @output_mode
 def json_group(mode):

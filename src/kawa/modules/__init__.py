@@ -18,11 +18,13 @@ from .minecraft import (
     nether_to_overworld,
     overworld_to_nether,
 )
+from .uuid_tools import KAOMOJI, run_uuid
 from .uwuify import run_uwuify
 
 __all__ = [
     "COINS_MESSAGES",
     "EASTER_EGG_EVENTS",
+    "KAOMOJI",
     "KAWA_MESSAGES",
     "SECRET_PLACEHOLDER_MESSAGES",
     "check_finite",
@@ -38,5 +40,6 @@ __all__ = [
     "pick_event",
     "pretty_json",
     "run_coinflip",
+    "run_uuid",
     "run_uwuify",
 ]
