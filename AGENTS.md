@@ -40,6 +40,7 @@ uv run python -m unittest tests.test_json_cli -v   # whole file
 - **Windows encoding**: `cli.py` reconfigures stdout/stderr to UTF-8 with `errors="replace"`. `tests/test_encoding.py` spawns a subprocess with `PYTHONIOENCODING=cp1252` + `PYTHONPATH=src` to guard this — don't remove the reconfigure block.
 - **Ruff**: minimal config (`src = ["src"]` in `pyproject.toml`); default line length (88). No typechecker (no mypy/pyright) and no pre-commit hooks in CI.
 - **No pytest**: `dependency-groups.dev` only has pyinstaller + ruff. Tests are stdlib `unittest` with `click.testing.CliRunner`.
+- **Commit messages**: follow Conventional Commits (`feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `test:`, `chore:`, `perf:`), lowercase imperative summary (e.g. `feat: add uuid command`). Only commit when explicitly asked.
 
 ## Releases
 
