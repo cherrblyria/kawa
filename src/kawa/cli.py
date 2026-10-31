@@ -124,7 +124,7 @@ def overworld(x, z, mode):
 @click.argument("level", type=click.IntRange(min=0, max=10**9))
 @output_mode
 def level(level, mode):
-    """Convert Level to Experience"""
+    """Convert level to experience"""
     level_to_experience(level, mode)
 
 
@@ -132,7 +132,7 @@ def level(level, mode):
 @click.argument("xp", type=click.IntRange(min=0, max=10**18))
 @output_mode
 def xp(xp, mode):
-    """Convert Experience to Level"""
+    """Convert experience to level"""
     experience_to_level(xp, mode)
 
 
