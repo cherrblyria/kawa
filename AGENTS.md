@@ -2,9 +2,50 @@
 
 ## Project
 
-`kawa` — a small joke CLI (Minecraft calculators, uwuify, coinflip, JSON pretty-print). Click-based, Python 3.14, packaged with hatchling, distributed as wheel + PyInstaller binary + Nix flake.
+Kawa is a personal, character-driven CLI project. It combines practical command-line utilities with Kawa, a lively cat-girl terminal companion. The CLI is the primary interface; optional shell integration and richer interfaces may be explored later.
 
-## Commands
+Kawa is built with Python 3.14, Click, hatchling, and is distributed as a wheel, PyInstaller binary, and Nix flake.
+
+## Documentation map
+
+Read the relevant documents before making product or structural changes:
+
+- [README.md](README.md) — user-facing installation, commands, and usage. Describes behavior that exists today.
+- [docs/VISION.md](docs/VISION.md) — product intent, Kawa's identity, lore, and long-term direction.
+- [docs/ROADMAP.md](docs/ROADMAP.md) — planned work, priorities, and status.
+- [docs/DESIGN.md](docs/DESIGN.md) — CLI UX, output modes, errors, and character presentation conventions.
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — current technical structure and possible future direction.
+
+Use this map to find the source of truth:
+
+- Product intent: `docs/VISION.md`.
+- Planned work and status: `docs/ROADMAP.md`.
+- UX and presentation conventions: `docs/DESIGN.md`.
+- Current and intended technical structure: `docs/ARCHITECTURE.md`.
+- Actual implemented behavior: source code and tests.
+- User-facing usage: `README.md`.
+
+## Decision authority
+
+The project owner is the final decision-maker.
+
+- Do not treat an idea or suggestion as an approved feature.
+- Do not silently change product direction, scope, or established conventions.
+- You may analyze, suggest, and explain trade-offs.
+- Implement changes that the owner has requested or approved.
+- If a decision materially affects product direction or architecture and approval is unclear, ask before proceeding.
+
+## Documentation rules
+
+- Keep documentation in the repository.
+- Keep documents focused on their defined responsibilities; avoid duplicating the same information across files.
+- Clearly distinguish current behavior from planned or conceptual behavior.
+- Do not document a planned feature as implemented.
+- Update relevant documentation when behavior, UX conventions, or architecture changes.
+- Keep the roadmap flexible. Priorities do not imply deadlines or commitments.
+- The owner decides when roadmap items are added, removed, or reprioritized.
+
+## Development commands
 
 ```bash
 uv sync --dev                                # setup (Python 3.14 via .python-version)
@@ -18,6 +59,7 @@ uv run pyinstaller kawa.spec                 # build standalone binary -> dist/k
 CI order (`.github/workflows/ci.yml`): lint → format check → unittest → smoke-run CLI commands → PyInstaller build + run `dist/kawa`.
 
 Single test:
+
 ```bash
 uv run python -m unittest tests.test_minecraft_cli.MinecraftCliTests.test_nether_to_overworld_json -v
 uv run python -m unittest tests.test_json_cli -v   # whole file
